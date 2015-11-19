@@ -1,6 +1,0 @@
-name = Key
-description = Provides the ability to manage keys, which can be used by other modules.
-package = Security
-core = 7.x
-
-dependencies[] = ctools
