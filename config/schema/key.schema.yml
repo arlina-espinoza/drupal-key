@@ -1,0 +1,51 @@
+key.key.*:
+  type: config_entity
+  label: 'Key config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+    description:
+      type: text
+      label: 'Description'
+    key_provider:
+      type: string
+      label: Key Provider
+    key_provider_settings:
+      type: key.key_provider.plugin.[id]
+      label: 'Key provider settings'
+    service_default:
+      type: boolean
+      label: 'Service default'
+
+key_provider:
+  type: mapping
+  label: 'Key provider settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+
+key.key_provider.plugin.*:
+  type: key_provider
+
+key.key_provider.plugin.config:
+  type: key_provider
+  label: 'Configuration'
+  mapping:
+    key_value:
+      type: string
+      label: 'Key Value'
+
+key.key_provider.plugin.file:
+  type: key_provider
+  label: 'File'
+  mapping:
+    file_location:
+      type: string
+      label: 'File Location'
