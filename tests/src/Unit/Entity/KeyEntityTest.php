@@ -1,19 +1,18 @@
 <?php
 /**
  *  @file
- *  Provides \Drupal\Tests\key\Entity\KeyEntityTest
+ *  Provides \Drupal\Tests\key\Unit\Entity\KeyEntityTest
  */
 
-namespace Drupal\Tests\key\Entity;
+namespace Drupal\Tests\key\Unit\Entity;
 
 use Drupal\key\Entity\Key;
 use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
-use Drupal\Tests\key\KeyTestBase;
+use Drupal\Tests\key\Unit\KeyTestBase;
 
 /**
- * Test the key entity methods.
- *
  * @coversDefaultClass \Drupal\key\Entity\Key
+ * @group key
  */
 class KeyEntityTest extends KeyTestBase {
 
@@ -25,8 +24,6 @@ class KeyEntityTest extends KeyTestBase {
 
   /**
    * Assert that key entity getters work.
-   *
-   * @group key
    */
   public function testGetters() {
     // Create a key entity using Configuration key provider.

@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * Provides \Drupal\Tests\key\KeyTestBase.php.
+ * Provides \Drupal\Tests\key\Unit\KeyTestBase.php.
  */
 
-namespace Drupal\Tests\key;
+namespace Drupal\Tests\key\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @group key
+ * Provides a base class for key tests.
  */
-class KeyTestBase extends UnitTestCase {
+abstract class KeyTestBase extends UnitTestCase {
 
   /**
    * @var \Drupal\Core\Config\ImmutableConfig

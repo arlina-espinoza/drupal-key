@@ -1,15 +1,16 @@
 <?php
 /**
- * Provides \Drupal\Tests\key\KeyManagerTest.php
+ * Provides \Drupal\Tests\key\Unit\KeyManagerTest.php
  */
 
-namespace Drupal\Tests\key;
+namespace Drupal\Tests\key\Unit;
 
 use Drupal\key\KeyRepository;
 use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
 use Drupal\key\Entity\Key;
 
 /**
+ * @coversDefaultClass \Drupal\key\KeyRepository
  * @group key
  */
 class KeyRepositoryTest extends KeyTestBase {
