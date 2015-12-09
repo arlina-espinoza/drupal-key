@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\key\KeyProviderManager;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -69,7 +70,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $entities = $this->load();
     $build = parent::render();
-    $build['table']['#empty'] = t('No keys are available. <a href="@link">Add a key</a>.', array('@link' => \Drupal::url('entity.key.add_form')));
+    $build['table']['#empty'] = t('No keys are available. <a href=":link">Add a key</a>.', array(':link' => Url::fromRoute('entity.key.add_form')->toString()));
     return $build;
   }
 
