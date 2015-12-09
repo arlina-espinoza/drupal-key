@@ -1,5 +1,5 @@
 services:
-  key_repository:
+  key.repository:
     class: Drupal\key\KeyRepository
     arguments: ['@entity.manager', '@config.factory', '@plugin.manager.key.key_provider']
   plugin.manager.key.key_provider:

@@ -28,16 +28,16 @@ Modules can retrieve information about keys or a specific key value by making a 
 
 ### Get All Keys
 
-`Drupal::service('key_repository')->getKeys();`
+`Drupal::service('key.repository')->getKeys();`
 
 ### Get Single Key
 
-`Drupal::service('key_repository')->getKey($key_id);`
+`Drupal::service('key.repository')->getKey($key_id);`
 
 ### Get Default Key
 
-`Drupal::service('key_repository')->getKey();`
+`Drupal::service('key.repository')->getKey();`
 
 ### Get Key Value
 
-`Drupal::service('key_repository')->getKey($key_id)->getKeyValue();`
+`Drupal::service('key.repository')->getKey($key_id)->getKeyValue();`
