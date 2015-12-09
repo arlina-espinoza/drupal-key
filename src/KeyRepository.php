@@ -88,33 +88,10 @@ class KeyRepository {
    *   The key ID to use.
    *
    * @return \Drupal\key\Entity\Key|null
-   *   The key with the given id, defaults to the default key.
+   *   The key with the given id.
    */
-  public function getKey($key_id = NULL) {
-    if ($key_id) {
-      return $this->entityManager->getStorage('key')->load($key_id);
-    } else {
-      return $this->getDefaultKey();
-    }
-  }
-
-  /**
-   * Loading a default key.
-   *
-   * @return \Drupal\key\Entity\Key|null
-   *   A default key.
-   *
-   * @throws \Exception
-   *   Thrown when no key was found.
-   */
-  public function getDefaultKey() {
-    $keys = $this->entityManager->getStorage('key')->loadByProperties(['service_default'=>TRUE]);
-
-    if (empty($keys)){
-      throw new \Exception('There is no default key set for the key manager to process.');
-    } else {
-      return array_shift($keys);
-    }
+  public function getKey($key_id) {
+    return $this->entityManager->getStorage('key')->load($key_id);
   }
 
   /**
@@ -133,32 +110,6 @@ class KeyRepository {
     }
 
     return $options;
-  }
-
-  /**
-   * Sets the key as service default.
-   *
-   * @param \Drupal\key\KeyInterface $key
-   *   The default key.
-   */
-  public function setDefaultKey(KeyInterface $key) {
-    $entities = \Drupal::entityManager()
-      ->getStorage('key')
-      ->loadByProperties(['service_default'=>TRUE]);
-    foreach ($entities as $entity) {
-      $entity->setServiceDefault(FALSE);
-    }
-
-    $key->setServiceDefault(TRUE);
-  }
-
-  /**
-   * Removes the key as service default.
-   *
-   * @param \Drupal\key\KeyInterface $key
-   */
-  public function removeDefaultKey(KeyInterface $key) {
-    $key->setServiceDefault(FALSE);
   }
 
 }

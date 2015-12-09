@@ -1,4 +1,3 @@
-
 # Key routing definition
 entity.key.collection:
   path: '/admin/config/system/key'
@@ -29,13 +28,5 @@ entity.key.delete_form:
   defaults:
     _entity_form: 'key.delete'
     _title: 'Delete Key'
-  requirements:
-    _permission: 'administer keys'
-
-entity.key.set_default:
-  path: '/admin/config/system/key/manage/{key}/default'
-  defaults:
-    _entity_form: 'key.default'
-    _title: 'Make Key Default'
   requirements:
     _permission: 'administer keys'

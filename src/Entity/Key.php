@@ -21,8 +21,7 @@ use Drupal\key\KeyInterface;
  *     "form" = {
  *       "add" = "Drupal\key\Form\KeyForm",
  *       "edit" = "Drupal\key\Form\KeyForm",
- *       "delete" = "Drupal\key\Form\KeyDeleteForm",
- *       "default" = "Drupal\key\Form\KeyDefaultForm"
+ *       "delete" = "Drupal\key\Form\KeyDeleteForm"
  *     }
  *   },
  *   config_prefix = "key",
@@ -36,8 +35,7 @@ use Drupal\key\KeyInterface;
  *     "add-form" = "/admin/config/system/key/add",
  *     "edit-form" = "/admin/config/system/key/manage/{key}",
  *     "delete-form" = "/admin/config/system/key/manage/{key}/delete",
- *     "collection" = "/admin/config/system/key",
- *     "set-default" = "/admin/config/system/key/manage/{key}/default",
+ *     "collection" = "/admin/config/system/key"
  *   }
  * )
  */
@@ -78,13 +76,6 @@ class Key extends ConfigEntityBase implements KeyInterface {
   protected $key_provider_settings = [];
 
   /**
-   * If the key is the default of the Key Repository service.
-   *
-   * @var boolean
-   */
-  protected $service_default;
-
-  /**
    * {@inheritdoc}
    */
   public function getDescription() {
@@ -103,21 +94,6 @@ class Key extends ConfigEntityBase implements KeyInterface {
    */
   public function getKeyProviderSettings() {
     return $this->key_provider_settings;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getServiceDefault() {
-    return $this->service_default;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setServiceDefault($is_default) {
-    $this->service_default = $is_default;
-    $this->save();
   }
 
   /**
