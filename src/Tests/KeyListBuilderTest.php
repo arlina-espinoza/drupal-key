@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\key\Tests\KeyListBuilder.
+ * Definition of \Drupal\key\Tests\KeyListBuilderTest.
  */
 
 namespace Drupal\key\Tests;
@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group key
  */
-class KeyListBuilder extends WebTestBase {
+class KeyListBuilderTest extends WebTestBase {
 
   public static $modules = array('key', 'dblog');
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\key\Tests\KeyService.
+ * Definition of \Drupal\key\Tests\KeyServiceTest.
  */
 
 namespace Drupal\key\Tests;
@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group key
  */
-class KeyService extends WebTestBase {
+class KeyServiceTest extends WebTestBase {
 
   public static $modules = array('key', 'dblog');
 
