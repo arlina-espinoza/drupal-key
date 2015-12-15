@@ -2,55 +2,79 @@
 
 /**
  * @file
- * Contains Drupal\key\Form\KeyForm.
+ * Contains \Drupal\key\Form\KeyFormBase.
  */
 
 namespace Drupal\key\Form;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Form\FormState;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class KeyForm.
- *
- * @package Drupal\key\Form
+ * Base form for key add and edit forms.
  */
-class KeyForm extends EntityForm {
+abstract class KeyFormBase extends EntityForm {
+
+  /**
+   * The entity being used by this form.
+   *
+   * @var \Drupal\key\KeyInterface
+   */
+  protected $entity;
+
+  /**
+   * The key storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $storage;
 
   /**
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
-  protected $manager;
+  protected $keyProviderManager;
+
+  /**
+   * Constructs a new key form.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The key storage.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_provider_manager
+   *   The key provider plugin manager.
+   */
+  public function __construct(EntityStorageInterface $storage, PluginManagerInterface $key_provider_manager) {
+    $this->storage = $storage;
+    $this->keyProviderManager = $key_provider_manager;
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('plugin.manager.key.key_provider'));
-  }
-
-  function __construct(PluginManagerInterface $manager) {
-    $this->manager = $manager;
+    return new static(
+      $container->get('entity_type.manager')->getStorage('key'),
+      $container->get('plugin.manager.key.key_provider')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $form = parent::form($form, $form_state);
+    /** @var $key \Drupal\key\KeyInterface */
+    $key = $this->entity;
 
-    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     $key_providers = [];
-    foreach ($this->manager->getDefinitions() as $plugin_id => $definition) {
+    foreach ($this->keyProviderManager->getDefinitions() as $plugin_id => $definition) {
       $key_providers[$plugin_id] = (string) $definition['title'];
     }
 
-    /** @var $key \Drupal\key\KeyInterface */
-    $key = $this->entity;
+    // Add the key entity to the form state, so plugins can access it.
     $form_state->set('key_entity', $key);
+
     $form['#tree'] = TRUE;
     $form['label'] = array(
       '#type' => 'textfield',
@@ -59,28 +83,25 @@ class KeyForm extends EntityForm {
       '#default_value' => $key->label(),
       '#required' => TRUE,
     );
-
     $form['id'] = array(
       '#type' => 'machine_name',
       '#default_value' => $key->id(),
       '#machine_name' => array(
-        'exists' => '\Drupal\key\Entity\Key::load',
+        'exists' => array($this->storage, 'load'),
       ),
       '#disabled' => !$key->isNew(),
     );
-
     $form['description'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Description'),
       '#default_value' => $key->getDescription(),
       '#description' => $this->t('A short description of the key.'),
     );
-
     $form['key_provider'] = array(
       '#type' => 'select',
       '#title' => $this->t('Key Provider'),
       '#options' => $key_providers,
-      '#empty_option' => t('- Select key provider -'),
+      '#empty_option' => $this->t('- Select key provider -'),
       '#empty_value' => '',
       '#ajax' => [
         'callback' => [$this, 'getKeyProviderForm'],
@@ -90,25 +111,24 @@ class KeyForm extends EntityForm {
       '#required' => TRUE,
       '#default_value' => $key->getKeyProvider(),
     );
-
     $form['key_provider_settings'] = [
       '#prefix' => '<div id="key-provider-form">',
       '#suffix' => '</div>',
     ];
-    if ($this->manager->hasDefinition($key->getKeyProvider())) {
+    if ($this->keyProviderManager->hasDefinition($key->getKeyProvider())) {
       // @todo compare ids to ensure appropriate plugin values.
-      $plugin = $this->manager->createInstance($key->getKeyProvider(), $key->getKeyProviderSettings());
+      $plugin = $this->keyProviderManager->createInstance($key->getKeyProvider(), $key->getKeyProviderSettings());
       $form['key_provider_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
-    return $form;
+    return parent::form($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $plugin = $this->manager->createInstance($form_state->getValue('key_provider'), []);
+    $plugin = $this->keyProviderManager->createInstance($form_state->getValue('key_provider'), []);
     $plugin->submitConfigurationForm($form, $form_state);
     $form_state->setValue('key_provider_settings', $plugin->getConfiguration());
     parent::submitForm($form, $form_state);
@@ -120,7 +140,7 @@ class KeyForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Only run key provider settings validation if the form is being submitted
     if ($form_state->isSubmitted()) {
-      $plugin = $this->manager->createInstance($form_state->getValue('key_provider'), []);
+      $plugin = $this->keyProviderManager->createInstance($form_state->getValue('key_provider'), []);
       $plugin->validateConfigurationForm($form, $form_state);
     }
     parent::validateForm($form, $form_state);
@@ -130,19 +150,8 @@ class KeyForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $status = parent::save($form, $form_state);
-
-    if ($status) {
-      drupal_set_message($this->t('Saved the %label Key.', array(
-        '%label' => $this->entity->label(),
-      )));
-    }
-    else {
-      drupal_set_message($this->t('The %label Key was not saved.', array(
-        '%label' => $this->entity->label(),
-      )));
-    }
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    parent::save($form, $form_state);
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
   /**

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\key\Annotation\KeyProvider.
+ * Contains \Drupal\key\Annotation\KeyProvider.
  */
 
 namespace Drupal\key\Annotation;
@@ -17,14 +17,14 @@ use Drupal\Component\Annotation\Plugin;
 class KeyProvider extends Plugin {
 
   /**
-   * The plugin ID.
+   * The plugin ID of the key provider.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the constraint type.
+   * The human-readable name of the key provider.
    *
    * @ingroup plugin_translatable
    *
@@ -33,7 +33,7 @@ class KeyProvider extends Plugin {
   public $title;
 
   /**
-   * The description shown to users.
+   * The description of the key provider.
    *
    * @ingroup plugin_translatable
    *
@@ -44,7 +44,7 @@ class KeyProvider extends Plugin {
   /**
    * The storage method of the key provider.
    *
-   * This is an enumeration of {file, config, database, remote}
+   * This is an enumeration of {file, config, database, remote}.
    *
    * @var string
    */

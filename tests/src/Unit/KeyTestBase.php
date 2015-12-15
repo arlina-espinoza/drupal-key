@@ -25,14 +25,9 @@ abstract class KeyTestBase extends UnitTestCase {
   protected $configStorage;
 
   /**
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  protected $entityManager;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
+  protected $entityTypeManager;
 
   /**
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
@@ -53,34 +48,24 @@ abstract class KeyTestBase extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    // Mock the ConfigFactory service.
-    $this->configFactory = $this->getMockBuilder('\Drupal\Core\Config\ConfigFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->configFactory->expects($this->any())
-      ->method('get')
-      ->with('key.default_config')
-      ->willReturn($this->config);
-
     // Mock ConfigEntityStorage object, but methods will be mocked in the test
     // class.
     $this->configStorage = $this->getMockBuilder('\Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
 
-    // Mock EntityManager service.
-    $this->entityManager = $this->getMockBuilder('\Drupal\Core\Entity\EntityManager')
+    // Mock EntityTypeManager service.
+    $this->entityTypeManager = $this->getMockBuilder('\Drupal\Core\Entity\EntityTypeManager')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('key')
       ->willReturn($this->configStorage);
 
     // Create a dummy container.
     $this->container = new ContainerBuilder();
-    $this->container->set('entity.manager', $this->entityManager);
-    $this->container->set('config.factory', $this->configFactory);
+    $this->container->set('entity_type.manager', $this->entityTypeManager);
 
     // Each test class should call \Drupal::setContainer() in its own setUp
     // method so that test classes can add mocked services to the container

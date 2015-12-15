@@ -1,7 +1,6 @@
-# Key menu items definition
 entity.key.collection:
   title: 'Keys'
   route_name: entity.key.collection
-  description: 'Manage sitewide keys.'
+  description: 'Manage site-wide keys.'
   parent: system.admin_config_system
   weight: 30

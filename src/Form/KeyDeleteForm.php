@@ -19,7 +19,7 @@ class KeyDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete %name?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the key %key?', array('%key' => $this->entity->label()));
   }
 
   /**
@@ -41,16 +41,7 @@ class KeyDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-
-    drupal_set_message(
-      $this->t('content @type: deleted @label.',
-        [
-          '@type' => $this->entity->bundle(),
-          '@label' => $this->entity->label()
-        ]
-        )
-    );
-
+    drupal_set_message($this->t('The key %key was deleted.', array('%key' => $this->entity->label())));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

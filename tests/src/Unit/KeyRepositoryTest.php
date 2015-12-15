@@ -21,6 +21,11 @@ class KeyRepositoryTest extends KeyTestBase {
   protected $keyRepository;
 
   /**
+   * @var \Drupal\key\KeyProviderManager
+   */
+  protected $keyProviderManager;
+
+  /**
    * @var string
    *   Random string to use as key id.
    */
@@ -105,7 +110,7 @@ class KeyRepositoryTest extends KeyTestBase {
    */
   public function testGetKeyValue($defaults, $KeyProvider) {
     // Make the key provider plugin manager return a plugin instance.
-    $this->KeyProviderManager->expects($this->any())
+    $this->keyProviderManager->expects($this->any())
       ->method('createInstance')
       ->with('config', $defaults)
       ->willReturn($KeyProvider);
@@ -132,7 +137,7 @@ class KeyRepositoryTest extends KeyTestBase {
     $KeyProvider = new ConfigKeyProvider($defaults, 'config', $definition);
 
     // Make the key provider plugin manager return a plugin instance.
-    $this->KeyProviderManager->expects($this->any())
+    $this->keyProviderManager->expects($this->any())
       ->method('createInstance')
       ->with('config', $defaults)
       ->willReturn($KeyProvider);
@@ -171,7 +176,7 @@ class KeyRepositoryTest extends KeyTestBase {
       ->willReturn([$this->key_id => $this->key]);
 
     // Make the key provider plugin manager return a plugin instance.
-    $this->KeyProviderManager->expects($this->any())
+    $this->keyProviderManager->expects($this->any())
       ->method('createInstance')
       ->with('config', $defaults)
       ->willReturn($KeyProvider);
@@ -209,22 +214,22 @@ class KeyRepositoryTest extends KeyTestBase {
       ->willReturn($this->key);
 
     // Mock the KeyProviderManager service.
-    $this->KeyProviderManager = $this->getMockBuilder('\Drupal\key\KeyProviderManager')
+    $this->keyProviderManager = $this->getMockBuilder('\Drupal\key\KeyProviderManager')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->KeyProviderManager->expects($this->any())
+    $this->keyProviderManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'file', 'title' => 'File', 'storage_method' => 'file'],
         ['id' => 'config', 'title' => 'Configuration', 'storage_method' => 'config']
       ]);
 
-    $this->container->set('plugin.manager.key.key_provider', $this->KeyProviderManager);
+    $this->container->set('plugin.manager.key.key_provider', $this->keyProviderManager);
     \Drupal::setContainer($this->container);
 
     // Create a new key manager object.
-    $this->keyRepository = new KeyRepository($this->entityManager, $this->configFactory, $this->KeyProviderManager);
+    $this->keyRepository = new KeyRepository($this->entityTypeManager, $this->keyProviderManager);
   }
 
 }

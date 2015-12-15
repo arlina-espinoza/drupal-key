@@ -2,15 +2,13 @@
 
 /**
  * @file
- * Contains Drupal\key\KeyProvider\FileKeyProvider.
+ * Contains \Drupal\key\KeyProvider\FileKeyProvider.
  */
-
 
 namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\KeyProviderBase;
-
 use Drupal\key\KeyInterface;
 
 /**
@@ -89,4 +87,5 @@ class FileKeyProvider extends KeyProviderBase {
 
     return $key;
   }
+
 }

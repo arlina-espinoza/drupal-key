@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\key\Entity\Key.
+ * Contains \Drupal\key\Entity\Key.
  */
 
 namespace Drupal\key\Entity;
@@ -19,8 +19,8 @@ use Drupal\key\KeyInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\key\Controller\KeyListBuilder",
  *     "form" = {
- *       "add" = "Drupal\key\Form\KeyForm",
- *       "edit" = "Drupal\key\Form\KeyForm",
+ *       "add" = "Drupal\key\Form\KeyAddForm",
+ *       "edit" = "Drupal\key\Form\KeyEditForm",
  *       "delete" = "Drupal\key\Form\KeyDeleteForm"
  *     }
  *   },
@@ -28,48 +28,34 @@ use Drupal\key\KeyInterface;
  *   admin_permission = "administer keys",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
- *     "add-form" = "/admin/config/system/key/add",
- *     "edit-form" = "/admin/config/system/key/manage/{key}",
- *     "delete-form" = "/admin/config/system/key/manage/{key}/delete",
- *     "collection" = "/admin/config/system/key"
+ *     "add-form" = "/admin/config/system/keys/add",
+ *     "edit-form" = "/admin/config/system/keys/manage/{key}",
+ *     "delete-form" = "/admin/config/system/keys/manage/{key}/delete",
+ *     "collection" = "/admin/config/system/keys"
  *   }
  * )
  */
 class Key extends ConfigEntityBase implements KeyInterface {
+
   /**
-   * The Key ID.
+   * The key description.
    *
    * @var string
    */
-  protected $id;
+  protected $description = '';
 
   /**
-   * The Key label.
+   * The key provider ID.
    *
    * @var string
-   */
-  protected $label;
-
-  /**
-   * The Key description.
-   *
-   * @var string
-   */
-  protected $description;
-
-  /**
-   * The Key label.
-   *
-   * @var \Drupal\key\KeyProviderInterface
    */
   protected $key_provider;
 
   /**
-   * The settings for the key provider.
+   * The key provider settings.
    *
    * @var array
    */
@@ -100,11 +86,11 @@ class Key extends ConfigEntityBase implements KeyInterface {
    * {@inheritdoc}
    */
   public function getKeyValue() {
-    // Create instance of the plugin.
+    // Create instance of the key provider plugin.
     $plugin = \Drupal::service('plugin.manager.key.key_provider');
     $key_provider = $plugin->createInstance($this->key_provider, $this->key_provider_settings);
 
-    // Return its key contents.
+    // Return the key value.
     return $key_provider->getKeyValue($this);
   }
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\key\KeyInterface.
+ * Contains \Drupal\key\KeyInterface.
  */
 
 namespace Drupal\key;
@@ -15,23 +15,26 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface KeyInterface extends ConfigEntityInterface {
 
   /**
-   * The description for the key.
+   * Gets the description of the key.
    *
    * @return string
+   *   The description of this key.
    */
   public function getDescription();
 
   /**
-   * The plugin id of the selected key.
+   * Gets the key provider ID.
    *
    * @return string
+   *   The ID of the key provider for this key.
    */
   public function getKeyProvider();
 
   /**
-   * The plugin configuration for the selected key.
+   * Gets the key provider settings.
    *
    * @return array
+   *   The key provider settings.
    */
   public function getKeyProviderSettings();
 
@@ -39,6 +42,7 @@ interface KeyInterface extends ConfigEntityInterface {
    * Gets the value of the key.
    *
    * @return string
+   *   The value of the key.
    */
   public function getKeyValue();
 

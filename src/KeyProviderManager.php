@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\key\KeyProviderManager.
+ * Contains \Drupal\key\KeyProviderManager.
  */
 
 namespace Drupal\key;
@@ -10,7 +10,10 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
-
+/**
+ * Provides a Key Provider plugin manager.
+ *
+ */
 class KeyProviderManager extends DefaultPluginManager {
 
   /**

@@ -1,6 +1,6 @@
 key.key.*:
   type: config_entity
-  label: 'Key config'
+  label: 'Key'
   mapping:
     id:
       type: string
@@ -8,14 +8,12 @@ key.key.*:
     label:
       type: label
       label: 'Label'
-    uuid:
-      type: string
     description:
       type: text
       label: 'Description'
     key_provider:
       type: string
-      label: Key Provider
+      label: 'Key provider'
     key_provider_settings:
       type: key.key_provider.plugin.[id]
       label: 'Key provider settings'

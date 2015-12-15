@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\key\KeyProvider\ConfigKeyProvider.
+ * Contains \Drupal\key\KeyProvider\ConfigKeyProvider.
  */
 
 
@@ -10,7 +10,6 @@ namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\KeyProviderBase;
-
 use Drupal\key\KeyInterface;
 
 /**

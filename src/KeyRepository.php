@@ -7,70 +7,60 @@
 
 namespace Drupal\key;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
- * Responsible for the key management service.
+ * Provides a repository for Key configuration entities.
  */
-class KeyRepository {
+class KeyRepository implements KeyRepositoryInterface {
 
   /**
-   * Create the KeyRepository.
+   * The entity type manager.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
-   *   The entity manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
-   *   The plugin manager.
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  public function __construct(EntityManagerInterface $entityManager, ConfigFactoryInterface $configFactory, PluginManagerInterface $pluginManager) {
-    $this->entityManager = $entityManager;
-    $this->configFactory = $configFactory;
-    $this->pluginManager = $pluginManager;
+  protected $entityTypeManager;
+
+  /**
+   * The key provider plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $keyProviderManager;
+
+  /**
+   * Constructs a new KeyRepository.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_provider_manager
+   *   The key provider plugin manager.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, PluginManagerInterface $key_provider_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->keyProviderManager = $key_provider_manager;
   }
 
   /**
-   * Loading all keys.
-   *
-   * @param array $key_ids
-   *   (optional) An array of entity IDs, or NULL to load all entities.
-   * @return \Drupal\key\Entity\Key[]
-   *   An array of keys indexed by their IDs. Returns an empty array if no
-   *   matching entities are found.
+   * {@inheritdoc}
    */
   public function getKeys(array $key_ids = NULL) {
-    return $this->entityManager->getStorage('key')->loadMultiple($key_ids);
+    return $this->entityTypeManager->getStorage('key')->loadMultiple($key_ids);
   }
 
   /**
-   * Loading keys that are of the specified key provider.
-   *
-   * @param string $key_provider_id
-   *   The key provider ID to use.
-   *
-   * @return \Drupal\key\Entity\Key[]
-   *   An array of key objects indexed by their ids.
+   * {@inheritdoc}
    */
   public function getKeysByProvider($key_provider_id) {
-    return $this->entityManager->getStorage('key')->loadByProperties(array('key_provider' => $key_provider_id));
+    return $this->entityTypeManager->getStorage('key')->loadByProperties(array('key_provider' => $key_provider_id));
   }
 
   /**
-   * Loading keys that are of the specified storage method.
-   *
-   * Storage method is an annotation of a key's key provider.
-   *
-   * @param string $storage_method
-   *   The storage method of the key provider.
-   *
-   * @return \Drupal\key\Entity\Key[]
-   *   An array of key objects indexed by their ids.
+   * {@inheritdoc}
    */
   public function getKeysByStorageMethod($storage_method) {
-    $key_providers = array_filter($this->pluginManager->getDefinitions(), function ($definition) use ($storage_method) {
+    $key_providers = array_filter($this->keyProviderManager->getDefinitions(), function ($definition) use ($storage_method) {
       return $definition['storage_method'] == $storage_method;
     });
 
@@ -82,23 +72,14 @@ class KeyRepository {
   }
 
   /**
-   * Loading a specific key.
-   *
-   * @param string $key_id
-   *   The key ID to use.
-   *
-   * @return \Drupal\key\Entity\Key|null
-   *   The key with the given id.
+   * {@inheritdoc}
    */
   public function getKey($key_id) {
-    return $this->entityManager->getStorage('key')->load($key_id);
+    return $this->entityTypeManager->getStorage('key')->load($key_id);
   }
 
   /**
-   * Load an array of key names, useful as options in form fields.
-   *
-   * @return array $options
-   *   An array of key names, indexed by id.
+   * {@inheritdoc}
    */
   public function getKeyNamesAsOptions() {
     $options = array();

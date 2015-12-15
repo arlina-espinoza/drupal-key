@@ -3,4 +3,3 @@ entity.key.add_form:
   title: 'Add Key'
   appears_on:
     - entity.key.collection
-

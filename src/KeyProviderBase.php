@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Provides Drupal\key\KeyProviderBase.
+ * Provides \Drupal\key\KeyProviderBase.
  */
 
 namespace Drupal\key;

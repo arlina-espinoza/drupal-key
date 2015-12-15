@@ -17,6 +17,11 @@ use Drupal\Tests\key\Unit\KeyTestBase;
 class KeyEntityTest extends KeyTestBase {
 
   /**
+   * @var \Drupal\key\KeyProviderManager
+   */
+  protected $keyProviderManager;
+
+  /**
    * @var []
    *   Key provider settings to use for Configuration key provider.
    */
@@ -54,21 +59,21 @@ class KeyEntityTest extends KeyTestBase {
     $plugin = new ConfigKeyProvider($this->key_provider_settings, 'config', $definition);
 
     // Mock the KeyProviderManager service.
-    $this->KeyProviderManager = $this->getMockBuilder('\Drupal\key\KeyProviderManager')
+    $this->keyProviderManager = $this->getMockBuilder('\Drupal\key\KeyProviderManager')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->KeyProviderManager->expects($this->any())
+    $this->keyProviderManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'file', 'title' => 'File', 'storage_method' => 'file'],
         ['id' => 'config', 'title' => 'Configuration', 'storage_method' => 'config']
       ]);
-    $this->KeyProviderManager->expects($this->any())
+    $this->keyProviderManager->expects($this->any())
       ->method('createInstance')
       ->with('config', $this->key_provider_settings)
       ->willReturn($plugin);
-    $this->container->set('plugin.manager.key.key_provider', $this->KeyProviderManager);
+    $this->container->set('plugin.manager.key.key_provider', $this->keyProviderManager);
 
     \Drupal::setContainer($this->container);
   }

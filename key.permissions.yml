@@ -1,3 +1,4 @@
 administer keys:
   title: 'Administer keys'
-  description: 'Add, edit, and delete sitewide keys.'
+  description: 'Create, edit, and delete site-wide keys.'
+  restrict access: true

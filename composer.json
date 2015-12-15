@@ -1,7 +1,7 @@
 {
   "name": "drupal/key",
   "type": "module",
-  "description": "Managing system keys",
+  "description": "Provides the ability to manage site-wide keys",
   "keywords": ["Drupal"],
   "license": "GPL-2.0+",
   "homepage": "http://drupal.org/project/key",
