@@ -36,11 +36,6 @@ abstract class KeyProviderBase extends PluginBase implements KeyProviderInterfac
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {}
-
-  /**
-   * {@inheritdoc}
-   */
   public function defaultConfiguration() {
     return array();
   }
@@ -49,9 +44,7 @@ abstract class KeyProviderBase extends PluginBase implements KeyProviderInterfac
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
-      'id' => $this->getPluginId(),
-    ) + $this->configuration;
+    return $this->configuration;
   }
 
   /**
@@ -65,7 +58,14 @@ abstract class KeyProviderBase extends PluginBase implements KeyProviderInterfac
   /**
    * {@inheritdoc}
    */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function calculateDependencies() {
     return array();
   }
+
 }
