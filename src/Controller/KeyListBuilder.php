@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\key\Controller\KeyListBuilder.
+ * Contains \Drupal\key\Controller\KeyListBuilder.
  */
 
 namespace Drupal\key\Controller;

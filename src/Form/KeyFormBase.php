@@ -33,6 +33,8 @@ abstract class KeyFormBase extends EntityForm {
   protected $storage;
 
   /**
+   * The key provider manager.
+   *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $keyProviderManager;
@@ -161,7 +163,9 @@ abstract class KeyFormBase extends EntityForm {
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
    * @return array
+   *   The element to update in the form.
    */
   public function getKeyProviderForm(array &$form, FormStateInterface $form_state) {
     return $form['key_provider_settings'];

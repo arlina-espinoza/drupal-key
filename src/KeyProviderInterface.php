@@ -20,6 +20,7 @@ interface KeyProviderInterface extends PluginInspectionInterface, ConfigurablePl
    * Returns the value of a key from the key provider.
    *
    * @param \Drupal\key\KeyInterface $key
+   *
    * @return string
    */
   public function getKeyValue(KeyInterface $key);

@@ -74,6 +74,8 @@ class KeyRepositoryTest extends KeyTestBase {
   /**
    * Test load by multiple key ids.
    *
+   * @param array $key_ids
+   * @param array $keys
    * @group key
    * @dataProvider getKeysProvider
    */
@@ -105,6 +107,8 @@ class KeyRepositoryTest extends KeyTestBase {
   /**
    * Test get key value.
    *
+   * @param $defaults
+   * @param $KeyProvider
    * @group key
    * @dataProvider defaultKeyContentProvider
    */
