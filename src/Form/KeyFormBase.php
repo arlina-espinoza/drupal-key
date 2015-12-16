@@ -67,13 +67,15 @@ abstract class KeyFormBase extends EntityForm {
     /** @var $key \Drupal\key\KeyInterface */
     $key = $this->entity;
 
+    // Store the original key, so plugins can access it.
+    if (!$form_state->isRebuilding()) {
+      $form_state->set('original_key', $key);
+    }
+
     $key_providers = [];
     foreach ($this->keyProviderManager->getDefinitions() as $plugin_id => $definition) {
       $key_providers[$plugin_id] = (string) $definition['title'];
     }
-
-    // Add the key entity to the form state, so plugins can access it.
-    $form_state->set('key_entity', $key);
 
     $form['#tree'] = TRUE;
     $form['label'] = array(
