@@ -80,13 +80,13 @@ class KeyListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
     if ($entity->getKeyType() && $key_type = $this->keyTypeManager->getDefinition($entity->getKeyType())) {
-      $row['type'] = $key_type['title'];
+      $row['type'] = $key_type['label'];
     }
     else {
       $row['type'] = '';
     }
 
-    $row['provider'] = $this->keyProviderManager->getDefinition($entity->getKeyProvider())['title'];
+    $row['provider'] = $this->keyProviderManager->getDefinition($entity->getKeyProvider())['label'];
 
 
     return $row + parent::buildRow($entity);

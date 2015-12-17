@@ -87,12 +87,12 @@ abstract class KeyFormBase extends EntityForm {
 
     $key_types = [];
     foreach ($this->keyTypeManager->getDefinitions() as $plugin_id => $definition) {
-      $key_types[$plugin_id] = (string) $definition['title'];
+      $key_types[$plugin_id] = (string) $definition['label'];
     }
 
     $key_providers = [];
     foreach ($this->keyProviderManager->getDefinitions() as $plugin_id => $definition) {
-      $key_providers[$plugin_id] = (string) $definition['title'];
+      $key_providers[$plugin_id] = (string) $definition['label'];
     }
 
     $form['#tree'] = TRUE;

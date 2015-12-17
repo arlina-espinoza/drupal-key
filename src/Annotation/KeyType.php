@@ -30,7 +30,7 @@ class KeyType extends Plugin {
    *
    * @var \Drupal\Core\Annotation\Translation
    */
-  public $title;
+  public $label;
 
   /**
    * The description of the key type.

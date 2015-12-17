@@ -16,7 +16,7 @@ use Drupal\key\KeyInterface;
  *
  * @KeyProvider(
  *   id = "file",
- *   title = @Translation("File"),
+ *   label = @Translation("File"),
  *   description = @Translation("Allows a key to be stored in a file within the filesystem."),
  *   storage_method = "file",
  * )

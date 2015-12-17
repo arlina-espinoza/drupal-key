@@ -49,7 +49,7 @@ class KeyRepositoryTest extends KeyTestBase {
     $definition = [
       'id' => 'config',
       'class' => 'Drupal\key\Plugin\KeyProvider\ConfigKeyProvider',
-      'title' => 'Configuration',
+      'label' => 'Configuration',
     ];
     $KeyProvider = new ConfigKeyProvider($defaults, 'config', $definition);
 
@@ -141,7 +141,7 @@ class KeyRepositoryTest extends KeyTestBase {
     $definition = [
       'id' => 'config',
       'class' => 'Drupal\key\Plugin\KeyProvider\ConfigKeyProvider',
-      'title' => 'Configuration',
+      'label' => 'Configuration',
     ];
     $KeyProvider = new ConfigKeyProvider($defaults, 'config', $definition);
 
@@ -174,7 +174,7 @@ class KeyRepositoryTest extends KeyTestBase {
     $definition = [
       'id' => 'config',
       'class' => 'Drupal\key\Plugin\KeyProvider\ConfigKeyProvider',
-      'title' => 'Configuration',
+      'label' => 'Configuration',
     ];
     $KeyProvider = new ConfigKeyProvider($defaults, 'config', $definition);
 
@@ -235,8 +235,8 @@ class KeyRepositoryTest extends KeyTestBase {
     $this->keyProviderManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
-        ['id' => 'file', 'title' => 'File', 'storage_method' => 'file'],
-        ['id' => 'config', 'title' => 'Configuration', 'storage_method' => 'config']
+        ['id' => 'file', 'label' => 'File', 'storage_method' => 'file'],
+        ['id' => 'config', 'label' => 'Configuration', 'storage_method' => 'config']
       ]);
 
     $this->container->set('plugin.manager.key.key_type', $this->keyTypeManager);

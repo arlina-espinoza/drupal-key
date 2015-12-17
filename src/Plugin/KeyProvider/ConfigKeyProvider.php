@@ -17,7 +17,7 @@ use Drupal\key\KeyInterface;
  *
  * @KeyProvider(
  *   id = "config",
- *   title = @Translation("Configuration"),
+ *   label = @Translation("Configuration"),
  *   description = @Translation("Allows a key to be stored in Drupal's configuration system."),
  *   storage_method = "config",
  * )
