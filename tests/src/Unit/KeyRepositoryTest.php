@@ -21,6 +21,11 @@ class KeyRepositoryTest extends KeyTestBase {
   protected $keyRepository;
 
   /**
+   * @var \Drupal\key\KeyTypeManager
+   */
+  protected $keyTypeManager;
+
+  /**
    * @var \Drupal\key\KeyProviderManager
    */
   protected $keyProviderManager;
@@ -217,6 +222,11 @@ class KeyRepositoryTest extends KeyTestBase {
       ->with($this->key_id)
       ->willReturn($this->key);
 
+    // Mock the KeyTypeManager service.
+    $this->keyTypeManager = $this->getMockBuilder('\Drupal\key\KeyTypeManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     // Mock the KeyProviderManager service.
     $this->keyProviderManager = $this->getMockBuilder('\Drupal\key\KeyProviderManager')
       ->disableOriginalConstructor()
@@ -229,11 +239,12 @@ class KeyRepositoryTest extends KeyTestBase {
         ['id' => 'config', 'title' => 'Configuration', 'storage_method' => 'config']
       ]);
 
+    $this->container->set('plugin.manager.key.key_type', $this->keyTypeManager);
     $this->container->set('plugin.manager.key.key_provider', $this->keyProviderManager);
     \Drupal::setContainer($this->container);
 
     // Create a new key manager object.
-    $this->keyRepository = new KeyRepository($this->entityTypeManager, $this->keyProviderManager);
+    $this->keyRepository = new KeyRepository($this->entityTypeManager, $this->keyTypeManager, $this->keyProviderManager);
   }
 
 }

@@ -1,7 +1,10 @@
 services:
   key.repository:
     class: Drupal\key\KeyRepository
-    arguments: ['@entity_type.manager', '@plugin.manager.key.key_provider']
+    arguments: ['@entity_type.manager', '@plugin.manager.key.key_type', '@plugin.manager.key.key_provider']
+  plugin.manager.key.key_type:
+    class: Drupal\key\KeyTypeManager
+    parent: default_plugin_manager
   plugin.manager.key.key_provider:
     class: Drupal\key\KeyProviderManager
     parent: default_plugin_manager

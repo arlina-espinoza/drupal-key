@@ -13,12 +13,34 @@ key.key.*:
     description:
       type: text
       label: 'Description'
+    key_type:
+      type: string
+      label: 'Key type'
+    key_type_settings:
+      type: key.type.[%parent.key_type]
+      label: 'Key type settings'
     key_provider:
       type: string
       label: 'Key provider'
     key_provider_settings:
       type: key.provider.[%parent.key_provider]
       label: 'Key provider settings'
+
+key.type.*:
+  type: mapping
+  label: 'Key type settings'
+
+# The empty key type has no settings.
+key.type.:
+  type: sequence
+
+key.type.foobar:
+  type: mapping
+  label: 'Foobar'
+  mapping:
+    some_setting:
+      type: string
+      label: 'Some setting'
 
 key.provider.*:
   type: mapping

@@ -23,6 +23,22 @@ interface KeyInterface extends ConfigEntityInterface {
   public function getDescription();
 
   /**
+   * Gets the key type ID.
+   *
+   * @return string
+   *   The ID of the key type for this key.
+   */
+  public function getKeyType();
+
+  /**
+   * Gets the key type settings.
+   *
+   * @return array
+   *   The key type settings.
+   */
+  public function getKeyTypeSettings();
+
+  /**
    * Gets the key provider ID.
    *
    * @return string

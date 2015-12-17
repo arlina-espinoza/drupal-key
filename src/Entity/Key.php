@@ -48,6 +48,20 @@ class Key extends ConfigEntityBase implements KeyInterface {
   protected $description = '';
 
   /**
+   * The key type ID.
+   *
+   * @var string
+   */
+  protected $key_type;
+
+  /**
+   * The key type settings.
+   *
+   * @var array
+   */
+  protected $key_type_settings = [];
+
+  /**
    * The key provider ID.
    *
    * @var string
@@ -66,6 +80,20 @@ class Key extends ConfigEntityBase implements KeyInterface {
    */
   public function getDescription() {
     return $this->description;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKeyType() {
+    return $this->key_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKeyTypeSettings() {
+    return $this->key_type_settings;
   }
 
   /**
