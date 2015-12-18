@@ -17,7 +17,7 @@ use Drupal\Core\Url;
  * Properties:
  * - #empty_option: The label that will be displayed to denote no selection.
  * - #empty_value: The value of the option that is used to denote no selection.
- * - #filters: An array of filters to apply to the list of keys.
+ * - #key_filters: An array of filters to apply to the list of keys.
  * - #key_description: A boolean value that determines if information about
  *   keys is added to the element's description.
  *
@@ -35,8 +35,8 @@ class KeySelect extends Select {
     // Add a process function.
     array_unshift($info['#process'], array($class, 'processKeySelect'));
 
-    // Add a property for filters.
-    $info['#filters'] = array();
+    // Add a property for key filters.
+    $info['#key_filters'] = array();
 
     // Add a property for key description.
     $info['#key_description'] = TRUE;
@@ -59,7 +59,7 @@ class KeySelect extends Select {
    */
   public static function processKeySelect(&$element, FormStateInterface $form_state, &$complete_form) {
     // Get the list of available keys and define the options.
-    $options = \Drupal::service('key.repository')->getKeyNamesAsOptions();
+    $options = \Drupal::service('key.repository')->getKeyNamesAsOptions($element['#key_filters']);
     $element['#options'] = $options;
 
     // Prefix the default description with information about keys, unless disabled.

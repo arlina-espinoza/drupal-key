@@ -62,9 +62,12 @@ interface KeyRepositoryInterface {
   /**
    * Get an array of key names, useful as options in form fields.
    *
-   * @return array
-   *   An array of key names, indexed by id.
+   * @param $filters
+   *  An array of filters to apply to the list of options.
+   *
+   * @return array An array of key names, indexed by id.
+   *  An array of key names, indexed by id.
    */
-  public function getKeyNamesAsOptions();
+  public function getKeyNamesAsOptions($filters);
 
 }

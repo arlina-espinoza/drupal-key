@@ -69,6 +69,13 @@ class KeyRepository implements KeyRepositoryInterface {
   /**
    * {@inheritdoc}
    */
+  public function getKeysByType($key_type_id) {
+    return $this->entityTypeManager->getStorage('key')->loadByProperties(array('key_type' => $key_type_id));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getKeysByStorageMethod($storage_method) {
     $key_providers = array_filter($this->keyProviderManager->getDefinitions(), function ($definition) use ($storage_method) {
       return $definition['storage_method'] == $storage_method;
@@ -91,10 +98,27 @@ class KeyRepository implements KeyRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getKeyNamesAsOptions() {
+  public function getKeyNamesAsOptions($filters = array()) {
     $options = array();
+    $keys = array();
 
-    foreach ($this->getKeys() as $key) {
+    // TODO: Make filtering more sophisticated.
+    if (empty($filters)) {
+      $keys = $this->getKeys();
+    }
+    else {
+      if (isset($filters['type']) && isset($filters['provider'])) {
+        $keys = array_intersect_key($this->getKeysByType($filters['type']), $this->getKeysByProvider($filters['provider']));
+      }
+      elseif (isset($filters['type'])) {
+        $keys = $this->getKeysByType($filters['type']);
+      }
+      elseif (isset($filters['provider'])) {
+        $keys = $this->getKeysByProvider($filters['provider']);
+      }
+    }
+
+    foreach ($keys as $key) {
       $key_id = $key->id();
       $key_title = $key->label();
       $options[$key_id] = (string) $key_title;
