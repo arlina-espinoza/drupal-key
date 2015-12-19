@@ -95,7 +95,6 @@ abstract class KeyFormBase extends EntityForm {
       $key_providers[$plugin_id] = (string) $definition['label'];
     }
 
-    $form['#tree'] = TRUE;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Key name'),
@@ -118,51 +117,76 @@ abstract class KeyFormBase extends EntityForm {
       '#description' => $this->t('A short description of the key.'),
     );
 
-    $form['key_type'] = array(
+    // This is the element that contains all of the dynamic parts of the form.
+    $form['settings'] = array(
+      '#type' => 'container',
+      '#prefix' => '<div id="key-settings">',
+      '#suffix' => '</div>',
+    );
+
+    // Key type section.
+    $form['settings']['type_section'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Key type'),
+      '#open' => TRUE,
+    );
+    $form['settings']['type_section']['key_type'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Key Type'),
+      '#title' => $this->t('Key type'),
+      '#title_display' => FALSE,
       '#options' => $key_types,
       '#empty_option' => $this->t('- None -'),
       '#empty_value' => '',
-      '#ajax' => [
-        'callback' => [$this, 'getKeyTypeForm'],
-        'event' => 'change',
-        'wrapper' => 'key-type-form',
-      ],
       '#default_value' => $key->getKeyType(),
+      '#ajax' => array(
+        'callback' => [$this, 'ajaxUpdateSettings'],
+        'event' => 'change',
+        'wrapper' => 'key-settings',
+      ),
     );
-    $form['key_type_settings'] = [
-      '#prefix' => '<div id="key-type-form">',
-      '#suffix' => '</div>',
-    ];
+    $form['settings']['type_section']['key_type_settings'] = array(
+      '#type' => 'container',
+      '#title' => $this->t('Key type settings'),
+      '#title_display' => FALSE,
+      '#tree' => TRUE,
+    );
     if ($this->keyTypeManager->hasDefinition($key->getKeyType())) {
       // @todo compare ids to ensure appropriate plugin values.
       $plugin = $this->keyTypeManager->createInstance($key->getKeyType(), $key->getKeyTypeSettings());
-      $form['key_type_settings'] += $plugin->buildConfigurationForm([], $form_state);
+      $form['settings']['type_section']['key_type_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
-    $form['key_provider'] = array(
+    // Key provider section.
+    $form['settings']['provider_section'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Key provider'),
+      '#open' => TRUE,
+    );
+    $form['settings']['provider_section']['key_provider'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Key Provider'),
+      '#title' => $this->t('Key provider'),
+      '#title_display' => FALSE,
       '#options' => $key_providers,
       '#empty_option' => $this->t('- Select key provider -'),
       '#empty_value' => '',
-      '#ajax' => [
-        'callback' => [$this, 'getKeyProviderForm'],
-        'event' => 'change',
-        'wrapper' => 'key-provider-form',
-      ],
       '#required' => TRUE,
       '#default_value' => $key->getKeyProvider(),
+      '#ajax' => array(
+        'callback' => [$this, 'ajaxUpdateSettings'],
+        'event' => 'change',
+        'wrapper' => 'key-settings',
+      ),
     );
-    $form['key_provider_settings'] = [
-      '#prefix' => '<div id="key-provider-form">',
-      '#suffix' => '</div>',
-    ];
+    $form['settings']['provider_section']['key_provider_settings'] = array(
+      '#type' => 'container',
+      '#title' => $this->t('Key provider settings'),
+      '#title_display' => FALSE,
+      '#tree' => TRUE,
+    );
     if ($this->keyProviderManager->hasDefinition($key->getKeyProvider())) {
       // @todo compare ids to ensure appropriate plugin values.
       $plugin = $this->keyProviderManager->createInstance($key->getKeyProvider(), $key->getKeyProviderSettings());
-      $form['key_provider_settings'] += $plugin->buildConfigurationForm([], $form_state);
+      $form['settings']['provider_section']['key_provider_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
     return parent::form($form, $form_state);
@@ -221,7 +245,7 @@ abstract class KeyFormBase extends EntityForm {
   }
 
   /**
-   * AJAX action to load the key type settings form.
+   * AJAX callback to update the dynamic settings on the form.
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -229,21 +253,7 @@ abstract class KeyFormBase extends EntityForm {
    * @return array
    *   The element to update in the form.
    */
-  public function getKeyTypeForm(array &$form, FormStateInterface $form_state) {
-    return $form['key_type_settings'];
+  public function ajaxUpdateSettings(array &$form, FormStateInterface $form_state) {
+    return $form['settings'];
   }
-
-  /**
-   * AJAX action to retrieve the appropriate key provider into the form.
-   *
-   * @param array $form
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *
-   * @return array
-   *   The element to update in the form.
-   */
-  public function getKeyProviderForm(array &$form, FormStateInterface $form_state) {
-    return $form['key_provider_settings'];
-  }
-
 }
