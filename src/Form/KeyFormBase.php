@@ -80,7 +80,17 @@ abstract class KeyFormBase extends EntityForm {
     /** @var $key \Drupal\key\KeyInterface */
     $key = $this->entity;
 
-    // Store the original key, so plugins can access it.
+    // If the form is rebuilding due to an AJAX call, get the name of the
+    // triggering element.
+    if ($form_state->isRebuilding() && isset($form_state->getTriggeringElement()['#name'])) {
+      $triggering_element = $form_state->getTriggeringElement()['#name'];
+    }
+    else {
+      $triggering_element = '';
+    }
+
+    // If the form is not rebuilding, store the original key, so plugins can
+    // access it.
     if (!$form_state->isRebuilding()) {
       $form_state->set('original_key', $key);
     }
@@ -127,13 +137,12 @@ abstract class KeyFormBase extends EntityForm {
     // Key type section.
     $form['settings']['type_section'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Key type'),
+      '#title' => $this->t('Type settings'),
       '#open' => TRUE,
     );
     $form['settings']['type_section']['key_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Key type'),
-      '#title_display' => FALSE,
       '#options' => $key_types,
       '#empty_option' => $this->t('- None -'),
       '#empty_value' => '',
@@ -150,22 +159,33 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
+
     if ($this->keyTypeManager->hasDefinition($key->getKeyType())) {
-      // @todo compare ids to ensure appropriate plugin values.
-      $plugin = $this->keyTypeManager->createInstance($key->getKeyType(), $key->getKeyTypeSettings());
+      // If the form is rebuilding after an AJAX call and the key type
+      // field is responsible, clear the key type settings. Otherwise,
+      // use the current settings when creating the plugin instance.
+      if ($form_state->isRebuilding() && $triggering_element == 'key_type') {
+        $user_input = $form_state->getUserInput();
+        $user_input['key_type_settings'] = $key_type_settings = array();
+        $form_state->setUserInput($user_input);
+      }
+      else {
+        $key_type_settings = $key->getKeyTypeSettings();
+      }
+      $plugin = $this->keyTypeManager->createInstance($key->getKeyType(), $key_type_settings);
+
       $form['settings']['type_section']['key_type_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
     // Key provider section.
     $form['settings']['provider_section'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Key provider'),
+      '#title' => $this->t('Provider settings'),
       '#open' => TRUE,
     );
     $form['settings']['provider_section']['key_provider'] = array(
       '#type' => 'select',
       '#title' => $this->t('Key provider'),
-      '#title_display' => FALSE,
       '#options' => $key_providers,
       '#empty_option' => $this->t('- Select key provider -'),
       '#empty_value' => '',
@@ -183,9 +203,21 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
+
     if ($this->keyProviderManager->hasDefinition($key->getKeyProvider())) {
-      // @todo compare ids to ensure appropriate plugin values.
-      $plugin = $this->keyProviderManager->createInstance($key->getKeyProvider(), $key->getKeyProviderSettings());
+      // If the form is rebuilding after an AJAX call and the key provider
+      // field is responsible, clear the key provider settings. Otherwise,
+      // use the current settings when creating the plugin instance.
+      if ($form_state->isRebuilding() && $triggering_element == 'key_provider') {
+        $user_input = $form_state->getUserInput();
+        $user_input['key_provider_settings'] = $key_provider_settings = array();
+        $form_state->setUserInput($user_input);
+      }
+      else {
+        $key_provider_settings = $key->getKeyProviderSettings();
+      }
+      $plugin = $this->keyProviderManager->createInstance($key->getKeyProvider(), $key_provider_settings);
+
       $form['settings']['provider_section']['key_provider_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
