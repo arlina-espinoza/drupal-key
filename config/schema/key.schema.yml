@@ -34,14 +34,6 @@ key.type.*:
 key.type.:
   type: sequence
 
-key.type.foobar:
-  type: mapping
-  label: 'Foobar'
-  mapping:
-    some_setting:
-      type: string
-      label: 'Some setting'
-
 key.provider.*:
   type: mapping
   label: 'Key provider settings'
