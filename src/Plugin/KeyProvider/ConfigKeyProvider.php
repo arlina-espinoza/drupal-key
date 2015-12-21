@@ -2,9 +2,8 @@
 
 /**
  * @file
- * Contains \Drupal\key\KeyProvider\ConfigKeyProvider.
+ * Contains \Drupal\key\Plugin\KeyProvider\ConfigKeyProvider.
  */
-
 
 namespace Drupal\key\Plugin\KeyProvider;
 

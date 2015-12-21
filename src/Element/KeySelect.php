@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Render\Element\KeySelect.
+ * Contains \Drupal\key\Element\KeySelect.
  */
 
 namespace Drupal\key\Element;

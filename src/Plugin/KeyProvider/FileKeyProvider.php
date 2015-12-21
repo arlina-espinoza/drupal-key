@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\key\KeyProvider\FileKeyProvider.
+ * Contains \Drupal\key\Plugin\KeyProvider\FileKeyProvider.
  */
 
 namespace Drupal\key\Plugin\KeyProvider;
