@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\key\Plugin\KeyTypeInterface.
+ * Contains \Drupal\key\Plugin\ConfigurableKeyTypeInterface.
  */
 
 namespace Drupal\key\Plugin;
@@ -11,9 +11,9 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\key\KeyInterface;
 
 /**
- * Provides an interface for all Key Type plugins.
+ * Provides an interface for configurable Key Type plugins.
  */
-interface KeyTypeInterface extends PluginInspectionInterface {
+interface ConfigurableKeyTypeInterface extends PluginInspectionInterface {
 
   /**
    * Allows the Key Type plugin to generate a key value.

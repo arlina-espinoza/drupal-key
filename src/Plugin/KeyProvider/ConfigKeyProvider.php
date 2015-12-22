@@ -8,7 +8,7 @@
 namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\key\Plugin\KeyProviderBase;
+use Drupal\key\Plugin\ConfigurableKeyProviderBase;
 use Drupal\key\KeyInterface;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\key\KeyInterface;
  *   storage_method = "config",
  * )
  */
-class ConfigKeyProvider extends KeyProviderBase {
+class ConfigKeyProvider extends ConfigurableKeyProviderBase {
 
   /**
    * {@inheritdoc}
