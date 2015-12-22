@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * Provides \Drupal\key\KeyProviderBase.
+ * Provides \Drupal\key\Plugin\KeyTypeBase.
  */
 
-namespace Drupal\key;
+namespace Drupal\key\Plugin;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class KeyProviderBase extends PluginBase implements KeyProviderInterface, ContainerFactoryPluginInterface {
+abstract class KeyTypeBase extends PluginBase implements KeyTypeInterface, ContainerFactoryPluginInterface {
 
   /**
    * {@inheritdoc}
@@ -19,7 +19,7 @@ abstract class KeyProviderBase extends PluginBase implements KeyProviderInterfac
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->setConfiguration($configuration);
+    $this->configuration += $this->defaultConfiguration();
   }
 
   /**
@@ -51,8 +51,7 @@ abstract class KeyProviderBase extends PluginBase implements KeyProviderInterfac
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $this->configuration = $configuration + $this->defaultConfiguration();
-    return $this;
+    $this->configuration = $configuration;
   }
 
   /**

@@ -29,7 +29,7 @@ class KeyTypeManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/KeyType', $namespaces, $module_handler, 'Drupal\key\KeyTypeInterface', 'Drupal\key\Annotation\KeyType');
+    parent::__construct('Plugin/KeyType', $namespaces, $module_handler, 'Drupal\key\Plugin\KeyTypeInterface', 'Drupal\key\Annotation\KeyType');
     $this->alterInfo('key_type_info');
     $this->setCacheBackend($cache_backend, 'key_type');
   }

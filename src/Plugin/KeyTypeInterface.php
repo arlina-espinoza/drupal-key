@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\key\KeyTypeInterface.
+ * Contains \Drupal\key\Plugin\KeyTypeInterface.
  */
 
-namespace Drupal\key;
+namespace Drupal\key\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;

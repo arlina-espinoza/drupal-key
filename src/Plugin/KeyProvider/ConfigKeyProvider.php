@@ -8,7 +8,7 @@
 namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\key\KeyProviderBase;
+use Drupal\key\Plugin\KeyProviderBase;
 use Drupal\key\KeyInterface;
 
 /**

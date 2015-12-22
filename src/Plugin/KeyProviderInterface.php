@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\key\KeyProviderInterface.
+ * Contains \Drupal\key\Plugin\KeyProviderInterface.
  */
 
-namespace Drupal\key;
+namespace Drupal\key\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\key\KeyInterface;
 
 /**
  * Provides an interface defining a Key Provider plugin.
