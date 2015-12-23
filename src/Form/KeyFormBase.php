@@ -48,11 +48,11 @@ abstract class KeyFormBase extends EntityForm {
   protected $keyProviderManager;
 
   /**
-   * The key value input manager.
+   * The key input manager.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
-  protected $keyValueInputManager;
+  protected $keyInputManager;
 
   /**
    * Constructs a new key form.
@@ -63,14 +63,14 @@ abstract class KeyFormBase extends EntityForm {
    *   The key type plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $key_provider_manager
    *   The key provider plugin manager.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_value_input_manager
-   *   The key value input manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_input_manager
+   *   The key input manager.
    */
-  public function __construct(EntityStorageInterface $storage, PluginManagerInterface $key_type_manager, PluginManagerInterface $key_provider_manager, PluginManagerInterface $key_value_input_manager) {
+  public function __construct(EntityStorageInterface $storage, PluginManagerInterface $key_type_manager, PluginManagerInterface $key_provider_manager, PluginManagerInterface $key_input_manager) {
     $this->storage = $storage;
     $this->keyTypeManager = $key_type_manager;
     $this->keyProviderManager = $key_provider_manager;
-    $this->keyValueInputManager = $key_value_input_manager;
+    $this->keyInputManager = $key_input_manager;
   }
 
   /**
@@ -81,7 +81,7 @@ abstract class KeyFormBase extends EntityForm {
       $container->get('entity_type.manager')->getStorage('key'),
       $container->get('plugin.manager.key.key_type'),
       $container->get('plugin.manager.key.key_provider'),
-      $container->get('plugin.manager.key.key_value_input')
+      $container->get('plugin.manager.key.key_input')
     );
   }
 
@@ -234,40 +234,40 @@ abstract class KeyFormBase extends EntityForm {
       $form['settings']['provider_section']['key_provider_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
-    // Key value input section.
-    $form['settings']['value_input_section'] = array(
+    // Key input section.
+    $form['settings']['input_section'] = array(
       '#type' => 'details',
       '#title' => $this->t('Value'),
       '#open' => TRUE,
     );
 
-    // TODO: determine which key value input plugin to use.
-    $key_value_input = 'none';
-    $form['settings']['value_input_section']['key_value_input'] = array(
+    // TODO: determine which key input plugin to use.
+    $key_input = 'none';
+    $form['settings']['input_section']['key_input'] = array(
       '#type' => 'value',
-      '#value' => $key_value_input,
+      '#value' => $key_input,
     );
-    $form['settings']['value_input_section']['key_value_input_settings'] = array(
+    $form['settings']['input_section']['key_input_settings'] = array(
       '#type' => 'container',
       '#title' => $this->t('Key value settings'),
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
 
-    if ($this->keyValueInputManager->hasDefinition($key_value_input)) {
+    if ($this->keyInputManager->hasDefinition($key_input)) {
       // If the form is rebuilding after an AJAX call clear the key value
       // input fields.
       if ($form_state->isRebuilding()) {
         $user_input = $form_state->getUserInput();
-        $user_input['key_value_input_settings'] = $key_value_input_settings = array();
+        $user_input['key_input_settings'] = $key_input_settings = array();
         $form_state->setUserInput($user_input);
       }
       else {
-        $key_value_input_settings = $key->getKeyValueInputSettings();
+        $key_input_settings = $key->getKeyInputSettings();
       }
-      $plugin = $this->keyValueInputManager->createInstance($key->getKeyValueInput(), $key_value_input_settings);
+      $plugin = $this->keyInputManager->createInstance($key->getKeyInput(), $key_input_settings);
 
-      $form['settings']['value_input_section']['key_value_input_settings'] += $plugin->buildConfigurationForm([], $form_state);
+      $form['settings']['input_section']['key_input_settings'] += $plugin->buildConfigurationForm([], $form_state);
     }
 
     return parent::form($form, $form_state);
@@ -345,4 +345,5 @@ abstract class KeyFormBase extends EntityForm {
   public function ajaxUpdateSettings(array &$form, FormStateInterface $form_state) {
     return $form['settings'];
   }
+
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\key\KeyValueInputManager.
+ * Contains \Drupal\key\KeyInputManager.
  */
 
 namespace Drupal\key;
@@ -12,13 +12,13 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 
 /**
- * Provides a Key Value Input plugin manager.
+ * Provides a Key Input plugin manager.
  *
  */
-class KeyValueInputManager extends DefaultPluginManager {
+class KeyInputManager extends DefaultPluginManager {
 
   /**
-   * Constructs a new KeyValueInputManager.
+   * Constructs a new KeyInputManager.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -29,9 +29,9 @@ class KeyValueInputManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/KeyValueInput', $namespaces, $module_handler, 'Drupal\key\Plugin\ConfigurableKeyValueInputInterface', 'Drupal\key\Annotation\KeyValueInput');
-    $this->alterInfo('key_value_input_info');
-    $this->setCacheBackend($cache_backend, 'key_value_input');
+    parent::__construct('Plugin/KeyInput', $namespaces, $module_handler, 'Drupal\key\Plugin\ConfigurableKeyInputInterface', 'Drupal\key\Annotation\KeyInput');
+    $this->alterInfo('key_input_info');
+    $this->setCacheBackend($cache_backend, 'key_input');
   }
 
 }

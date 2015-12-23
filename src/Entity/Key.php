@@ -76,18 +76,18 @@ class Key extends ConfigEntityBase implements KeyInterface {
   protected $key_provider_settings = [];
 
   /**
-   * The key value input ID.
+   * The key input ID.
    *
    * @var string
    */
-  protected $key_value_input = 'none';
+  protected $key_input = 'none';
 
   /**
-   * The key value input settings.
+   * The key input settings.
    *
    * @var array
    */
-  protected $key_value_input_settings = [];
+  protected $key_input_settings = [];
 
   /**
    * {@inheritdoc}
@@ -127,15 +127,15 @@ class Key extends ConfigEntityBase implements KeyInterface {
   /**
    * {@inheritdoc}
    */
-  public function getKeyValueInput() {
-    return $this->key_value_input;
+  public function getKeyInput() {
+    return $this->key_input;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getKeyValueInputSettings() {
-    return $this->key_value_input_settings;
+  public function getKeyInputSettings() {
+    return $this->key_input_settings;
   }
 
   /**

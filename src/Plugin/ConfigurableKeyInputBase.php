@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Provides \Drupal\key\Plugin\ConfigurableKeyValueInputBase.
+ * Provides \Drupal\key\Plugin\ConfigurableKeyInputBase.
  */
 
 namespace Drupal\key\Plugin;
@@ -13,9 +13,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a base class for configurable Key Value Input plugins.
+ * Defines a base class for configurable Key Input plugins.
  */
-abstract class ConfigurableKeyValueInputBase extends PluginBase implements ConfigurableKeyValueInputInterface, ContainerFactoryPluginInterface {
+abstract class ConfigurableKeyInputBase extends PluginBase implements ConfigurableKeyInputInterface, ContainerFactoryPluginInterface {
 
   /**
    * {@inheritdoc}

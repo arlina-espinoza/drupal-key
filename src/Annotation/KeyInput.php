@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\key\Annotation\KeyValueInput.
+ * Contains \Drupal\key\Annotation\KeyInput.
  */
 
 namespace Drupal\key\Annotation;
@@ -10,21 +10,21 @@ namespace Drupal\key\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a key value input annotation object.
+ * Defines a key input annotation object.
  *
  * @Annotation
  */
-class KeyValueInput extends Plugin {
+class KeyInput extends Plugin {
 
   /**
-   * The plugin ID of the key value input.
+   * The plugin ID of the key input.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the key value input.
+   * The human-readable name of the key input.
    *
    * @ingroup plugin_translatable
    *
@@ -33,7 +33,7 @@ class KeyValueInput extends Plugin {
   public $label;
 
   /**
-   * The description of the key value input.
+   * The description of the key input.
    *
    * @ingroup plugin_translatable
    *

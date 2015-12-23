@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\key\Plugin\ConfigurableKeyValueInputInterface.
+ * Contains \Drupal\key\Plugin\ConfigurableKeyInputInterface.
  */
 
 namespace Drupal\key\Plugin;
@@ -13,9 +13,9 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\key\KeyInterface;
 
 /**
- * Provides an interface for all Key Value Input plugins.
+ * Provides an interface for all Key Input plugins.
  */
-interface ConfigurableKeyValueInputInterface extends PluginInspectionInterface, ConfigurablePluginInterface, PluginFormInterface {
+interface ConfigurableKeyInputInterface extends PluginInspectionInterface, ConfigurablePluginInterface, PluginFormInterface {
 
   /**
    * @param \Drupal\key\KeyInterface $key

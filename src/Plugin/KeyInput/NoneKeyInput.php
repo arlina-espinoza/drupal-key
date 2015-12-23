@@ -2,25 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\key\Plugin\KeyValueInput\NoneKeyValueInput.
+ * Contains \Drupal\key\Plugin\KeyInput\NoneKeyInput.
  */
 
-namespace Drupal\key\Plugin\KeyValueInput;
+namespace Drupal\key\Plugin\KeyInput;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\key\Plugin\ConfigurableKeyValueInputBase;
+use Drupal\key\Plugin\ConfigurableKeyInputBase;
 use Drupal\key\KeyInterface;
 
 /**
- * Defines a key value input for providers that don't accept a value.
+ * Defines a key input for providers that don't accept a value.
  *
- * @KeyValueInput(
+ * @KeyInput(
  *   id = "none",
  *   label = @Translation("None"),
- *   description = @Translation("A key value input for providers that don't accept a value.")
+ *   description = @Translation("A key input for providers that don't accept a value.")
  * )
  */
-class NoneKeyValueInput extends ConfigurableKeyValueInputBase {
+class NoneKeyInput extends ConfigurableKeyInputBase {
 
   /**
    * {@inheritdoc}

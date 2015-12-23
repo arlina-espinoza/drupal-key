@@ -25,12 +25,12 @@ key.key.*:
     key_provider_settings:
       type: key.provider.[%parent.key_provider]
       label: 'Key provider settings'
-    key_value_input:
+    key_input:
       type: string
-      label: 'Key value input'
-    key_value_input_settings:
-      type: key.value_input.[%parent.key_value_input]
-      label: 'Key value input settings'
+      label: 'Key input'
+    key_input_settings:
+      type: key.input.[%parent.key_input]
+      label: 'Key input settings'
 
 key.type.*:
   type: mapping
@@ -56,6 +56,6 @@ key.provider.file:
       type: string
       label: 'File Location'
 
-key.value_input.*:
+key.input.*:
   type: mapping
-  label: 'Key value input settings'
+  label: 'Key input settings'
