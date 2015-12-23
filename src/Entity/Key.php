@@ -52,7 +52,7 @@ class Key extends ConfigEntityBase implements KeyInterface {
    *
    * @var string
    */
-  protected $key_type;
+  protected $key_type = 'basic';
 
   /**
    * The key type settings.

@@ -10,6 +10,7 @@ namespace Drupal\key\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -144,8 +145,7 @@ abstract class KeyFormBase extends EntityForm {
       '#type' => 'select',
       '#title' => $this->t('Key type'),
       '#options' => $key_types,
-      '#empty_option' => $this->t('- None -'),
-      '#empty_value' => '',
+      '#required' => TRUE,
       '#default_value' => $key->getKeyType(),
       '#ajax' => array(
         'callback' => [$this, 'ajaxUpdateSettings'],
@@ -174,7 +174,9 @@ abstract class KeyFormBase extends EntityForm {
       }
       $plugin = $this->keyTypeManager->createInstance($key->getKeyType(), $key_type_settings);
 
-      $form['settings']['type_section']['key_type_settings'] += $plugin->buildConfigurationForm([], $form_state);
+      if ($plugin instanceof PluginFormInterface) {
+        $form['settings']['type_section']['key_type_settings'] += $plugin->buildConfigurationForm([], $form_state);
+      }
     }
 
     // Key provider section.
@@ -231,7 +233,9 @@ abstract class KeyFormBase extends EntityForm {
     $key_type_id = $form_state->getValue('key_type');
     if ($this->keyTypeManager->hasDefinition($key_type_id)) {
       $key_type = $this->keyTypeManager->createInstance($key_type_id, []);
-      $key_type->submitConfigurationForm($form, $form_state);
+      if ($key_type instanceof PluginFormInterface) {
+        $key_type->submitConfigurationForm($form, $form_state);
+      }
     }
     else {
       $form_state->setValue('key_type_settings', []);
@@ -240,7 +244,9 @@ abstract class KeyFormBase extends EntityForm {
     $key_provider_id = $form_state->getValue('key_provider');
     if ($this->keyProviderManager->hasDefinition($key_provider_id)) {
       $key_provider = $this->keyProviderManager->createInstance($key_provider_id, []);
-      $key_provider->submitConfigurationForm($form, $form_state);
+      if ($key_provider instanceof PluginFormInterface) {
+        $key_provider->submitConfigurationForm($form, $form_state);
+      }
     }
 
     parent::submitForm($form, $form_state);
@@ -255,13 +261,17 @@ abstract class KeyFormBase extends EntityForm {
       $key_type_id = $form_state->getValue('key_type');
       if ($this->keyTypeManager->hasDefinition($key_type_id)) {
         $key_type = $this->keyTypeManager->createInstance($key_type_id, []);
-        $key_type->validateConfigurationForm($form, $form_state);
+        if ($key_type instanceof PluginFormInterface) {
+          $key_type->validateConfigurationForm($form, $form_state);
+        }
       }
 
       $key_provider_id = $form_state->getValue('key_provider');
       if ($this->keyProviderManager->hasDefinition($key_provider_id)) {
         $key_provider = $this->keyProviderManager->createInstance($key_provider_id, []);
-        $key_provider->validateConfigurationForm($form, $form_state);
+        if ($key_provider instanceof PluginFormInterface) {
+          $key_provider->validateConfigurationForm($form, $form_state);
+        }
       }
     }
 
