@@ -55,6 +55,22 @@ interface KeyInterface extends ConfigEntityInterface {
   public function getKeyProviderSettings();
 
   /**
+   * Gets the key value input ID.
+   *
+   * @return string
+   *   The ID of the key value input for this key.
+   */
+  public function getKeyValueInput();
+
+  /**
+   * Gets the key value input settings.
+   *
+   * @return array
+   *   The key value input settings.
+   */
+  public function getKeyValueInputSettings();
+
+  /**
    * Gets the value of the key.
    *
    * @return string
