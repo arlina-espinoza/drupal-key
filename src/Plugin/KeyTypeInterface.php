@@ -7,13 +7,12 @@
 
 namespace Drupal\key\Plugin;
 
-use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\key\KeyInterface;
 
 /**
  * Provides an interface for all Key Type plugins.
  */
-interface KeyTypeInterface extends PluginInspectionInterface {
+interface KeyTypeInterface {
 
   /**
    * Allows the Key Type plugin to generate a key value.

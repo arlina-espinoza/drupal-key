@@ -29,7 +29,7 @@ class KeyInputManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/KeyInput', $namespaces, $module_handler, 'Drupal\key\Plugin\ConfigurableKeyInputInterface', 'Drupal\key\Annotation\KeyInput');
+    parent::__construct('Plugin/KeyInput', $namespaces, $module_handler, 'Drupal\key\Plugin\KeyInputInterface', 'Drupal\key\Annotation\KeyInput');
     $this->alterInfo('key_input_info');
     $this->setCacheBackend($cache_backend, 'key_input');
   }

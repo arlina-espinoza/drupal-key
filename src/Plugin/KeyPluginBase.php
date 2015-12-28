@@ -1,18 +1,20 @@
 <?php
 /**
  * @file
- * Provides \Drupal\key\Plugin\ConfigurableKeyTypeBase.
+ * Provides \Drupal\key\Plugin\KeyPluginBase.
  */
 
 namespace Drupal\key\Plugin;
 
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a base class for configurable Key Type plugins.
+ * Defines a base class for all Key plugins.
  */
-abstract class ConfigurableKeyTypeBase extends KeyTypeBase implements ConfigurableKeyTypeInterface {
+abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
 
   /**
    * {@inheritdoc}
@@ -21,6 +23,24 @@ abstract class ConfigurableKeyTypeBase extends KeyTypeBase implements Configurab
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $this->configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function pluginType() {
+    return $this->pluginDefinition['plugin_type'];
   }
 
   /**
@@ -47,7 +67,20 @@ abstract class ConfigurableKeyTypeBase extends KeyTypeBase implements Configurab
   /**
    * {@inheritdoc}
    */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**

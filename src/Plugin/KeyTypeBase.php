@@ -6,26 +6,12 @@
 
 namespace Drupal\key\Plugin;
 
-use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\key\KeyInterface;
 
 /**
  * Defines a base class for Key Type plugins.
  */
-abstract class KeyTypeBase extends PluginBase implements KeyTypeInterface, ContainerFactoryPluginInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition
-    );
-  }
+abstract class KeyTypeBase extends KeyPluginBase implements KeyTypeInterface {
 
   /**
    * {@inheritdoc}

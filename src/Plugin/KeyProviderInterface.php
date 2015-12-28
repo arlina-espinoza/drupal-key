@@ -7,13 +7,12 @@
 
 namespace Drupal\key\Plugin;
 
-use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\key\KeyInterface;
 
 /**
- * Provides an interface for all Key Provider plugins.
+ * Provides an interface for Key Provider plugins.
  */
-interface KeyProviderInterface extends PluginInspectionInterface {
+interface KeyProviderInterface {
 
   /**
    * Returns the value of a key from the key provider.
