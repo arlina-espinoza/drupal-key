@@ -11,7 +11,6 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,26 +22,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class KeyListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * The key type plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $keyTypeManager;
-
-  /**
-   * The key provider plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $keyProviderManager;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, PluginManagerInterface $key_type_manager, PluginManagerInterface $key_provider_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage) {
     parent::__construct($entity_type, $storage);
-    $this->keyTypeManager = $key_type_manager;
-    $this->keyProviderManager = $key_provider_manager;
   }
 
   /**
@@ -51,9 +34,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('plugin.manager.key.key_type'),
-      $container->get('plugin.manager.key.key_provider')
+      $container->get('entity_type.manager')->getStorage($entity_type->id())
     );
   }
 
@@ -78,16 +59,12 @@ class KeyListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['label'] = $entity->label();
-    if ($entity->getKeyType() && $key_type = $this->keyTypeManager->getDefinition($entity->getKeyType())) {
-      $row['type'] = $key_type['label'];
-    }
-    else {
-      $row['type'] = '';
-    }
+    /** @var $key \Drupal\key\Entity\Key */
+    $key = $entity;
 
-    $row['provider'] = $this->keyProviderManager->getDefinition($entity->getKeyProvider())['label'];
-
+    $row['label'] = $key->label();
+    $row['type'] = $key->getKeyType()->getPluginDefinition()['label'];
+    $row['provider'] = $key->getKeyProvider()->getPluginDefinition()['label'];
 
     return $row + parent::buildRow($entity);
   }

@@ -21,8 +21,8 @@ interface KeyPluginInterface extends ContainerFactoryPluginInterface, PluginInsp
    * Returns the type of plugin.
    *
    * @return string
-   *   The type of plugin, "key_type", "key_provider", or "key_input".
+   *   The type of plugin: "key_type", "key_provider", or "key_input".
    */
-  public function pluginType();
+  public function getPluginType();
 
 }

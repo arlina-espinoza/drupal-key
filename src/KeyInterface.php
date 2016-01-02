@@ -23,52 +23,36 @@ interface KeyInterface extends ConfigEntityInterface {
   public function getDescription();
 
   /**
-   * Gets the key type ID.
+   * Returns the configured plugins for the key.
    *
-   * @return string
-   *   The ID of the key type for this key.
+   * @return \Drupal\key\Plugin\KeyPluginInterface[]
+   *   An array of plugins, indexed by plugin type.
+   */
+  public function getPlugins();
+
+  /**
+   * Returns the configured key type for the key.
+   *
+   * @return \Drupal\key\Plugin\KeyTypeInterface
+   *   The key type associated with the key.
    */
   public function getKeyType();
 
   /**
-   * Gets the key type settings.
+   * Returns the configured key provider for the key.
    *
-   * @return array
-   *   The key type settings.
-   */
-  public function getKeyTypeSettings();
-
-  /**
-   * Gets the key provider ID.
-   *
-   * @return string
-   *   The ID of the key provider for this key.
+   * @return \Drupal\key\Plugin\KeyProviderInterface
+   *   The key provider associated with the key.
    */
   public function getKeyProvider();
 
   /**
-   * Gets the key provider settings.
+   * Returns the configured key input for the key.
    *
-   * @return array
-   *   The key provider settings.
-   */
-  public function getKeyProviderSettings();
-
-  /**
-   * Gets the key input ID.
-   *
-   * @return string
-   *   The ID of the key input for this key.
+   * @return \Drupal\key\Plugin\KeyInputInterface
+   *   The key input associated with the key.
    */
   public function getKeyInput();
-
-  /**
-   * Gets the key input settings.
-   *
-   * @return array
-   *   The key input settings.
-   */
-  public function getKeyInputSettings();
 
   /**
    * Gets the value of the key.

@@ -8,7 +8,9 @@
 namespace Drupal\key\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\key\KeyInterface;
+use Drupal\key\Plugin\KeyPluginCollection;
 
 /**
  * Defines the Key entity.
@@ -16,6 +18,7 @@ use Drupal\key\KeyInterface;
  * @ConfigEntityType(
  *   id = "key",
  *   label = @Translation("Key"),
+ *   module = "key",
  *   handlers = {
  *     "list_builder" = "Drupal\key\Controller\KeyListBuilder",
  *     "form" = {
@@ -38,7 +41,21 @@ use Drupal\key\KeyInterface;
  *   }
  * )
  */
-class Key extends ConfigEntityBase implements KeyInterface {
+class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginCollectionInterface {
+
+  /**
+   * The key ID.
+   *
+   * @var string
+   */
+  protected $id;
+
+  /**
+   * The key label.
+   *
+   * @var string
+   */
+  protected $label;
 
   /**
    * The key description.
@@ -48,46 +65,60 @@ class Key extends ConfigEntityBase implements KeyInterface {
   protected $description = '';
 
   /**
-   * The key type ID.
+   * The types of plugins used by a the key entity.
+   *
+   * @var array
+   */
+  protected $pluginTypes = ['key_type', 'key_provider', 'key_input'];
+
+  /**
+   * The key type plugin id.
    *
    * @var string
    */
   protected $key_type = 'basic';
 
   /**
-   * The key type settings.
-   *
-   * @var array
-   */
-  protected $key_type_settings = [];
-
-  /**
-   * The key provider ID.
+   * The key provider plugin id.
    *
    * @var string
    */
-  protected $key_provider;
+  protected $key_provider = 'config';
 
   /**
-   * The key provider settings.
-   *
-   * @var array
-   */
-  protected $key_provider_settings = [];
-
-  /**
-   * The key input ID.
+   * The key input plugin id.
    *
    * @var string
    */
   protected $key_input = 'none';
 
   /**
-   * The key input settings.
+   * The key type plugin settings.
+   *
+   * @var array
+   */
+  protected $key_type_settings = [];
+
+  /**
+   * The key provider plugin settings.
+   *
+   * @var array
+   */
+  protected $key_provider_settings = [];
+
+  /**
+   * The key input plugin settings.
    *
    * @var array
    */
   protected $key_input_settings = [];
+
+  /**
+   * The plugin collections, indexed by plugin type.
+   *
+   * @var \Drupal\key\Plugin\KeyPluginCollection[]
+   */
+  protected $pluginCollection;
 
   /**
    * {@inheritdoc}
@@ -97,45 +128,97 @@ class Key extends ConfigEntityBase implements KeyInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Return the list of plugin types supported by key entities.
+   *
+   * @return array
+   *   The list of plugin types.
    */
-  public function getKeyType() {
-    return $this->key_type;
+  public function getPluginTypes() {
+    return $this->pluginTypes;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getKeyTypeSettings() {
-    return $this->key_type_settings;
+  public function getPlugins() {
+    $plugins = [];
+    foreach ($this->pluginTypes as $type) {
+      $plugins[$type] = $this->getPlugin($type);
+    }
+
+    return $plugins;
+  }
+
+  /**
+   * Returns the configured plugin of the requested type.
+   *
+   * @param string $type
+   *   The plugin type to return.
+   *
+   * @return \Drupal\key\Plugin\KeyPluginInterface
+   *   The plugin.
+   */
+  protected function getPlugin($type) {
+    $collections = $this->getPluginCollections();
+    return $collections[$type . '_settings']->get($this->$type);
+  }
+
+  /**
+   * Returns a list of plugins, for use in forms.
+   *
+   * @param string $type
+   *   The plugin type to use.
+   *
+   * @return array
+   *   The list of plugins, indexed by ID.
+   */
+  public function getPluginsAsOptions($type) {
+    $manager = \Drupal::service("plugin.manager.key.$type");
+
+    $options = [];
+    foreach ($manager->getDefinitions() as $id => $definition) {
+      $options[$id] = ($definition['label']);
+    }
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKeyType() {
+    return $this->getPlugin('key_type');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getKeyProvider() {
-    return $this->key_provider;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getKeyProviderSettings() {
-    return $this->key_provider_settings;
+    return $this->getPlugin('key_provider');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getKeyInput() {
-    return $this->key_input;
+    return $this->getPlugin('key_input');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getKeyInputSettings() {
-    return $this->key_input_settings;
+  public function getPluginCollections() {
+    if (!isset($this->pluginCollection)) {
+      $this->pluginCollection = [];
+      foreach ($this->pluginTypes as $type) {
+        $this->pluginCollection[$type . '_settings'] = new KeyPluginCollection(
+          \Drupal::service("plugin.manager.key.$type"),
+          $this->get($type),
+          $this->get($type . '_settings'));
+      }
+    }
+
+    return $this->pluginCollection;
   }
 
   /**
@@ -149,5 +232,7 @@ class Key extends ConfigEntityBase implements KeyInterface {
     // Return the key value.
     return $key_provider->getKeyValue($this);
   }
+
+
 
 }

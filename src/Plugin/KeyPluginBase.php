@@ -39,13 +39,6 @@ abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function pluginType() {
-    return $this->pluginDefinition['plugin_type'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function defaultConfiguration() {
     return array();
   }

@@ -67,14 +67,6 @@ class FileKeyProvider extends KeyProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $key_provider_settings = $form_state->getValue('key_provider_settings');
-    $this->configuration['file_location'] = $key_provider_settings['file_location'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getKeyValue(KeyInterface $key) {
     $file = $this->configuration['file_location'];
 

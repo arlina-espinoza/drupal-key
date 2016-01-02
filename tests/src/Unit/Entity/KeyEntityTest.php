@@ -8,6 +8,8 @@ namespace Drupal\Tests\key\Unit\Entity;
 
 use Drupal\key\Entity\Key;
 use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
+use Drupal\key\Plugin\KeyType\BasicKeyType;
+use Drupal\key\Plugin\KeyInput\NoneKeyInput;
 use Drupal\Tests\key\Unit\KeyTestBase;
 
 /**
@@ -17,15 +19,37 @@ use Drupal\Tests\key\Unit\KeyTestBase;
 class KeyEntityTest extends KeyTestBase {
 
   /**
+   * @var \Drupal\key\KeyTypeManager
+   */
+  protected $keyTypeManager;
+
+  /**
    * @var \Drupal\key\KeyProviderManager
    */
   protected $keyProviderManager;
+
+  /**
+   * @var \Drupal\key\KeyInputManager
+   */
+  protected $keyInputManager;
+
+  /**
+   * @var []
+   *   Key type settings to use for Basic key type.
+   */
+  protected $key_type_settings;
 
   /**
    * @var []
    *   Key provider settings to use for Configuration key provider.
    */
   protected $key_provider_settings;
+
+  /**
+   * @var []
+   *   Key input settings to use for None key input.
+   */
+  protected $key_input_settings;
 
   /**
    * Assert that key entity getters work.
@@ -39,9 +63,9 @@ class KeyEntityTest extends KeyTestBase {
     ];
     $key = new Key($values, 'key');
 
-    $this->assertEquals($values['key_provider'], $key->getKeyProvider());
-    $this->assertEquals($values['key_provider_settings'], $key->getKeyProviderSettings());
-    $this->assertEquals($values['key_provider_settings']['key_value'], $key->getKeyValue());
+    $this->assertEquals($values['key_provider'], $key->getKeyProvider()->getPluginId());
+    $this->assertEquals($values['key_provider_settings'], $key->getKeyProvider()->getConfiguration());
+    $this->assertEquals($values['key_provider_settings']['key_value'], $key->getKeyProvider()->getConfiguration()['key_value']);
   }
 
   /**
@@ -49,6 +73,29 @@ class KeyEntityTest extends KeyTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $definition = [
+      'id' => 'basic',
+      'label' => 'Basic',
+    ];
+    $this->key_type_settings = [];
+    $plugin = new BasicKeyType($this->key_type_settings, 'basic', $definition);
+
+    // Mock the KeyTypeManager service.
+    $this->keyTypeManager = $this->getMockBuilder('\Drupal\key\KeyTypeManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->keyTypeManager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([
+        ['id' => 'basic', 'label' => 'Basic'],
+      ]);
+    $this->keyTypeManager->expects($this->any())
+      ->method('createInstance')
+      ->with('basic', $this->key_type_settings)
+      ->willReturn($plugin);
+    $this->container->set('plugin.manager.key.key_type', $this->keyTypeManager);
 
     $definition = [
       'id' => 'config',
@@ -75,6 +122,30 @@ class KeyEntityTest extends KeyTestBase {
       ->willReturn($plugin);
     $this->container->set('plugin.manager.key.key_provider', $this->keyProviderManager);
 
+    $definition = [
+      'id' => 'none',
+      'label' => 'None',
+    ];
+    $this->key_input_settings = [];
+    $plugin = new NoneKeyInput($this->key_input_settings, 'none', $definition);
+
+    // Mock the KeyInputManager service.
+    $this->keyInputManager = $this->getMockBuilder('\Drupal\key\KeyInputManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->keyInputManager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([
+        ['id' => 'none', 'label' => 'None'],
+      ]);
+    $this->keyInputManager->expects($this->any())
+      ->method('createInstance')
+      ->with('none', $this->key_input_settings)
+      ->willReturn($plugin);
+    $this->container->set('plugin.manager.key.key_input', $this->keyInputManager);
+
     \Drupal::setContainer($this->container);
   }
+
 }
