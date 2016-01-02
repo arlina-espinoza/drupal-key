@@ -23,13 +23,6 @@ class KeyRepository implements KeyRepositoryInterface {
   protected $entityTypeManager;
 
   /**
-   * The key type plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $keyTypeManager;
-
-  /**
    * The key provider plugin manager.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -41,14 +34,11 @@ class KeyRepository implements KeyRepositoryInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_type_manager
-   *   The key type plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $key_provider_manager
    *   The key provider plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, PluginManagerInterface $key_type_manager, PluginManagerInterface $key_provider_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, PluginManagerInterface $key_provider_manager) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->keyTypeManager = $key_type_manager;
     $this->keyProviderManager = $key_provider_manager;
   }
 
