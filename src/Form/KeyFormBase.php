@@ -113,6 +113,9 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
+    $form['settings']['type_section']['key_type_description'] = array(
+      '#markup' => $key->getKeyType()->getPluginDefinition()['description'],
+    );
     if ($key->getKeyType() instanceof PluginFormInterface) {
     $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $form_state);
     }
@@ -134,6 +137,9 @@ abstract class KeyFormBase extends EntityForm {
         'event' => 'change',
         'wrapper' => 'key-settings',
       ),
+    );
+    $form['settings']['provider_section']['key_provider_description'] = array(
+      '#markup' => $key->getKeyProvider()->getPluginDefinition()['description'],
     );
     $form['settings']['provider_section']['key_provider_settings'] = array(
       '#type' => 'container',

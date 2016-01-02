@@ -15,7 +15,7 @@ use Drupal\key\Plugin\KeyTypeBase;
  * @KeyType(
  *   id = "basic",
  *   label = @Translation("Basic"),
- *   description = @Translation("A basic key.")
+ *   description = @Translation("A Basic key is one that is not logically associated with any other defined type.")
  * )
  */
 class BasicKeyType extends KeyTypeBase {
