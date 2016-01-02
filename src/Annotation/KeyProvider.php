@@ -50,4 +50,18 @@ class KeyProvider extends Plugin {
    */
   public $storage_method;
 
+  /**
+   * The settings for the key input plugin.
+   *
+   * This is used to indicate to the key input plugin if this provider
+   * accepts a key value, if it require one, and if it can be edited.
+   *
+   * @var array
+   */
+  public $key_input = array(
+    'accepted' => FALSE,
+    'required' => FALSE,
+    'editable' => FALSE,
+  );
+
 }

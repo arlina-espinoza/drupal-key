@@ -19,6 +19,11 @@ use Drupal\key\KeyInterface;
  *   label = @Translation("File"),
  *   description = @Translation("Allows a key to be stored in a file within the filesystem."),
  *   storage_method = "file",
+ *   key_input = {
+ *     "accepted" = FALSE,
+ *     "required" = FALSE,
+ *     "editable" = FALSE
+ *   }
  * )
  */
 class FileKeyProvider extends KeyProviderBase {
