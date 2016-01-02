@@ -57,6 +57,9 @@ abstract class KeyFormBase extends EntityForm {
       $form_state->set('original_key', $key);
     }
 
+    // Store the current plugins.
+    $form_state->set('plugins', $key->getPlugins());
+
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Key name'),
