@@ -118,7 +118,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    *
    * @var \Drupal\key\Plugin\KeyPluginCollection[]
    */
-  protected $pluginCollection;
+  protected $pluginCollections;
 
   /**
    * {@inheritdoc}
@@ -159,8 +159,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    *   The plugin.
    */
   protected function getPlugin($type) {
-    $collections = $this->getPluginCollections();
-    return $collections[$type . '_settings']->get($this->$type);
+    return $this->getPluginCollection($type)->get($this->$type);
   }
 
   /**
@@ -205,20 +204,35 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
   }
 
   /**
+   * Create a plugin collection of the requested plugin type.
+   *
+   * @param $type
+   *   The plugin type.
+   *
+   * @return \Drupal\key\Plugin\KeyPluginCollection
+   *   The plugin collection.
+   */
+  public function getPluginCollection($type) {
+    if (!isset($this->pluginCollections[$type . '_settings'])) {
+      $this->pluginCollections[$type . '_settings'] = new KeyPluginCollection(
+        \Drupal::service("plugin.manager.key.$type"),
+        $this->get($type),
+        $this->get($type . '_settings'));
+    }
+
+    return $this->pluginCollections[$type . '_settings'];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getPluginCollections() {
-    if (!isset($this->pluginCollection)) {
-      $this->pluginCollection = [];
-      foreach ($this->pluginTypes as $type) {
-        $this->pluginCollection[$type . '_settings'] = new KeyPluginCollection(
-          \Drupal::service("plugin.manager.key.$type"),
-          $this->get($type),
-          $this->get($type . '_settings'));
-      }
+    $plugin_collections = [];
+    foreach ($this->pluginTypes as $type) {
+      $plugin_collections[$type . '_settings'] = $this->getPluginCollection($type);
     }
 
-    return $this->pluginCollection;
+    return $plugin_collections;
   }
 
   /**
