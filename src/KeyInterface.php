@@ -31,6 +31,27 @@ interface KeyInterface extends ConfigEntityInterface {
   public function getPlugins();
 
   /**
+   * Returns the configured plugin of the requested type.
+   *
+   * @param string $type
+   *   The plugin type to return.
+   *
+   * @return \Drupal\key\Plugin\KeyPluginInterface
+   *   The plugin.
+   */
+  public function getPlugin($type);
+
+  /**
+   * Sets a plugin of the requested type and plugin ID.
+   *
+   * @param string $type
+   *   The plugin type.
+   * @param $id
+   *   The plugin ID.
+   */
+  public function setPlugin($type, $id);
+
+  /**
    * Returns the configured key type for the key.
    *
    * @return \Drupal\key\Plugin\KeyTypeInterface

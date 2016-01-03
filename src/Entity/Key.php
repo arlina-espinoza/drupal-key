@@ -150,16 +150,18 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
   }
 
   /**
-   * Returns the configured plugin of the requested type.
-   *
-   * @param string $type
-   *   The plugin type to return.
-   *
-   * @return \Drupal\key\Plugin\KeyPluginInterface
-   *   The plugin.
+   * {@inheritdoc}
    */
-  protected function getPlugin($type) {
+  public function getPlugin($type) {
     return $this->getPluginCollection($type)->get($this->$type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPlugin($type, $id) {
+    $this->$type = $id;
+    $this->getPluginCollection($type)->addInstanceID($id);
   }
 
   /**
