@@ -40,7 +40,7 @@ class KeyServiceTest extends WebTestBase {
       'label' => 'Testing Key',
       'description' => 'A test of the Configuration key provider.',
       'key_provider' => 'config',
-      'key_provider_settings[key_value]' => $test_string,
+      'key_input_settings[key_value]' => $test_string,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
@@ -69,7 +69,7 @@ class KeyServiceTest extends WebTestBase {
       'label' => 'Testing Key 2',
       'description' => 'A second test of the Configuration key provider.',
       'key_provider' => 'config',
-      'key_provider_settings[key_value]' => $test_string,
+      'key_input_settings[key_value]' => $test_string,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

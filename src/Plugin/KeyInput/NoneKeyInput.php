@@ -41,7 +41,7 @@ class NoneKeyInput extends KeyInputBase {
   /**
    * {@inheritdoc}
    */
-  public function processSubmittedKeyValue(array &$form, FormStateInterface $form_state) {
+  public function processSubmittedKeyValue(FormStateInterface $form_state) {
     return '';
   }
 

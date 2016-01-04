@@ -49,16 +49,22 @@ abstract class KeyFormBase extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
-    $key = $this->entity;
+    $key = &$this->entity;
 
-    // If the form is not rebuilding, store the original key, so plugins can
-    // access it.
+    // Only when the form is first built.
     if (!$form_state->isRebuilding()) {
+      // Store the original key, so plugins can access it.
       $form_state->set('original_key', $key);
+
+      // If the key provider accepts a key value, get the current value
+      // and add it to the key input plugin configuration.
+      if ($key->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+        $key->getKeyInput()->setConfiguration(['key_value' => $key->getKeyValue()]);
+      }
     }
 
     // Store the current plugins.
-    $form_state->set('plugins', $key->getPlugins());
+    $form_state->set('key_plugins', $key->getPlugins());
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -158,11 +164,12 @@ abstract class KeyFormBase extends EntityForm {
       '#open' => TRUE,
     );
 
-    // TODO: determine which key input plugin to use.
-    $key_input = 'none';
+    // Update the key input plugin.
+    $this->updateKeyInput();
+
     $form['settings']['input_section']['key_input'] = array(
       '#type' => 'value',
-      '#value' => $key_input,
+      '#value' => $key->getKeyInput()->getPluginId(),
     );
     $form['settings']['input_section']['key_input_settings'] = array(
       '#type' => 'container',
@@ -170,7 +177,6 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
-
     if ($key->getKeyInput() instanceof PluginFormInterface) {
       $form['settings']['input_section']['key_input_settings'] += $key->getKeyInput()->buildConfigurationForm([], $form_state);
     }
@@ -197,6 +203,17 @@ abstract class KeyFormBase extends EntityForm {
           $plugin->validateConfigurationForm($form, $form_state);
         }
       }
+
+      // If the provider accepts a key value, get the processed value
+      // from the Key Input plugin.
+      if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+        $processed_key_value = $this->entity->getKeyInput()->processSubmittedKeyValue($form_state);
+        // TODO: Add validation by key type plugin here.
+        $form_state->set('processed_key_value', $processed_key_value);
+      }
+      else {
+        $form_state->set('processed_key_value', FALSE);
+      }
     }
   }
 
@@ -208,6 +225,13 @@ abstract class KeyFormBase extends EntityForm {
       if ($plugin instanceof PluginFormInterface) {
         $plugin->submitConfigurationForm($form, $form_state);
       }
+    }
+
+    // If a key value has been processed by the key input plugin,
+    // send it to the key provider plugin to set it.
+    $processed_key_value = $form_state->get('processed_key_value');
+    if (isset($processed_key_value)) {
+      $this->entity->getKeyProvider()->setKeyValue($this->entity, $processed_key_value);
     }
 
     parent::submitForm($form, $form_state);
@@ -232,6 +256,28 @@ abstract class KeyFormBase extends EntityForm {
    */
   public function ajaxUpdateSettings(array &$form, FormStateInterface $form_state) {
     return $form['settings'];
+  }
+
+  /**
+   * Update the Key Input plugin.
+   */
+  public function updateKeyInput() {
+    /** @var $key \Drupal\key\Entity\Key */
+    $key = &$this->entity;
+
+    $current_input_id = $key->getKeyInput()->getPluginId();
+
+    // 'None' is the default.
+    $new_input_id = 'none';
+
+    if ($key->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+      $new_input_id = 'text_field';
+    }
+
+    if ($current_input_id != $new_input_id) {
+      $key->setPlugin('key_input', $new_input_id);
+      $key->getKeyInput()->setConfiguration(['key_value' => '']);
+    }
   }
 
 }

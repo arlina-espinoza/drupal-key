@@ -35,11 +35,4 @@ class TextFieldKeyInput extends KeyInputBase {
     return $form;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function processSubmittedKeyValue(array &$form, FormStateInterface $form_state) {
-    return '';
-  }
-
 }

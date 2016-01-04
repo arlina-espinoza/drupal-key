@@ -17,12 +17,12 @@ interface KeyInputInterface {
   /**
    * Process a submitted key value.
    *
-   * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    *
    * @return string
    *   The processed key value.
    */
-  public function processSubmittedKeyValue(array &$form, FormStateInterface $form_state);
+  public function processSubmittedKeyValue(FormStateInterface $form_state);
 
 }

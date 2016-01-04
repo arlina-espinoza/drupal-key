@@ -7,7 +7,6 @@
 
 namespace Drupal\key\Plugin\KeyProvider;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyProviderBase;
 use Drupal\key\KeyInterface;
 
@@ -31,31 +30,14 @@ class ConfigKeyProvider extends KeyProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
-    return [
-      'key_value' => '',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['key_value'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Key value'),
-      '#description' => $this->t("Enter the key to save in Drupal's configuration system."),
-      '#required' => TRUE,
-      '#default_value' => $this->getConfiguration()['key_value'],
-    );
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getKeyValue(KeyInterface $key) {
-    return $this->configuration['key_value'];
+    return isset($this->configuration['key_value']) ? $this->configuration['key_value'] : '';
+  }
+
+  public function setKeyValue(KeyInterface $key, $key_value) {
+    $this->configuration['key_value'] = $key_value;
+
+    return $key_value;
   }
 
 }
