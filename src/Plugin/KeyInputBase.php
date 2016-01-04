@@ -16,20 +16,6 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPluginType() {
-    return 'key_input';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->setConfiguration($form_state->getValue('key_input_settings'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function processSubmittedKeyValue(FormStateInterface $form_state) {
     // This is the default behavior. If a field named 'key_value' exists in
     // the key input settings, remove it from the settings and return the

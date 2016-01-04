@@ -19,17 +19,17 @@ use Drupal\Tests\key\Unit\KeyTestBase;
 class KeyEntityTest extends KeyTestBase {
 
   /**
-   * @var \Drupal\key\KeyTypeManager
+   * @var \Drupal\key\Plugin\KeyPluginManager
    */
   protected $keyTypeManager;
 
   /**
-   * @var \Drupal\key\KeyProviderManager
+   * @var \Drupal\key\Plugin\KeyPluginManager
    */
   protected $keyProviderManager;
 
   /**
-   * @var \Drupal\key\KeyInputManager
+   * @var \Drupal\key\Plugin\KeyPluginManager
    */
   protected $keyInputManager;
 
@@ -82,7 +82,7 @@ class KeyEntityTest extends KeyTestBase {
     $plugin = new BasicKeyType($this->key_type_settings, 'basic', $definition);
 
     // Mock the KeyTypeManager service.
-    $this->keyTypeManager = $this->getMockBuilder('\Drupal\key\KeyTypeManager')
+    $this->keyTypeManager = $this->getMockBuilder('\Drupal\key\Plugin\KeyPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -106,7 +106,7 @@ class KeyEntityTest extends KeyTestBase {
     $plugin = new ConfigKeyProvider($this->key_provider_settings, 'config', $definition);
 
     // Mock the KeyProviderManager service.
-    $this->keyProviderManager = $this->getMockBuilder('\Drupal\key\KeyProviderManager')
+    $this->keyProviderManager = $this->getMockBuilder('\Drupal\key\Plugin\KeyPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -130,7 +130,7 @@ class KeyEntityTest extends KeyTestBase {
     $plugin = new NoneKeyInput($this->key_input_settings, 'none', $definition);
 
     // Mock the KeyInputManager service.
-    $this->keyInputManager = $this->getMockBuilder('\Drupal\key\KeyInputManager')
+    $this->keyInputManager = $this->getMockBuilder('\Drupal\key\Plugin\KeyPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
 

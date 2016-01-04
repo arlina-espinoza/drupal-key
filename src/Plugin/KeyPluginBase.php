@@ -39,6 +39,13 @@ abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
   /**
    * {@inheritdoc}
    */
+  public function getPluginType() {
+    return $this->pluginDefinition['plugin_type'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return array();
   }
@@ -74,6 +81,7 @@ abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->setConfiguration($form_state->getValue($this->pluginDefinition['plugin_type'] . '_settings'));
   }
 
   /**
