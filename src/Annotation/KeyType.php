@@ -45,7 +45,7 @@ class KeyType extends Plugin {
    * The group to which this key type belongs.
    *
    * This is the general category of this type of key. Examples include
-   * api, password, and encryption.
+   * "authentication" and "encryption".
    *
    * @var string
    */
