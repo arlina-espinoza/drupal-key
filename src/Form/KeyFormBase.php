@@ -344,7 +344,7 @@ abstract class KeyFormBase extends EntityForm {
 
     if ($current_input_id != $new_input_id) {
       /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
-      $plugin = $key->getKeyProvider();
+      $plugin = $key->getKeyInput();
 
       $key->setPlugin('key_input', $new_input_id);
       $plugin->setConfiguration($plugin->defaultConfiguration());
