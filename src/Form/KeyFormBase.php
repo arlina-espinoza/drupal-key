@@ -223,16 +223,16 @@ abstract class KeyFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // Make sure each plugin settings field is an array.
-    foreach ($this->entity->getPluginTypes() as $type) {
-      if (empty($form_state->getValue($type . '_settings'))) {
-        $form_state->setValue($type . '_settings', []);
-      }
-    }
-
     parent::validateForm($form, $form_state);
 
     if ($form_state->isSubmitted()) {
+      // Make sure each plugin settings field is an array.
+      foreach ($this->entity->getPluginTypes() as $type) {
+        if (empty($form_state->getValue($type . '_settings'))) {
+          $form_state->setValue($type . '_settings', []);
+        }
+      }
+
       foreach ($this->entity->getPlugins() as $type => $plugin) {
         if ($plugin instanceof PluginFormInterface) {
           $plugin_state = $this->createPluginState($type, $form_state);
