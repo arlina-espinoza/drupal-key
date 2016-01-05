@@ -27,7 +27,7 @@ class TextFieldKeyInput extends KeyInputBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['key_value'] = array(
       '#type' => 'textfield',
-      '#title' => 'Key value',
+      '#title' => $this->t('Key value'),
       '#required' => TRUE,
       '#default_value' => $this->getConfiguration()['key_value'],
     );
