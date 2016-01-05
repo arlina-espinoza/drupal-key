@@ -63,10 +63,19 @@ class FileKeyProvider extends KeyProviderBase {
     $key_provider_settings = $form_state->getValues();
     $file = $key_provider_settings['file_location'];
 
-    // Does the file exist and is it readable?
-    if (!is_file($file) || !is_readable($file)) {
-      $form_state->setErrorByName('file_location', $this->t('File does not exist or is not readable.'));
+    // Does the file exist?
+    if (!is_file($file)) {
+      $form_state->setErrorByName('file_location', $this->t('There is no file at the specified location.'));
+      return;
     }
+
+    // Is the file readable?
+    if ((!is_readable($file))) {
+      $form_state->setErrorByName('file_location', $this->t('The file at the specified location is not readable.'));
+      return;
+    }
+
+    parent::validateConfigurationForm($form, $form_state);
   }
 
   /**
