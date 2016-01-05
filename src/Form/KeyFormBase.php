@@ -26,13 +26,12 @@ abstract class KeyFormBase extends EntityForm {
   protected $storage;
 
   /**
-   * The original key data.
+   * The original key.
    *
-   * @var array|bool
-   *   An array with the original key data or FALSE if this is
-   *   a new key.
+   * @var \Drupal\key\Entity\Key|bool
+   *   The original key entity or FALSE if this is a new key.
    */
-  protected $originalKeyData = FALSE;
+  protected $originalKey = FALSE;
 
   /**
    * Constructs a new key form base.
@@ -59,8 +58,8 @@ abstract class KeyFormBase extends EntityForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Only when the form is first built.
     if (!$form_state->isRebuilding()) {
-      // Store the original key data for use by plugins.
-      $form_state->set('original_key_data', $this->originalKeyData);
+      // Store a clone of the original key entity for use by plugins.
+      $form_state->set('original_key', $this->originalKey);
     }
 
     return parent::buildForm($form, $form_state);
