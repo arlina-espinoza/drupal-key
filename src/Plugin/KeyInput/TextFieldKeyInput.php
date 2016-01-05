@@ -24,6 +24,15 @@ class TextFieldKeyInput extends KeyInputBase {
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return [
+      'key_value' => '',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['key_value'] = array(
       '#type' => 'textfield',

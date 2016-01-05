@@ -137,6 +137,13 @@ abstract class KeyFormBase extends EntityForm {
     $form['settings']['type_section']['key_type_description'] = array(
       '#markup' => $key->getKeyType()->getPluginDefinition()['description'],
     );
+
+    // If the form is rebuilding and the key type is responsible,
+    // update the key type plugin.
+    if ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_type') {
+      $this->updateKeyType();
+    }
+
     if ($key->getKeyType() instanceof PluginFormInterface) {
       $plugin_state = $this->createPluginState('key_type', $form_state);
       $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $plugin_state);
@@ -170,6 +177,13 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
+
+    // If the form is rebuilding and the key provider is responsible,
+    // update the key provider plugin.
+    if ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_provider') {
+      $this->updateKeyProvider();
+    }
+
     if ($key->getKeyProvider() instanceof PluginFormInterface) {
       $plugin_state = $this->createPluginState('key_provider', $form_state);
       $form['settings']['provider_section']['key_provider_settings'] += $key->getKeyProvider()->buildConfigurationForm([], $plugin_state);
@@ -285,11 +299,39 @@ abstract class KeyFormBase extends EntityForm {
   }
 
   /**
+   * Update the Key Type plugin.
+   */
+  protected function updateKeyType() {
+    /** @var $key \Drupal\key\Entity\Key */
+    $key = $this->entity;
+
+    /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+    $plugin = $key->getKeyType();
+
+    $key->setPlugin('key_type', $plugin->getPluginId());
+    $plugin->setConfiguration($plugin->defaultConfiguration());
+  }
+
+  /**
+   * Update the Key Provider plugin.
+   */
+  protected function updateKeyProvider() {
+    /** @var $key \Drupal\key\Entity\Key */
+    $key = $this->entity;
+
+    /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+    $plugin = $key->getKeyProvider();
+
+    $key->setPlugin('key_provider', $plugin->getPluginId());
+    $plugin->setConfiguration($plugin->defaultConfiguration());
+  }
+
+  /**
    * Update the Key Input plugin.
    */
-  public function updateKeyInput() {
+  protected function updateKeyInput() {
     /** @var $key \Drupal\key\Entity\Key */
-    $key = &$this->entity;
+    $key = $this->entity;
 
     $current_input_id = $key->getKeyInput()->getPluginId();
 
@@ -301,8 +343,11 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     if ($current_input_id != $new_input_id) {
+      /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+      $plugin = $key->getKeyProvider();
+
       $key->setPlugin('key_input', $new_input_id);
-      $key->getKeyInput()->setConfiguration(['key_value' => '']);
+      $plugin->setConfiguration($plugin->defaultConfiguration());
     }
   }
 
