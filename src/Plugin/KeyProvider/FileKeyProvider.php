@@ -60,7 +60,7 @@ class FileKeyProvider extends KeyProviderBase {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $key_provider_settings = $form_state->getValue('key_provider_settings');
+    $key_provider_settings = $form_state->getValues();
     $file = $key_provider_settings['file_location'];
 
     // Does the file exist and is it readable?

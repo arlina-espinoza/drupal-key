@@ -83,4 +83,16 @@ interface KeyInterface extends ConfigEntityInterface {
    */
   public function getKeyValue();
 
+  /**
+   * Sets the value of the key.
+   *
+   * @param string $key_value
+   *   The key value to set.
+   *
+   * @return string|bool
+   *   The key value or FALSE if the value could not be set, because the
+   *   provider does not support setting a key value, for instance.
+   */
+  public function setKeyValue($key_value);
+
 }
