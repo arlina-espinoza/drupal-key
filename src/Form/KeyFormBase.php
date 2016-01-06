@@ -10,7 +10,7 @@ namespace Drupal\key\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\key\Plugin\KeyPluginFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -131,7 +131,7 @@ abstract class KeyFormBase extends EntityForm {
       $this->updateKeyType();
     }
 
-    if ($key->getKeyType() instanceof PluginFormInterface) {
+    if ($key->getKeyType() instanceof KeyPluginFormInterface) {
       $plugin_state = $this->createPluginState('key_type', $form_state);
       $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $plugin_state);
       $form_state->setValue('key_type_settings', $plugin_state->getValues());
@@ -171,7 +171,7 @@ abstract class KeyFormBase extends EntityForm {
       $this->updateKeyProvider();
     }
 
-    if ($key->getKeyProvider() instanceof PluginFormInterface) {
+    if ($key->getKeyProvider() instanceof KeyPluginFormInterface) {
       $plugin_state = $this->createPluginState('key_provider', $form_state);
       $form['settings']['provider_section']['key_provider_settings'] += $key->getKeyProvider()->buildConfigurationForm([], $plugin_state);
       $form_state->setValue('key_provider_settings', $plugin_state->getValues());
@@ -197,7 +197,7 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
-    if ($key->getKeyInput() instanceof PluginFormInterface) {
+    if ($key->getKeyInput() instanceof KeyPluginFormInterface) {
       $plugin_state = $this->createPluginState('key_input', $form_state);
       $form['settings']['input_section']['key_input_settings'] += $key->getKeyInput()->buildConfigurationForm([], $plugin_state);
       $form_state->setValue('key_input_settings', $plugin_state->getValues());
@@ -221,7 +221,7 @@ abstract class KeyFormBase extends EntityForm {
       }
 
       foreach ($this->entity->getPlugins() as $type => $plugin) {
-        if ($plugin instanceof PluginFormInterface) {
+        if ($plugin instanceof KeyPluginFormInterface) {
           $plugin_state = $this->createPluginState($type, $form_state);
           $plugin->validateConfigurationForm($form, $plugin_state);
           $form_state->setValue($type . '_settings', $plugin_state->getValues());
@@ -247,7 +247,7 @@ abstract class KeyFormBase extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->entity->getPlugins() as $type => $plugin) {
-      if ($plugin instanceof PluginFormInterface) {
+      if ($plugin instanceof KeyPluginFormInterface) {
         $plugin_state = $this->createPluginState($type, $form_state);
         $plugin->submitConfigurationForm($form, $plugin_state);
         $form_state->setValue($type . '_settings', $plugin_state->getValues());

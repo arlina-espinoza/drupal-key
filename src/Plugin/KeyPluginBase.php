@@ -8,7 +8,6 @@ namespace Drupal\key\Plugin;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -62,26 +61,6 @@ abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
    */
   public function setConfiguration(array $configuration) {
     $this->configuration = $configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->setConfiguration($form_state->getValues());
   }
 
   /**

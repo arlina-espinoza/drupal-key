@@ -9,6 +9,7 @@ namespace Drupal\key\Plugin\KeyInput;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyInputBase;
+use Drupal\key\Plugin\KeyPluginFormInterface;
 
 /**
  * Defines a key input for providers that don't accept a value.
@@ -19,7 +20,7 @@ use Drupal\key\Plugin\KeyInputBase;
  *   description = @Translation("A key input for providers that don't accept a value.")
  * )
  */
-class NoneKeyInput extends KeyInputBase {
+class NoneKeyInput extends KeyInputBase implements KeyPluginFormInterface {
 
   /**
    * {@inheritdoc}
@@ -34,8 +35,14 @@ class NoneKeyInput extends KeyInputBase {
   /**
    * {@inheritdoc}
    */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration = array();
+    $this->setConfiguration($form_state->getValues());
   }
 
   /**

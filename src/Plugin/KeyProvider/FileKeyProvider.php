@@ -9,6 +9,7 @@ namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyProviderBase;
+use Drupal\key\Plugin\KeyPluginFormInterface;
 use Drupal\key\KeyInterface;
 
 /**
@@ -26,7 +27,7 @@ use Drupal\key\KeyInterface;
  *   }
  * )
  */
-class FileKeyProvider extends KeyProviderBase {
+class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface {
 
   /**
    * {@inheritdoc}
@@ -74,8 +75,13 @@ class FileKeyProvider extends KeyProviderBase {
       $form_state->setErrorByName('file_location', $this->t('The file at the specified location is not readable.'));
       return;
     }
+  }
 
-    parent::validateConfigurationForm($form, $form_state);
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->setConfiguration($form_state->getValues());
   }
 
   /**

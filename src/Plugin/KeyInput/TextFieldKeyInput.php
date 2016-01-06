@@ -9,6 +9,7 @@ namespace Drupal\key\Plugin\KeyInput;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyInputBase;
+use Drupal\key\Plugin\KeyPluginFormInterface;
 
 /**
  * Defines a key input that provides a simple text field.
@@ -19,7 +20,7 @@ use Drupal\key\Plugin\KeyInputBase;
  *   description = @Translation("A simple text field.")
  * )
  */
-class TextFieldKeyInput extends KeyInputBase {
+class TextFieldKeyInput extends KeyInputBase implements KeyPluginFormInterface {
 
   /**
    * {@inheritdoc}
@@ -42,6 +43,19 @@ class TextFieldKeyInput extends KeyInputBase {
     );
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->setConfiguration($form_state->getValues());
   }
 
 }
