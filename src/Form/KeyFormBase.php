@@ -55,19 +55,6 @@ abstract class KeyFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    // Only when the form is first built.
-    if (!$form_state->isRebuilding()) {
-      // Store a clone of the original key entity for use by plugins.
-      $form_state->set('original_key', $this->originalKey);
-    }
-
-    return parent::buildForm($form, $form_state);
-  }
-
-    /**
-   * {@inheritdoc}
-   */
   public function form(array $form, FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
     $key = &$this->entity;
@@ -349,6 +336,16 @@ abstract class KeyFormBase extends EntityForm {
       $key->setPlugin('key_input', $new_input_id);
       $plugin->setConfiguration($plugin->defaultConfiguration());
     }
+  }
+
+  /**
+   * Returns the original key entity
+   *
+   * @return \Drupal\key\Entity\Key
+   *   The original key entity.
+   */
+  public function getOriginalKey() {
+    return $this->originalKey;
   }
 
   /**
