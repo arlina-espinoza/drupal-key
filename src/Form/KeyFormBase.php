@@ -115,14 +115,14 @@ abstract class KeyFormBase extends EntityForm {
         'wrapper' => 'key-settings',
       ),
     );
+    $form['settings']['type_section']['key_type_description'] = array(
+      '#markup' => $key->getKeyType()->getPluginDefinition()['description'],
+    );
     $form['settings']['type_section']['key_type_settings'] = array(
       '#type' => 'container',
       '#title' => $this->t('Key type settings'),
       '#title_display' => FALSE,
       '#tree' => TRUE,
-    );
-    $form['settings']['type_section']['key_type_description'] = array(
-      '#markup' => $key->getKeyType()->getPluginDefinition()['description'],
     );
 
     // If the form is rebuilding and the key type is responsible,
