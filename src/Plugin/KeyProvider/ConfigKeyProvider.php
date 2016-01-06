@@ -34,7 +34,10 @@ class ConfigKeyProvider extends KeyProviderBase {
     return isset($this->configuration['key_value']) ? $this->configuration['key_value'] : '';
   }
 
-  public function setKeyValue($key_value) {
+  /**
+   * {@inheritdoc}
+   */
+  public function setKeyValue(KeyInterface $key, $key_value) {
     $this->configuration['key_value'] = $key_value;
 
     return $key_value;

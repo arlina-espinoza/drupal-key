@@ -28,12 +28,14 @@ interface KeyProviderInterface {
   /**
    * Sets the value of a key.
    *
+   * @param \Drupal\key\KeyInterface $key
+   *   The key whose value will be set.
    * @param string $key_value
    *   The key value.
    *
-   * @return string|bool
-   *   The key value if successful, FALSE if unsuccessful.
+   * @return bool
+   *   TRUE if successful, FALSE if unsuccessful.
    */
-  public function setKeyValue($key_value);
+  public function setKeyValue(KeyInterface $key, $key_value);
 
 }
