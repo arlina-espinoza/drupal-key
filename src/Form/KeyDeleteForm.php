@@ -10,6 +10,7 @@ namespace Drupal\key\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\key\Plugin\KeyPluginDeleteFormInterface;
 
 /**
  * Builds the form to delete a Key.
@@ -39,9 +40,47 @@ class KeyDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildForm($form, $form_state);
+
+    // Allow the plugins to modify the form.
+    foreach ($this->entity->getPlugins() as $type => $plugin) {
+      if ($plugin instanceof KeyPluginDeleteFormInterface) {
+        $plugin->buildDeleteForm($form, $form_state);
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+
+    // Allow the plugins to perform additional validation.
+    foreach ($this->entity->getPlugins() as $type => $plugin) {
+      if ($plugin instanceof KeyPluginDeleteFormInterface) {
+        $plugin->validateDeleteForm($form, $form_state);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('The key %key was deleted.', array('%key' => $this->entity->label())));
+
+    // Allow the plugins to perform additional actions.
+    foreach ($this->entity->getPlugins() as $type => $plugin) {
+      if ($plugin instanceof KeyPluginDeleteFormInterface) {
+        $plugin->submitDeleteForm($form, $form_state);
+      }
+    }
+
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
