@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyPluginFormInterface;
+use Drupal\key\Plugin\KeyProviderSettableValueInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -229,16 +230,15 @@ abstract class KeyFormBase extends EntityForm {
         }
       }
 
+      $processed_key_value = FALSE;
+
       // If the provider accepts a key value, get the processed value
       // from the Key Input plugin.
       if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
-        $processed_key_value = $this->entity->getKeyInput()->processSubmittedKeyValue($form_state);
-        // TODO: Add validation by key type plugin here.
-        $form_state->set('processed_key_value', $processed_key_value);
+        $processed_key_value = $this->entity->getKeyInput()
+          ->processSubmittedKeyValue($form_state);
       }
-      else {
-        $form_state->set('processed_key_value', FALSE);
-      }
+      $form_state->set('processed_key_value', $processed_key_value);
     }
   }
 
@@ -254,11 +254,12 @@ abstract class KeyFormBase extends EntityForm {
       }
     }
 
-    // If a key value has been processed by the key input plugin,
-    // send it to the key provider plugin to set it.
-    $processed_key_value = $form_state->get('processed_key_value');
-    if (isset($processed_key_value)) {
-      $this->entity->setKeyValue($processed_key_value);
+    // If the key provider allows setting the key value, pass the processed
+    // key value to the plugin. The value will be FALSE if the form didn't
+    // provide a key value, either because the provider doesn't accept one
+    // or it was optional.
+    if ($this->entity->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
+      $this->entity->setKeyValue($form_state->get('processed_key_value'));
     }
 
     parent::submitForm($form, $form_state);

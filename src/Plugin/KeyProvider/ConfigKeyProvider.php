@@ -8,6 +8,7 @@
 namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\key\Plugin\KeyProviderBase;
+use Drupal\key\Plugin\KeyProviderSettableValueInterface;
 use Drupal\key\KeyInterface;
 
 /**
@@ -25,7 +26,7 @@ use Drupal\key\KeyInterface;
  *   }
  * )
  */
-class ConfigKeyProvider extends KeyProviderBase {
+class ConfigKeyProvider extends KeyProviderBase implements KeyProviderSettableValueInterface {
 
   /**
    * {@inheritdoc}
@@ -38,9 +39,21 @@ class ConfigKeyProvider extends KeyProviderBase {
    * {@inheritdoc}
    */
   public function setKeyValue(KeyInterface $key, $key_value) {
-    $this->configuration['key_value'] = $key_value;
+    if ($this->configuration['key_value'] = $key_value) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
 
-    return $key_value;
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteKeyValue(KeyInterface $key) {
+    // Nothing needs to be done, since the value will have been deleted
+    // with the Key entity.
+    return TRUE;
   }
 
 }

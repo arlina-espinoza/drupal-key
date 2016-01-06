@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\key\KeyInterface;
 use Drupal\key\Plugin\KeyPluginCollection;
+use Drupal\key\Plugin\KeyProviderSettableValueInterface;
 
 /**
  * Defines the Key entity.
@@ -253,7 +254,24 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    * {@inheritdoc}
    */
   public function setKeyValue($key_value) {
-    return $this->getKeyProvider()->setKeyValue($this, $key_value);
+    if ($this->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
+      return $this->getKeyProvider()->setKeyValue($this, $key_value);
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteKeyValue() {
+    if ($this->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
+      return $this->getKeyProvider()->deleteKeyValue($this);
+    }
+    else {
+      return FALSE;
+    }
   }
 
 }
