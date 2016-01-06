@@ -295,8 +295,16 @@ abstract class KeyFormBase extends EntityForm {
     /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
     $plugin = $key->getKeyType();
 
-    $key->setPlugin('key_type', $plugin->getPluginId());
-    $plugin->setConfiguration($plugin->defaultConfiguration());
+    // If an original key exists, restore the plugin configuration
+    // from it. Otherwise, reset to the default configuration.
+    if ($this->originalKey) {
+      $configuration = $this->originalKey->getKeyType()->getConfiguration();
+    }
+    else {
+      $configuration = $plugin->defaultConfiguration();
+    }
+
+    $plugin->setConfiguration($configuration);
   }
 
   /**
@@ -310,7 +318,17 @@ abstract class KeyFormBase extends EntityForm {
     $plugin = $key->getKeyProvider();
 
     $key->setPlugin('key_provider', $plugin->getPluginId());
-    $plugin->setConfiguration($plugin->defaultConfiguration());
+
+    // If an original key exists, restore the plugin configuration
+    // from it. Otherwise, reset to the default configuration.
+    if ($this->originalKey) {
+      $configuration = $this->originalKey->getKeyProvider()->getConfiguration();
+    }
+    else {
+      $configuration = $plugin->defaultConfiguration();
+    }
+
+    $plugin->setConfiguration($configuration);
   }
 
   /**
