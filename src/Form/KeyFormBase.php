@@ -213,36 +213,38 @@ abstract class KeyFormBase extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    if ($form_state->isSubmitted()) {
-      // Make sure each plugin settings field is an array.
-      foreach ($this->entity->getPluginTypes() as $type) {
-        if (empty($form_state->getValue($type . '_settings'))) {
-          $form_state->setValue($type . '_settings', []);
-        }
-      }
-
-      $processed_key_value = FALSE;
-      foreach ($this->entity->getPlugins() as $type => $plugin) {
-        if ($plugin instanceof KeyPluginFormInterface) {
-          $plugin_form_state = $this->createPluginFormState($type, $form_state);
-
-          // Special behavior for the Key Input plugin.
-          if ($type == 'key_input') {
-            // If the provider accepts a key value, get the processed value.
-            if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
-              $processed_key_value = $plugin->processSubmittedKeyValue($plugin_form_state);
-            }
-          }
-
-          $plugin->validateConfigurationForm($form, $plugin_form_state);
-          $form_state->setValue($type . '_settings', $plugin_form_state->getValues());
-          $this->moveFormStateErrors($plugin_form_state, $form_state);
-        }
-      }
-
-      // Store the processed key value in form state.
-      $form_state->set('processed_key_value', $processed_key_value);
+    if (!$form_state->isSubmitted()) {
+      return;
     }
+
+    // Make sure each plugin settings field is an array.
+    foreach ($this->entity->getPluginTypes() as $type) {
+      if (empty($form_state->getValue($type . '_settings'))) {
+        $form_state->setValue($type . '_settings', []);
+      }
+    }
+
+    $processed_key_value = FALSE;
+    foreach ($this->entity->getPlugins() as $type => $plugin) {
+      if ($plugin instanceof KeyPluginFormInterface) {
+        $plugin_form_state = $this->createPluginFormState($type, $form_state);
+
+        // Special behavior for the Key Input plugin.
+        if ($type == 'key_input') {
+          // If the provider accepts a key value, get the processed value.
+          if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+            $processed_key_value = $plugin->processSubmittedKeyValue($plugin_form_state);
+          }
+        }
+
+        $plugin->validateConfigurationForm($form, $plugin_form_state);
+        $form_state->setValue($type . '_settings', $plugin_form_state->getValues());
+        $this->moveFormStateErrors($plugin_form_state, $form_state);
+      }
+    }
+
+    // Store the processed key value in form state.
+    $form_state->set('processed_key_value', $processed_key_value);
   }
 
   /**
