@@ -49,7 +49,7 @@ class KeyPluginManager extends DefaultPluginManager {
     );
 
     $this->pluginType = $type;
-    $this->subdir = 'Plugin/' . str_replace('_', '', ucwords($type, '_'));
+    $this->subdir = 'Plugin/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $type)));
 
     parent::__construct($this->subdir, $namespaces, $module_handler, $plugin_interfaces[$type], $type_annotations[$type]);
     $this->alterInfo($type . '_info');
