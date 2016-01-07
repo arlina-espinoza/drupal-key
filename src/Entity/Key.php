@@ -8,6 +8,7 @@
 namespace Drupal\key\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\key\KeyInterface;
 use Drupal\key\Plugin\KeyPluginCollection;
@@ -272,6 +273,21 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
     else {
       return FALSE;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    foreach ($entities as $id => $key) {
+      /** @var $key \Drupal\key\Entity\Key */
+      // Give the key provider plugin the opportunity to delete the key value.
+      if ($key->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
+        $key->deleteKeyValue();
+      }
+    }
+
+    parent::postDelete($storage, $entities);
   }
 
 }
