@@ -21,12 +21,12 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface {
     // the key input settings, remove it from the settings and return the
     // value. Otherwise, return an empty string. Input plugins can override
     // this behavior to perform more complex processing.
-    $key_input_settings = $form_state->getValue('key_input_settings');
+    $key_input_settings = $form_state->getValues();
     $processed_key_value = '';
     if (isset($key_input_settings['key_value'])) {
       $processed_key_value = $key_input_settings['key_value'];
       unset($key_input_settings['key_value']);
-      $form_state->setValue('key_input_settings', $key_input_settings);
+      $form_state->setValues($key_input_settings);
     }
 
     return $processed_key_value;

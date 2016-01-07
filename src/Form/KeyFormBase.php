@@ -221,23 +221,26 @@ abstract class KeyFormBase extends EntityForm {
         }
       }
 
+      $processed_key_value = FALSE;
       foreach ($this->entity->getPlugins() as $type => $plugin) {
         if ($plugin instanceof KeyPluginFormInterface) {
           $plugin_state = $this->createPluginState($type, $form_state);
+
+          // Special behavior for the Key Input plugin.
+          if ($type == 'key_input') {
+            // If the provider accepts a key value, get the processed value.
+            if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+              $processed_key_value = $plugin->processSubmittedKeyValue($plugin_state);
+            }
+          }
+
           $plugin->validateConfigurationForm($form, $plugin_state);
           $form_state->setValue($type . '_settings', $plugin_state->getValues());
           $this->moveFormStateErrors($plugin_state, $form_state);
         }
       }
 
-      $processed_key_value = FALSE;
-
-      // If the provider accepts a key value, get the processed value
-      // from the Key Input plugin.
-      if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
-        $processed_key_value = $this->entity->getKeyInput()
-          ->processSubmittedKeyValue($form_state);
-      }
+      // Store the processed key value in form state.
       $form_state->set('processed_key_value', $processed_key_value);
     }
   }
