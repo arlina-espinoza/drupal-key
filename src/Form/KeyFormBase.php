@@ -245,6 +245,20 @@ abstract class KeyFormBase extends EntityForm {
 
     // Store the processed key value in form state.
     $form_state->set('processed_key_value', $processed_key_value);
+
+    // Allow the Key Type plugin to validate the key value. Use the processed
+    // key value if there is one. Otherwise, retrieve the key value using the
+    // key provider.
+    if (!empty($processed_key_value)) {
+      $key_value = $processed_key_value;
+    }
+    else {
+      $key_value = $this->entity->getKeyValue();
+    }
+    $plugin_form_state = $this->createPluginFormState('key_type', $form_state);
+    $this->entity->getKeyType()->validateKeyValue($form, $plugin_form_state, $key_value);
+    $form_state->setValue('key_type_settings', $plugin_form_state->getValues());
+    $this->moveFormStateErrors($plugin_form_state, $form_state);
   }
 
   /**

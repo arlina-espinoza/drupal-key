@@ -6,6 +6,7 @@
 
 namespace Drupal\key\Plugin;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\KeyInterface;
 
 /**
@@ -24,7 +25,8 @@ abstract class KeyTypeBase extends KeyPluginBase implements KeyTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateKeyValue(KeyInterface $key, $key_value) {
+  public function validateKeyValue(array $form, FormStateInterface $form_state, $key_value) {
+    // Validation of the key value is optional.
   }
 
 }
