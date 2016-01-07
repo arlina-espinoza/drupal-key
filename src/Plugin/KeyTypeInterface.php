@@ -28,11 +28,11 @@ interface KeyTypeInterface {
   /**
    * Allows the Key Type plugin to validate the key value.
    *
-   * @param string $key_value
-   *   The key value
    * @param \Drupal\key\KeyInterface $key
    *   The key entity object.
+   * @param string $key_value
+   *   The key value
    */
-  public function validateKeyValue($key_value, KeyInterface $key);
+  public function validateKeyValue(KeyInterface $key, $key_value);
 
 }

@@ -24,7 +24,7 @@ abstract class KeyTypeBase extends KeyPluginBase implements KeyTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateKeyValue($key_value, KeyInterface $key) {
+  public function validateKeyValue(KeyInterface $key, $key_value) {
   }
 
 }
