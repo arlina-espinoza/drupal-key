@@ -58,7 +58,7 @@ abstract class KeyFormBase extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
-    $key = &$this->entity;
+    $key = $this->entity;
 
     // Only when the form is first built.
     if (!$form_state->isRebuilding()) {
