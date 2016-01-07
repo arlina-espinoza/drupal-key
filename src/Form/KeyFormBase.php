@@ -133,9 +133,9 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     if ($key->getKeyType() instanceof KeyPluginFormInterface) {
-      $plugin_state = $this->createPluginState('key_type', $form_state);
-      $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $plugin_state);
-      $form_state->setValue('key_type_settings', $plugin_state->getValues());
+      $plugin_form_state = $this->createPluginFormState('key_type', $form_state);
+      $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $plugin_form_state);
+      $form_state->setValue('key_type_settings', $plugin_form_state->getValues());
     }
 
     // Key provider section.
@@ -173,9 +173,9 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     if ($key->getKeyProvider() instanceof KeyPluginFormInterface) {
-      $plugin_state = $this->createPluginState('key_provider', $form_state);
-      $form['settings']['provider_section']['key_provider_settings'] += $key->getKeyProvider()->buildConfigurationForm([], $plugin_state);
-      $form_state->setValue('key_provider_settings', $plugin_state->getValues());
+      $plugin_form_state = $this->createPluginFormState('key_provider', $form_state);
+      $form['settings']['provider_section']['key_provider_settings'] += $key->getKeyProvider()->buildConfigurationForm([], $plugin_form_state);
+      $form_state->setValue('key_provider_settings', $plugin_form_state->getValues());
     }
 
     // Key input section.
@@ -199,9 +199,9 @@ abstract class KeyFormBase extends EntityForm {
       '#tree' => TRUE,
     );
     if ($key->getKeyInput() instanceof KeyPluginFormInterface) {
-      $plugin_state = $this->createPluginState('key_input', $form_state);
-      $form['settings']['input_section']['key_input_settings'] += $key->getKeyInput()->buildConfigurationForm([], $plugin_state);
-      $form_state->setValue('key_input_settings', $plugin_state->getValues());
+      $plugin_form_state = $this->createPluginFormState('key_input', $form_state);
+      $form['settings']['input_section']['key_input_settings'] += $key->getKeyInput()->buildConfigurationForm([], $plugin_form_state);
+      $form_state->setValue('key_input_settings', $plugin_form_state->getValues());
     }
 
     return parent::form($form, $form_state);
@@ -224,19 +224,19 @@ abstract class KeyFormBase extends EntityForm {
       $processed_key_value = FALSE;
       foreach ($this->entity->getPlugins() as $type => $plugin) {
         if ($plugin instanceof KeyPluginFormInterface) {
-          $plugin_state = $this->createPluginState($type, $form_state);
+          $plugin_form_state = $this->createPluginFormState($type, $form_state);
 
           // Special behavior for the Key Input plugin.
           if ($type == 'key_input') {
             // If the provider accepts a key value, get the processed value.
             if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
-              $processed_key_value = $plugin->processSubmittedKeyValue($plugin_state);
+              $processed_key_value = $plugin->processSubmittedKeyValue($plugin_form_state);
             }
           }
 
-          $plugin->validateConfigurationForm($form, $plugin_state);
-          $form_state->setValue($type . '_settings', $plugin_state->getValues());
-          $this->moveFormStateErrors($plugin_state, $form_state);
+          $plugin->validateConfigurationForm($form, $plugin_form_state);
+          $form_state->setValue($type . '_settings', $plugin_form_state->getValues());
+          $this->moveFormStateErrors($plugin_form_state, $form_state);
         }
       }
 
@@ -251,9 +251,9 @@ abstract class KeyFormBase extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->entity->getPlugins() as $type => $plugin) {
       if ($plugin instanceof KeyPluginFormInterface) {
-        $plugin_state = $this->createPluginState($type, $form_state);
-        $plugin->submitConfigurationForm($form, $plugin_state);
-        $form_state->setValue($type . '_settings', $plugin_state->getValues());
+        $plugin_form_state = $this->createPluginFormState($type, $form_state);
+        $plugin->submitConfigurationForm($form, $plugin_form_state);
+        $form_state->setValue($type . '_settings', $plugin_form_state->getValues());
       }
     }
 
@@ -383,16 +383,16 @@ abstract class KeyFormBase extends EntityForm {
    *   The form state to copy values from.
    *
    * @return FormStateInterface
-   *   A new form state object.
+   *   A clone of the form state object with values from the plugin.
    */
-  protected function createPluginState($type, FormStateInterface $form_state) {
+  protected function createPluginFormState($type, FormStateInterface $form_state) {
     // Clone the form state.
-    $plugin_state = clone $form_state;
+    $plugin_form_state = clone $form_state;
 
     // Clear the values, except for this plugin type's settings.
-    $plugin_state->setValues($form_state->getValue($type . '_settings', []));
+    $plugin_form_state->setValues($form_state->getValue($type . '_settings', []));
 
-    return $plugin_state;
+    return $plugin_form_state;
   }
 
   /**
