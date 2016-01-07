@@ -278,6 +278,29 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
   /**
    * {@inheritdoc}
    */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    // If an original key exists.
+    if (isset($this->original)) {
+      /** @var $original \Drupal\key\Entity\Key */
+      $original = $this->original;
+
+      // If the original key's provider allows setting a key value and
+      // the plugin ID is different from the one that was just saved with
+      // the entity.
+      if ($original->getKeyProvider() instanceof KeyProviderSettableValueInterface
+        && $original->getKeyProvider()->getPluginId() != $this->getKeyProvider()->getPluginId()
+      ) {
+        // Allow the original key's provider to delete the key value.
+        $original->deleteKeyValue();
+      }
+    }
+
+    parent::postSave($storage, $update);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     foreach ($entities as $id => $key) {
       /** @var $key \Drupal\key\Entity\Key */
