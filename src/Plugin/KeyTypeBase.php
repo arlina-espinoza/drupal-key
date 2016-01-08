@@ -7,7 +7,6 @@
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\key\KeyInterface;
 
 /**
  * Defines a base class for Key Type plugins.
@@ -17,7 +16,7 @@ abstract class KeyTypeBase extends KeyPluginBase implements KeyTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateKeyValue(KeyInterface $key) {
+  public static function generateKeyValue(array $configuration) {
     // Generate a random 16-character password.
     return user_password(16);
   }
