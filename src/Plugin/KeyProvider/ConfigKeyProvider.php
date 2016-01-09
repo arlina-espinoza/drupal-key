@@ -19,7 +19,7 @@ use Drupal\key\KeyInterface;
  *   label = @Translation("Configuration"),
  *   description = @Translation("The Configuration key provider stores the key in Drupal's configuration system."),
  *   storage_method = "config",
- *   key_input = {
+ *   key_value = {
  *     "accepted" = TRUE,
  *     "required" = TRUE,
  *     "editable" = TRUE

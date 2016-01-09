@@ -64,7 +64,7 @@ abstract class KeyFormBase extends EntityForm {
     if (!$form_state->isRebuilding()) {
       // If the key provider accepts a key value, get the current value
       // and add it to the key input plugin configuration.
-      if ($key->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+      if ($key->getKeyProvider()->getPluginDefinition()['key_value']['accepted']) {
         $key->getKeyInput()->setConfiguration(['key_value' => $key->getKeyValue()]);
       }
     }
@@ -232,7 +232,7 @@ abstract class KeyFormBase extends EntityForm {
         // Special behavior for the Key Input plugin.
         if ($type == 'key_input') {
           // If the provider accepts a key value, get the processed value.
-          if ($this->entity->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+          if ($this->entity->getKeyProvider()->getPluginDefinition()['key_value']['accepted']) {
             $processed_key_value = $plugin->processSubmittedKeyValue($plugin_form_state);
           }
         }
@@ -367,7 +367,7 @@ abstract class KeyFormBase extends EntityForm {
     // 'None' is the default.
     $new_input_id = 'none';
 
-    if ($key->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
+    if ($key->getKeyProvider()->getPluginDefinition()['key_value']['accepted']) {
       $new_input_id = $key->getKeyType()->getPluginDefinition()['key_value']['plugin'];
     }
 
