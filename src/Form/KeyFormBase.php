@@ -368,7 +368,7 @@ abstract class KeyFormBase extends EntityForm {
     $new_input_id = 'none';
 
     if ($key->getKeyProvider()->getPluginDefinition()['key_input']['accepted']) {
-      $new_input_id = 'text_field';
+      $new_input_id = $key->getKeyType()->getPluginDefinition()['key_value']['plugin'];
     }
 
     if ($current_input_id != $new_input_id) {

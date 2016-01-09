@@ -51,4 +51,17 @@ class KeyType extends Plugin {
    */
   public $group;
 
+  /**
+   * The settings to use when a key value can be submitted.
+   *
+   * This is used to indicate which key input plugin should be used
+   * to receive the key value (if the provider accepts a key value).
+   * The default key input plugin is text_field.
+   *
+   * @var array
+   */
+  public $key_value = array(
+    'plugin' => 'text_field',
+  );
+
 }
