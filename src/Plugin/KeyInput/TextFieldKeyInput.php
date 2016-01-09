@@ -20,7 +20,7 @@ use Drupal\key\Plugin\KeyPluginFormInterface;
  *   description = @Translation("A simple text field.")
  * )
  */
-class TextFieldKeyInput extends KeyInputBase implements KeyPluginFormInterface {
+class TextFieldKeyInput extends KeyInputBase {
 
   /**
    * {@inheritdoc}
@@ -43,19 +43,6 @@ class TextFieldKeyInput extends KeyInputBase implements KeyPluginFormInterface {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->setConfiguration($form_state->getValues());
   }
 
 }

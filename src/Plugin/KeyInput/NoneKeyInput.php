@@ -20,7 +20,7 @@ use Drupal\key\Plugin\KeyPluginFormInterface;
  *   description = @Translation("A key input for providers that don't accept a value.")
  * )
  */
-class NoneKeyInput extends KeyInputBase implements KeyPluginFormInterface {
+class NoneKeyInput extends KeyInputBase {
 
   /**
    * {@inheritdoc}
@@ -30,19 +30,6 @@ class NoneKeyInput extends KeyInputBase implements KeyPluginFormInterface {
       '#markup' => $this->t("The selected key provider does not accept a value. See the provider's description for instructions on how and where to store the key value."),
     );
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->setConfiguration($form_state->getValues());
   }
 
   /**

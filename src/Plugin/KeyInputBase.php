@@ -11,7 +11,20 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Defines a base class for Key Type plugins.
  */
-abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface {
+abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface, KeyPluginFormInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->setConfiguration($form_state->getValues());
+  }
 
   /**
    * {@inheritdoc}
