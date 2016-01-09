@@ -40,6 +40,8 @@ class TextFieldKeyInput extends KeyInputBase {
       '#title' => $this->t('Key value'),
       '#required' => TRUE,
       '#default_value' => $this->getConfiguration()['key_value'],
+      // Tell the browser not to autocomplete this field.
+      '#attributes' => ['autocomplete' => 'off'],
     );
 
     return $form;
