@@ -129,7 +129,7 @@ abstract class KeyFormBase extends EntityForm {
     // If the form is rebuilding and the key type is responsible,
     // update the key type plugin.
     if ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_type') {
-      $this->updateKeyType();
+      $this->updateKeyType($form_state);
     }
 
     if ($key->getKeyType() instanceof KeyPluginFormInterface) {
@@ -169,7 +169,7 @@ abstract class KeyFormBase extends EntityForm {
     // If the form is rebuilding and the key provider is responsible,
     // update the key provider plugin.
     if ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_provider') {
-      $this->updateKeyProvider();
+      $this->updateKeyProvider($form_state);
     }
 
     if ($key->getKeyProvider() instanceof KeyPluginFormInterface) {
@@ -321,7 +321,7 @@ abstract class KeyFormBase extends EntityForm {
   /**
    * Update the Key Type plugin.
    */
-  protected function updateKeyType() {
+  protected function updateKeyType(FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
@@ -346,7 +346,7 @@ abstract class KeyFormBase extends EntityForm {
   /**
    * Update the Key Provider plugin.
    */
-  protected function updateKeyProvider() {
+  protected function updateKeyProvider(FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
