@@ -243,12 +243,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    * {@inheritdoc}
    */
   public function getKeyValue() {
-    // Create instance of the key provider plugin.
-    $plugin = \Drupal::service('plugin.manager.key.key_provider');
-    $key_provider = $plugin->createInstance($this->key_provider, $this->key_provider_settings);
-
-    // Return the key value.
-    return $key_provider->getKeyValue($this);
+    return $this->getKeyProvider()->getKeyValue($this);
   }
 
   /**
