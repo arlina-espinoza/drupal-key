@@ -56,4 +56,12 @@ class ConfigKeyProvider extends KeyProviderBase implements KeyProviderSettableVa
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function obscureKeyValue($key_value, array $options = []) {
+    // Key values are not obscured when this provider is used.
+    return $key_value;
+  }
+
 }

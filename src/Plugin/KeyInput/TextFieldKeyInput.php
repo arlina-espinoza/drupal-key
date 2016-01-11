@@ -35,11 +35,13 @@ class TextFieldKeyInput extends KeyInputBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $key_value_data = $form_state->get('key_value');
+
     $form['key_value'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Key value'),
       '#required' => TRUE,
-      '#default_value' => $this->getConfiguration()['key_value'],
+      '#default_value' => $key_value_data['current'],
       // Tell the browser not to autocomplete this field.
       '#attributes' => ['autocomplete' => 'off'],
     );

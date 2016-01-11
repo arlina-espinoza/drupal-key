@@ -185,8 +185,12 @@ abstract class KeyFormBase extends EntityForm {
       '#open' => TRUE,
     );
 
-    // Update the key input plugin.
-    $this->updateKeyInput();
+    // If the form is either building for the first time or rebuilding
+    // because the Key Provider was changed, update the Key Input plugin.
+    if ((!$form_state->isRebuilding())
+      || ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_provider')) {
+      $this->updateKeyInput($form_state);
+    }
 
     $form['settings']['input_section']['key_input'] = array(
       '#type' => 'value',
@@ -224,33 +228,40 @@ abstract class KeyFormBase extends EntityForm {
       }
     }
 
-    $processed_key_value = FALSE;
+    $processed_values = array(
+      'submitted' => NULL,
+      'processed_submitted' => NULL,
+    );
     foreach ($this->entity->getPlugins() as $type => $plugin) {
       if ($plugin instanceof KeyPluginFormInterface) {
         $plugin_form_state = $this->createPluginFormState($type, $form_state);
 
         // Special behavior for the Key Input plugin.
         if ($type == 'key_input') {
-          // If the provider accepts a key value, get the processed value.
+          // If the provider accepts a key value.
           if ($this->entity->getKeyProvider()->getPluginDefinition()['key_value']['accepted']) {
-            $processed_key_value = $plugin->processSubmittedKeyValue($plugin_form_state);
+            $processed_values = $plugin->processSubmittedKeyValue($plugin_form_state);
           }
         }
 
         $plugin->validateConfigurationForm($form, $plugin_form_state);
         $form_state->setValue($type . '_settings', $plugin_form_state->getValues());
         $this->moveFormStateErrors($plugin_form_state, $form_state);
+        $this->moveFormStateStorage($plugin_form_state, $form_state);
       }
     }
 
-    // Store the processed key value in form state.
-    $form_state->set('processed_key_value', $processed_key_value);
+    // Store the submitted and processed key values in form state.
+    $key_value_data = $form_state->get('key_value');
+    $key_value_data['submitted'] = $processed_values['submitted'];
+    $key_value_data['processed_submitted'] = $processed_values['processed_submitted'];
+    $form_state->set('key_value', $key_value_data);
 
     // Allow the Key Type plugin to validate the key value. Use the processed
     // key value if there is one. Otherwise, retrieve the key value using the
     // key provider.
-    if (!empty($processed_key_value)) {
-      $key_value = $processed_key_value;
+    if (!empty($processed_values['processed_submitted'])) {
+      $key_value = $processed_values['processed_submitted'];
     }
     else {
       $key_value = $this->entity->getKeyValue();
@@ -259,12 +270,15 @@ abstract class KeyFormBase extends EntityForm {
     $this->entity->getKeyType()->validateKeyValue($form, $plugin_form_state, $key_value);
     $form_state->setValue('key_type_settings', $plugin_form_state->getValues());
     $this->moveFormStateErrors($plugin_form_state, $form_state);
+    $this->moveFormStateStorage($plugin_form_state, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $key_value_data = $form_state->get('key_value');
+
     foreach ($this->entity->getPlugins() as $type => $plugin) {
       if ($plugin instanceof KeyPluginFormInterface) {
         $plugin_form_state = $this->createPluginFormState($type, $form_state);
@@ -273,12 +287,11 @@ abstract class KeyFormBase extends EntityForm {
       }
     }
 
-    // If the key provider allows setting the key value, pass the processed
-    // key value to the plugin. The value will be FALSE if the form didn't
-    // provide a key value, either because the provider doesn't accept one
-    // or it was optional.
-    if ($this->entity->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
-      $this->entity->setKeyValue($form_state->get('processed_key_value'));
+    // Set the key value if the key provider allows it and the submitted
+    // value is not equal to the obscured value.
+    if ($this->entity->getKeyProvider() instanceof KeyProviderSettableValueInterface
+      && ($key_value_data['submitted'] != $key_value_data['obscured'])) {
+        $this->entity->setKeyValue($key_value_data['processed_submitted']);
     }
 
     parent::submitForm($form, $form_state);
@@ -357,27 +370,49 @@ abstract class KeyFormBase extends EntityForm {
 
   /**
    * Update the Key Input plugin.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    */
-  protected function updateKeyInput() {
+  protected function updateKeyInput(FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
-    $current_input_id = $key->getKeyInput()->getPluginId();
+    /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+    $plugin = $key->getKeyInput();
 
-    // 'None' is the default.
-    $new_input_id = 'none';
+    // Get the current key value data.
+    $key_value_data = $form_state->get('key_value');
 
+    // Determine which Key Input plugin should be used.
+    $key_input_id = 'none';
     if ($key->getKeyProvider()->getPluginDefinition()['key_value']['accepted']) {
-      $new_input_id = $key->getKeyType()->getPluginDefinition()['key_value']['plugin'];
+      $key_input_id = $key->getKeyType()->getPluginDefinition()['key_value']['plugin'];
     }
 
-    if ($current_input_id != $new_input_id) {
-      /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
-      $plugin = $key->getKeyInput();
+    // Set the Key Input plugin.
+    $key->setPlugin('key_input', $key_input_id);
 
-      $key->setPlugin('key_input', $new_input_id);
-      $plugin->setConfiguration($plugin->defaultConfiguration());
+    // If an original key exists, and the plugin IDs match.
+    if ($this->originalKey
+      && $this->originalKey->getKeyProvider()->getPluginId() == $key->getKeyProvider()->getPluginId()
+      && $this->originalKey->getKeyInput()->getPluginId() == $key_input_id)
+    {
+      // Use the configuration from the original key's plugin.
+      $configuration = $this->originalKey->getKeyInput()->getConfiguration();
+
+      // Set the current key value to be the obscured value.
+      $key_value_data['current'] = $key_value_data['obscured'];
     }
+    else {
+      // Use the plugin's default configuration.
+      $configuration = $plugin->defaultConfiguration();
+
+      // Clear the current key value.
+      $key_value_data['current'] = '';
+    }
+
+    $plugin->setConfiguration($configuration);
+    $form_state->set('key_value', $key_value_data);
   }
 
   /**
@@ -422,6 +457,20 @@ abstract class KeyFormBase extends EntityForm {
   protected function moveFormStateErrors(FormStateInterface $from, FormStateInterface $to) {
     foreach ($from->getErrors() as $name => $error) {
       $to->setErrorByName($name, $error);
+    }
+  }
+
+  /**
+   * Moves storage variables from one form state to another.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $from
+   *   The form state object to move from.
+   * @param \Drupal\Core\Form\FormStateInterface $to
+   *   The form state object to move to.
+   */
+  protected function moveFormStateStorage(FormStateInterface $from, FormStateInterface $to) {
+    foreach ($from->getStorage() as $index => $value) {
+      $to->set($index, $value);
     }
   }
 

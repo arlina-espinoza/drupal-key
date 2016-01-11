@@ -31,18 +31,30 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface, 
    */
   public function processSubmittedKeyValue(FormStateInterface $form_state) {
     // This is the default behavior. If a field named 'key_value' exists in
-    // the key input settings, remove it from the settings and return the
-    // value. Otherwise, return an empty string. Input plugins can override
-    // this behavior to perform more complex processing.
+    // the key input settings, remove it from the settings and return it as
+    // the submitted value and the processed value. Otherwise, return NULL
+    // for each. Input plugins can override this behavior to perform more
+    // complex processing.
+    $processed_values = array(
+      'submitted' => NULL,
+      'processed_submitted' => NULL,
+    );
     $key_input_settings = $form_state->getValues();
-    $processed_key_value = '';
     if (isset($key_input_settings['key_value'])) {
-      $processed_key_value = $key_input_settings['key_value'];
+      $processed_values['submitted'] = $processed_values['processed_submitted'] = $key_input_settings['key_value'];
       unset($key_input_settings['key_value']);
       $form_state->setValues($key_input_settings);
     }
 
-    return $processed_key_value;
+    return $processed_values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processExistingKeyValue($key_value) {
+    // The default behavior is to return the key value as-is.
+    return $key_value;
   }
 
 }

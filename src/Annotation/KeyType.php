@@ -45,11 +45,11 @@ class KeyType extends Plugin {
    * The group to which this key type belongs.
    *
    * This is the general category of this type of key. Examples include
-   * "authentication" and "encryption".
+   * "authentication" and "encryption". The default group is "none".
    *
    * @var string
    */
-  public $group;
+  public $group = 'none';
 
   /**
    * The settings to use when a key value can be submitted.

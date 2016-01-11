@@ -25,4 +25,16 @@ interface KeyInputInterface {
    */
   public function processSubmittedKeyValue(FormStateInterface $form_state);
 
+  /**
+   * Process an existing key value.
+   *
+   * @param string $key_value
+   *   The existing key value.
+   *
+   * @return array
+   *   The submitted value (with index "submitted") and the processed
+   *   value (with index "processed_submitted").
+   */
+  public function processExistingKeyValue($key_value);
+
 }
