@@ -60,15 +60,6 @@ abstract class KeyFormBase extends EntityForm {
     /** @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
-    // Only when the form is first built.
-    if (!$form_state->isRebuilding()) {
-      // If the key provider accepts a key value, get the current value
-      // and add it to the key input plugin configuration.
-      if ($key->getKeyProvider()->getPluginDefinition()['key_value']['accepted']) {
-        $key->getKeyInput()->setConfiguration(['key_value' => $key->getKeyValue()]);
-      }
-    }
-
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Key name'),
