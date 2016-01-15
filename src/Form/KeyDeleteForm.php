@@ -72,7 +72,7 @@ class KeyDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message($this->t('The key %key was deleted.', array('%key' => $this->entity->label())));
+    drupal_set_message($this->t('The key %label has been deleted.', array('%label' => $this->entity->label())));
 
     // Allow the plugins to perform additional actions.
     foreach ($this->entity->getPlugins() as $type => $plugin) {
