@@ -29,10 +29,10 @@ abstract class KeyFormBase extends EntityForm {
   /**
    * The original key.
    *
-   * @var \Drupal\key\Entity\Key|bool
-   *   The original key entity or FALSE if this is a new key.
+   * @var \Drupal\key\Entity\Key|NULL
+   *   The original key entity or NULL if this is a new key.
    */
-  protected $originalKey = FALSE;
+  protected $originalKey = NULL;
 
   /**
    * Constructs a new key form base.
