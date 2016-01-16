@@ -340,6 +340,8 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     $plugin->setConfiguration($configuration);
+    $form_state->setValue('key_type_settings', $configuration);
+    $form_state->getUserInput()['key_type_settings'] = $configuration;
   }
 
   /**
@@ -365,6 +367,8 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     $plugin->setConfiguration($configuration);
+    $form_state->setValue('key_provider_settings', $configuration);
+    $form_state->getUserInput()['key_provider_settings'] = $configuration;
   }
 
   /**
@@ -391,10 +395,9 @@ abstract class KeyFormBase extends EntityForm {
     // Set the Key Input plugin.
     $key->setPlugin('key_input', $key_input_id);
 
-    // If an original key exists, and the plugin IDs match.
+    // If an original key exists, and the provider plugin IDs match.
     if ($this->originalKey
-      && $this->originalKey->getKeyProvider()->getPluginId() == $key->getKeyProvider()->getPluginId()
-      && $this->originalKey->getKeyInput()->getPluginId() == $key_input_id)
+      && $this->originalKey->getKeyProvider()->getPluginId() == $key->getKeyProvider()->getPluginId())
     {
       // Use the configuration from the original key's plugin.
       $configuration = $this->originalKey->getKeyInput()->getConfiguration();
@@ -411,6 +414,8 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     $plugin->setConfiguration($configuration);
+    $form_state->setValue('key_input_settings', $configuration);
+    $form_state->getUserInput()['key_input_settings'] = $configuration;
     $form_state->set('key_value', $key_value_data);
   }
 
