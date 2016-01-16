@@ -20,8 +20,9 @@ interface KeyInputInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
-   * @return string
-   *   The processed key value.
+   * @return array
+   *   The submitted value (with index "submitted") and the processed
+   *   value (with index "processed_submitted").
    */
   public function processSubmittedKeyValue(FormStateInterface $form_state);
 
@@ -31,9 +32,8 @@ interface KeyInputInterface {
    * @param string $key_value
    *   The existing key value.
    *
-   * @return array
-   *   The submitted value (with index "submitted") and the processed
-   *   value (with index "processed_submitted").
+   * @return string
+   *   The processed key value.
    */
   public function processExistingKeyValue($key_value);
 
