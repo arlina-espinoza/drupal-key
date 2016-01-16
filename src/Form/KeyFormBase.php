@@ -56,6 +56,36 @@ abstract class KeyFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    // If the form is rebuilding.
+    if ($form_state->isRebuilding()) {
+
+      // If a key type change triggered the rebuild.
+      if ($form_state->getTriggeringElement()['#name'] == 'key_type') {
+        // Update the type and input plugins.
+        $this->updateKeyType($form_state);
+        $this->updateKeyInput($form_state);
+      }
+
+      // If a key provider change triggered the rebuild.
+      if ($form_state->getTriggeringElement()['#name'] == 'key_provider') {
+        // Update the provider and input plugins.
+        $this->updateKeyProvider($form_state);
+        $this->updateKeyInput($form_state);
+      }
+    }
+    // If the form is not rebuilding.
+    else {
+      // Update the input plugin.
+      $this->updateKeyInput($form_state);
+    }
+
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(array $form, FormStateInterface $form_state) {
     /** @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
@@ -116,13 +146,6 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
-
-    // If the form is rebuilding and the key type is responsible,
-    // update the key type plugin.
-    if ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_type') {
-      $this->updateKeyType($form_state);
-    }
-
     if ($key->getKeyType() instanceof KeyPluginFormInterface) {
       $plugin_form_state = $this->createPluginFormState('key_type', $form_state);
       $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $plugin_form_state);
@@ -156,13 +179,6 @@ abstract class KeyFormBase extends EntityForm {
       '#title_display' => FALSE,
       '#tree' => TRUE,
     );
-
-    // If the form is rebuilding and the key provider is responsible,
-    // update the key provider plugin.
-    if ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_provider') {
-      $this->updateKeyProvider($form_state);
-    }
-
     if ($key->getKeyProvider() instanceof KeyPluginFormInterface) {
       $plugin_form_state = $this->createPluginFormState('key_provider', $form_state);
       $form['settings']['provider_section']['key_provider_settings'] += $key->getKeyProvider()->buildConfigurationForm([], $plugin_form_state);
@@ -175,14 +191,6 @@ abstract class KeyFormBase extends EntityForm {
       '#title' => $this->t('Value'),
       '#open' => TRUE,
     );
-
-    // If the form is either building for the first time or rebuilding
-    // because the Key Provider was changed, update the Key Input plugin.
-    if ((!$form_state->isRebuilding())
-      || ($form_state->isRebuilding() && $form_state->getTriggeringElement()['#name'] == 'key_provider')) {
-      $this->updateKeyInput($form_state);
-    }
-
     $form['settings']['input_section']['key_input'] = array(
       '#type' => 'value',
       '#value' => $key->getKeyInput()->getPluginId(),
