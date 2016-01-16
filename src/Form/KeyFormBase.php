@@ -286,18 +286,13 @@ abstract class KeyFormBase extends EntityForm {
       }
     }
 
-    // Set the key value if the key provider allows it and either the
-    // provider has changed or the submitted value is not the same as
-    // the obscured value.
-
     // If the key provider allows a key value to be set.
     if ($this->entity->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
       // If either the key provider has changed or the submitted value
       // is not the same as the obscured value.
-      if ($this->originalKey->getKeyProvider()
-          ->getPluginId() != $this->entity->getKeyProvider()
-          ->getPluginId() || $key_value_data['submitted'] != $key_value_data['obscured']
-      ) {
+      if (($this->originalKey && $this->originalKey->getKeyProvider()->getPluginId() != $this->entity->getKeyProvider()->getPluginId())
+        || ($key_value_data['submitted'] != $key_value_data['obscured']))
+      {
         // Set the key value.
         $this->entity->setKeyValue($key_value_data['processed_submitted']);
       }
