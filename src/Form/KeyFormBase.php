@@ -400,22 +400,41 @@ abstract class KeyFormBase extends EntityForm {
     // Set the Key Input plugin.
     $key->setPlugin('key_input', $key_input_id);
 
-    // If an original key exists, and the provider plugin IDs match.
-    if ($this->originalKey
-      && $this->originalKey->getKeyProvider()->getPluginId() == $key->getKeyProvider()->getPluginId())
-    {
+    // Set the plugin's configuration to the default. It may be
+    // overridden below
+    $configuration = $plugin->defaultConfiguration();
+
+    // Clear the current key value. It may be overridden below.
+    $key_value_data['current'] = '';
+
+    $use_original_key_value = FALSE;
+
+    // If an original key exists, one of the following conditions must
+    // be met in order to use the key value from it:
+    // - The key value was not obscured when the form first loaded
+    // - The original key provider is the same as the current one
+    //   AND the original key type is the same as the current one
+    if ($this->originalKey) {
+      // If the key value is not obscured.
+      if ($key_value_data['obscured'] == $key_value_data['processed_original']) {
+        $use_original_key_value = TRUE;
+      }
+      // If the original key provider is the same as the current one.
+      if ($this->originalKey->getKeyProvider()->getPluginId() == $key->getKeyProvider()->getPluginId()) {
+        // If the original key type is the same as the current one.
+        if ($this->originalKey->getKeyType()->getPluginId() == $key->getKeyType()->getPluginId()) {
+          $use_original_key_value = TRUE;
+        }
+      }
+    }
+
+    // If the original key value can be used.
+    if ($use_original_key_value) {
       // Use the configuration from the original key's plugin.
       $configuration = $this->originalKey->getKeyInput()->getConfiguration();
 
       // Set the current key value to be the obscured value.
       $key_value_data['current'] = $key_value_data['obscured'];
-    }
-    else {
-      // Use the plugin's default configuration.
-      $configuration = $plugin->defaultConfiguration();
-
-      // Clear the current key value.
-      $key_value_data['current'] = '';
     }
 
     $plugin->setConfiguration($configuration);
