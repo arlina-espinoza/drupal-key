@@ -340,8 +340,8 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     $plugin->setConfiguration($configuration);
-    $form_state->setValue('key_type_settings', $configuration);
-    $form_state->getUserInput()['key_type_settings'] = $configuration;
+    $form_state->setValue('key_type_settings', []);
+    $form_state->getUserInput()['key_type_settings'] = [];
   }
 
   /**
@@ -367,8 +367,8 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     $plugin->setConfiguration($configuration);
-    $form_state->setValue('key_provider_settings', $configuration);
-    $form_state->getUserInput()['key_provider_settings'] = $configuration;
+    $form_state->setValue('key_provider_settings', []);
+    $form_state->getUserInput()['key_provider_settings'] = [];
   }
 
   /**
@@ -414,8 +414,8 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     $plugin->setConfiguration($configuration);
-    $form_state->setValue('key_input_settings', $configuration);
-    $form_state->getUserInput()['key_input_settings'] = $configuration;
+    $form_state->setValue('key_input_settings', []);
+    $form_state->getUserInput()['key_input_settings'] = [];
     $form_state->set('key_value', $key_value_data);
   }
 
