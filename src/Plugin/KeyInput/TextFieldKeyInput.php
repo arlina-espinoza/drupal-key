@@ -28,6 +28,7 @@ class TextFieldKeyInput extends KeyInputBase {
   public function defaultConfiguration() {
     return [
       'key_value' => '',
+      'base64_encoded' => FALSE,
     ];
   }
 
@@ -45,6 +46,17 @@ class TextFieldKeyInput extends KeyInputBase {
       // Tell the browser not to autocomplete this field.
       '#attributes' => ['autocomplete' => 'off'],
     );
+
+    // If this key input is for an encryption key.
+    if ($form_state->getFormObject()->getEntity()->getKeyType()->getPluginDefinition()['group'] == 'encryption') {
+      // Add an option to indicate that the value is Base64-encoded.
+      $form['base64_encoded'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Base64-encoded'),
+        '#description' => $this->t('Check this if the key value being submitted has been Base64-encoded.'),
+        '#default_value' => $this->getConfiguration()['base64_encoded'],
+      );
+    }
 
     return $form;
   }
