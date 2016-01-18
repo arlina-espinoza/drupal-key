@@ -416,7 +416,7 @@ abstract class KeyFormBase extends EntityForm {
     //   AND the original key type is the same as the current one
     if ($this->originalKey) {
       // If the key value is not obscured.
-      if ($key_value_data['obscured'] == $key_value_data['processed_original']) {
+      if (empty($key_value_data['obscured'])) {
         $use_original_key_value = TRUE;
       }
       // If the original key provider is the same as the current one.
@@ -433,8 +433,8 @@ abstract class KeyFormBase extends EntityForm {
       // Use the configuration from the original key's plugin.
       $configuration = $this->originalKey->getKeyInput()->getConfiguration();
 
-      // Set the current key value to be the obscured value.
-      $key_value_data['current'] = $key_value_data['obscured'];
+      // Set the current key value.
+      $key_value_data['current'] = (!empty($key_value_data['obscured'])) ? $key_value_data['obscured'] : $key_value_data['processed_original'];
     }
 
     $plugin->setConfiguration($configuration);

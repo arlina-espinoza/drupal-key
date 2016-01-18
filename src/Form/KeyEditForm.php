@@ -46,10 +46,16 @@ class KeyEditForm extends KeyFormBase {
       $key_value['processed_original'] = $key_input->processExistingKeyValue($key_value['original']);
 
       // Obscure the processed key value.
-      $key_value['obscured'] = $key_provider->obscureKeyValue($key_value['processed_original'], $obscure_options);
+      $obscured_key_value = $key_provider->obscureKeyValue($key_value['processed_original'], $obscure_options);
+      if ($obscured_key_value != $key_value['processed_original']) {
+        $key_value['obscured'] = $obscured_key_value;
+      }
+      else {
+        $key_value['obscured'] = '';
+      }
 
-      // Set the current value as the obscured key value.
-      $key_value['current'] = $key_value['obscured'];
+      // Set the current value.
+      $key_value['current'] = (!empty($key_value['obscured'])) ? $key_value['obscured'] : $key_value['processed_original'];
 
       // Store the key value information in form state for use by plugins.
       $form_state->set('key_value', $key_value);
