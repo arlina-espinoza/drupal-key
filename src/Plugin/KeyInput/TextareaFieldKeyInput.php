@@ -8,8 +8,6 @@
 namespace Drupal\key\Plugin\KeyInput;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\key\Plugin\KeyInputBase;
-use Drupal\key\Plugin\KeyPluginFormInterface;
 
 /**
  * Defines a key input that provides a simple text field.
