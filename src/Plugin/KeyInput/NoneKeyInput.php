@@ -38,4 +38,11 @@ class NoneKeyInput extends KeyInputBase {
     return '';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function processExistingKeyValue($key_value) {
+    return $key_value;
+  }
+
 }
