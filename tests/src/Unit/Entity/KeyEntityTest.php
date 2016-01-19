@@ -102,7 +102,7 @@ class KeyEntityTest extends KeyTestBase {
       'label' => 'Configuration',
       'storage_method' => 'config'
     ];
-    $this->key_provider_settings = ['key_value' => $this->createToken()];
+    $this->key_provider_settings = ['key_value' => $this->createToken(), 'base64_encoded' => FALSE];
     $plugin = new ConfigKeyProvider($this->key_provider_settings, 'config', $definition);
 
     // Mock the KeyProviderManager service.

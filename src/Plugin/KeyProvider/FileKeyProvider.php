@@ -35,6 +35,7 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
   public function defaultConfiguration() {
     return [
       'file_location' => '',
+      'base64_encoded' => FALSE,
     ];
   }
 
@@ -53,6 +54,17 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
       '#required' => TRUE,
       '#default_value' => $this->getConfiguration()['file_location'],
     );
+
+    // If this key type is for an encryption key.
+    if ($form_state->getFormObject()->getEntity()->getKeyType()->getPluginDefinition()['group'] == 'encryption') {
+      // Add an option to indicate that the value is stored Base64-encoded.
+      $form['base64_encoded'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Base64-encoded'),
+        '#description' => $this->t('Check this if the key in the file is Base64-encoded.'),
+        '#default_value' => $this->getConfiguration()['base64_encoded'],
+      );
+    }
 
     return $form;
   }
@@ -95,9 +107,13 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
       return NULL;
     }
 
-    $key = file_get_contents($file);
+    $key_value = file_get_contents($file);
 
-    return $key;
+    if (isset($this->configuration['base64_encoded']) && $this->configuration['base64_encoded'] == TRUE) {
+      $key_value = base64_decode($key_value);
+    }
+
+    return $key_value;
   }
 
 }
