@@ -23,7 +23,7 @@ use Drupal\key\KeyInterface;
  *   storage_method = "config",
  *   key_value = {
  *     "accepted" = TRUE,
- *     "required" = TRUE,
+ *     "required" = FALSE,
  *     "editable" = TRUE
  *   }
  * )
