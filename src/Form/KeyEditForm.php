@@ -59,6 +59,17 @@ class KeyEditForm extends KeyFormBase {
 
       // Store the key value information in form state for use by plugins.
       $form_state->set('key_value', $key_value);
+
+      // Determine if the key can be edited.
+      $this->keyIsEditable = $key->getKeyProvider()->getPluginDefinition()['key_value']['editable'];
+
+      // If the key cannot be edited.
+      if (!$this->keyIsEditable) {
+        // Disable the form and add a message.
+        $form['#disabled'] = TRUE;
+        drupal_set_message($this->t('The key provider for this key does not allow it to be edited.'), 'warning');
+      }
+
     }
 
     return parent::buildForm($form, $form_state);

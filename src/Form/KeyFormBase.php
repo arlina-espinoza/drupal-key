@@ -36,6 +36,11 @@ abstract class KeyFormBase extends EntityForm {
   protected $originalKey = NULL;
 
   /**
+   * A flag indicating if this key can be edited.
+   */
+  protected $keyIsEditable = TRUE;
+
+  /**
    * Constructs a new key form base.
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage
