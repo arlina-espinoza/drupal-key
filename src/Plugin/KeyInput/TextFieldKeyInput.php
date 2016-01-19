@@ -40,7 +40,7 @@ class TextFieldKeyInput extends KeyInputBase {
     $form['key_value'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Key value'),
-      '#required' => TRUE,
+      '#required' => $form_state->getFormObject()->getEntity()->getKeyProvider()->getPluginDefinition()['key_value']['required'],
       '#default_value' => $key_value_data['current'],
       // Tell the browser not to autocomplete this field.
       '#attributes' => ['autocomplete' => 'off'],
