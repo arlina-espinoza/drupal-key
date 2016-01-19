@@ -10,6 +10,7 @@ namespace Drupal\key\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\key\Entity\Key;
 use Drupal\key\Plugin\KeyPluginFormInterface;
 use Drupal\key\Plugin\KeyProviderSettableValueInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -263,8 +264,11 @@ abstract class KeyFormBase extends EntityForm {
       $key_value = $processed_values['processed_submitted'];
     }
     else {
-      $key_value = $this->entity->getKeyValue();
+      // Create a temporary key entity to retrieve the key value.
+      $temp_key = new Key($form_state->getValues(), 'key');
+      $key_value = $temp_key->getKeyValue();
     }
+
     $plugin_form_state = $this->createPluginFormState('key_type', $form_state);
     $this->entity->getKeyType()->validateKeyValue($form, $plugin_form_state, $key_value);
     $form_state->setValue('key_type_settings', $plugin_form_state->getValues());
