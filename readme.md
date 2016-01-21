@@ -26,7 +26,7 @@ A key type can be selected for a key in order to indicate the purpose of the key
 
 Key includes one key type:
 
-*   **Basic:** Can be used when no other key type is applicable. This is the default.
+*   **Authentication:** A generic key type to use for a password or API key that does not belong to any other defined key type. This is the default.
 
 Key types are native Drupal 8 plugins, so new types can easily be defined. Key for Drupal 7 does not yet support key types.
 

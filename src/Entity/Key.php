@@ -78,7 +78,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    *
    * @var string
    */
-  protected $key_type = 'basic';
+  protected $key_type = 'authentication';
 
   /**
    * The key provider plugin id.

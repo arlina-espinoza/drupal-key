@@ -8,7 +8,7 @@ namespace Drupal\Tests\key\Unit\Entity;
 
 use Drupal\key\Entity\Key;
 use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
-use Drupal\key\Plugin\KeyType\BasicKeyType;
+use Drupal\key\Plugin\KeyType\AuthenticationKeyType;
 use Drupal\key\Plugin\KeyInput\NoneKeyInput;
 use Drupal\Tests\key\Unit\KeyTestBase;
 
@@ -35,7 +35,7 @@ class KeyEntityTest extends KeyTestBase {
 
   /**
    * @var []
-   *   Key type settings to use for Basic key type.
+   *   Key type settings to use for Authentication key type.
    */
   protected $key_type_settings;
 
@@ -75,11 +75,11 @@ class KeyEntityTest extends KeyTestBase {
     parent::setUp();
 
     $definition = [
-      'id' => 'basic',
-      'label' => 'Basic',
+      'id' => 'authentication',
+      'label' => 'Authentication',
     ];
     $this->key_type_settings = [];
-    $plugin = new BasicKeyType($this->key_type_settings, 'basic', $definition);
+    $plugin = new AuthenticationKeyType($this->key_type_settings, 'authentication', $definition);
 
     // Mock the KeyTypeManager service.
     $this->keyTypeManager = $this->getMockBuilder('\Drupal\key\Plugin\KeyPluginManager')
@@ -89,11 +89,11 @@ class KeyEntityTest extends KeyTestBase {
     $this->keyTypeManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
-        ['id' => 'basic', 'label' => 'Basic'],
+        ['id' => 'authentication', 'label' => 'Authentication'],
       ]);
     $this->keyTypeManager->expects($this->any())
       ->method('createInstance')
-      ->with('basic', $this->key_type_settings)
+      ->with('authentication', $this->key_type_settings)
       ->willReturn($plugin);
     $this->container->set('plugin.manager.key.key_type', $this->keyTypeManager);
 
