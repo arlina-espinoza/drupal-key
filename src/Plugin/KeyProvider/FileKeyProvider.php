@@ -22,8 +22,7 @@ use Drupal\key\KeyInterface;
  *   storage_method = "file",
  *   key_input = {
  *     "accepted" = FALSE,
- *     "required" = FALSE,
- *     "editable" = FALSE
+ *     "required" = FALSE
  *   }
  * )
  */
