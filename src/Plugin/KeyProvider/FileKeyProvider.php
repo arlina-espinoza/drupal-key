@@ -20,7 +20,7 @@ use Drupal\key\KeyInterface;
  *   label = @Translation("File"),
  *   description = @Translation("The File key provider allows a key to be stored in a file, preferably outside of the web root."),
  *   storage_method = "file",
- *   key_input = {
+ *   key_value = {
  *     "accepted" = FALSE,
  *     "required" = FALSE
  *   }
