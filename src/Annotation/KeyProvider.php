@@ -54,14 +54,13 @@ class KeyProvider extends Plugin {
    * The settings for inputting a key value.
    *
    * This is used to indicate to the key input plugin if this provider
-   * accepts a key value, if it require one, and if it can be edited.
+   * accepts a key value and if it requires one.
    *
    * @var array
    */
   public $key_value = array(
     'accepted' => FALSE,
     'required' => FALSE,
-    'editable' => FALSE,
   );
 
 }
