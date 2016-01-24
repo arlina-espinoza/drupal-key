@@ -51,6 +51,7 @@ class AesEncryptionKeyType extends KeyTypeBase implements KeyPluginFormInterface
         '256_bits' => $this->t('256 bits'),
       ),
       '#default_value' => $this->getConfiguration()['key_size'],
+      '#required' => TRUE,
     );
 
     return $form;
