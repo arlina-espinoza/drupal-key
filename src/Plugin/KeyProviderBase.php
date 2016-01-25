@@ -32,7 +32,7 @@ abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInter
 
       case 'encryption':
         $options['visible_right'] = 0;
-        $options['fixed_length'] = 32;
+        $options['fixed_length'] = 30;
         $obscured_value = static::obscureValue($key_value, $options);
         break;
     }
