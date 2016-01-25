@@ -21,9 +21,6 @@ abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInter
    *   The obscured key value.
    */
   public static function obscureKeyValue($key_value, array $options = []) {
-    // Set a default obscured value.
-    $obscured_value = str_repeat('*', 16);
-
     switch ($options['key_type_group']) {
       case 'authentication':
         $options['visible_right'] = 4;
@@ -35,6 +32,9 @@ abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInter
         $options['fixed_length'] = 30;
         $obscured_value = static::obscureValue($key_value, $options);
         break;
+
+      default:
+        $obscured_value = $key_value;
     }
 
     return $obscured_value;
