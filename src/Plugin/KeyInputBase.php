@@ -40,14 +40,22 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface, 
       'processed_submitted' => NULL,
     );
     $key_input_settings = $form_state->getValues();
+    $key_value_data = $form_state->get('key_value');
     if (isset($key_input_settings['key_value'])) {
-      $processed_values['submitted'] = $key_input_settings['key_value'];
-
-      if (isset($key_input_settings['base64_encoded']) && $key_input_settings['base64_encoded'] == TRUE) {
-        $processed_values['processed_submitted'] = base64_decode($key_input_settings['key_value']);
+      // If the submitted key value is equal to the obscured value.
+      if ($key_input_settings['key_value'] == $key_value_data['obscured']) {
+        // Use the processed original value as the submitted value.
+        $processed_values['submitted'] = $key_value_data['processed_original'];
       }
       else {
-        $processed_values['processed_submitted'] = $key_input_settings['key_value'];
+        $processed_values['submitted'] = $key_input_settings['key_value'];
+      }
+
+      if (isset($key_input_settings['base64_encoded']) && $key_input_settings['base64_encoded'] == TRUE) {
+        $processed_values['processed_submitted'] = base64_decode($processed_values['submitted']);
+      }
+      else {
+        $processed_values['processed_submitted'] = $processed_values['submitted'];
       }
 
       unset($key_input_settings['key_value']);
