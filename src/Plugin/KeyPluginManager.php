@@ -66,4 +66,3 @@ class KeyPluginManager extends DefaultPluginManager {
   }
 
 }
-

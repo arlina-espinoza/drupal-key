@@ -46,7 +46,7 @@ interface KeyInterface extends ConfigEntityInterface {
    *
    * @param string $type
    *   The plugin type.
-   * @param $id
+   * @param string $id
    *   The plugin ID.
    */
   public function setPlugin($type, $id);

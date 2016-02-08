@@ -21,7 +21,7 @@ class KeyListBuilderTest extends WebTestBase {
   /**
    * Test KeyListBuilder functions.
    */
-  function testListBuilder() {
+  public function testListBuilder() {
     // Create user with permission to administer keys.
     $user1 = $this->drupalCreateUser(array('administer keys'));
     $this->drupalLogin($user1);

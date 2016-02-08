@@ -30,10 +30,10 @@ interface KeyTypeInterface {
    * Generate a key value of this type using the submitted configuration.
    *
    * @param array $configuration
-   *  The configuration for the key type plugin.
+   *   The configuration for the key type plugin.
    *
    * @return string
-   * The generated key value.
+   *   The generated key value.
    */
   public static function generateKeyValue(array $configuration);
 

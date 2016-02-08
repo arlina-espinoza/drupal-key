@@ -62,7 +62,8 @@ class KeySelect extends Select {
     $options = \Drupal::service('key.repository')->getKeyNamesAsOptions($element['#key_filters']);
     $element['#options'] = $options;
 
-    // Prefix the default description with information about keys, unless disabled.
+    // Prefix the default description with information about keys,
+    // unless disabled.
     if ($element['#key_description']) {
       $original_description = (isset($element['#description'])) ? $element['#description'] : '';
       $key_description = t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', array(':link' => Url::fromRoute('entity.key.add_form')->toString()));

@@ -1,6 +1,7 @@
 <?php
 /**
- * Provides \Drupal\Tests\key\Unit\KeyManagerTest.php
+ * @file
+ * Provides \Drupal\Tests\key\Unit\KeyRepositoryTest.
  */
 
 namespace Drupal\Tests\key\Unit;
@@ -54,7 +55,7 @@ class KeyRepositoryTest extends KeyTestBase {
     $KeyProvider = new ConfigKeyProvider($defaults, 'config', $definition);
 
     return [
-      [$defaults, $KeyProvider]
+      [$defaults, $KeyProvider],
     ];
   }
 
@@ -72,7 +73,7 @@ class KeyRepositoryTest extends KeyTestBase {
     return [
       [[$key_id1], [$key_id1 => $key1]],
       [[$key_id1, $key_id2], [$key_id1 => $key1, $key_id2 => $key2]],
-      [[], [$key_id1 => $key1, $key_id2 => $key2]]
+      [[], [$key_id1 => $key1, $key_id2 => $key2]],
     ];
   }
 
@@ -81,7 +82,9 @@ class KeyRepositoryTest extends KeyTestBase {
    *
    * @param array $key_ids
    * @param array $keys
+   *
    * @group key
+   *
    * @dataProvider getKeysProvider
    */
   public function testGetKeys(array $key_ids, array $keys) {
@@ -114,7 +117,9 @@ class KeyRepositoryTest extends KeyTestBase {
    *
    * @param $defaults
    * @param $KeyProvider
+   *
    * @group key
+   *
    * @dataProvider defaultKeyContentProvider
    */
   public function testGetKeyValue($defaults, $KeyProvider) {
@@ -205,7 +210,7 @@ class KeyRepositoryTest extends KeyTestBase {
     $this->key_id = $this->getRandomGenerator()->word(15);
     $defaults = [
       'key_id' => $this->key_id,
-      'key_provider' => 'config'
+      'key_provider' => 'config',
     ];
     $this->key = new Key($defaults, 'key');
 
@@ -236,7 +241,7 @@ class KeyRepositoryTest extends KeyTestBase {
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'file', 'label' => 'File', 'storage_method' => 'file'],
-        ['id' => 'config', 'label' => 'Configuration', 'storage_method' => 'config']
+        ['id' => 'config', 'label' => 'Configuration', 'storage_method' => 'config'],
       ]);
 
     $this->container->set('plugin.manager.key.key_type', $this->keyTypeManager);

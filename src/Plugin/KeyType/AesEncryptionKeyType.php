@@ -5,7 +5,6 @@
  * Contains Drupal\key\KeyProvider\AesEncryptionKeyType.
  */
 
-
 namespace Drupal\key\Plugin\KeyType;
 
 use Drupal\Core\Form\FormStateInterface;

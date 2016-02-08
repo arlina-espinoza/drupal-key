@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a listing of keys.
  *
- *  @see \Drupal\key\Entity\Key
+ * @see \Drupal\key\Entity\Key
  */
 class KeyListBuilder extends ConfigEntityListBuilder {
 
@@ -59,7 +59,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var $key \Drupal\key\Entity\Key */
+    /* @var $key \Drupal\key\Entity\Key */
     $key = $entity;
 
     $row['label'] = $key->label();

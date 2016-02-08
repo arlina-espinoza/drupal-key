@@ -21,7 +21,7 @@ class KeyServiceTest extends WebTestBase {
   /**
    * Test getKeyValue functions.
    */
-  function testConfigKeyProviderService() {
+  public function testConfigKeyProviderService() {
 
     // Create user with permission to administer keys.
     $user1 = $this->drupalCreateUser(array('administer keys'));
@@ -43,7 +43,6 @@ class KeyServiceTest extends WebTestBase {
       'key_input_settings[key_value]' => $test_string,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-
 
     // Test getKeyValue service.
     $key_value_string = \Drupal::service('key.repository')->getKey('testing_key')->getKeyValue();
@@ -81,8 +80,8 @@ class KeyServiceTest extends WebTestBase {
   /**
    * Test getKeyValue functions.
    */
-  function testFileKeyProviderService() {
-    $rpath = realpath(drupal_get_path('module','key').'/tests/assets/testkey.txt');
+  public function testFileKeyProviderService() {
+    $rpath = realpath(drupal_get_path('module', 'key') . '/tests/assets/testkey.txt');
     $contents = file_get_contents($rpath);
 
     // Create user with permission to administer keys.

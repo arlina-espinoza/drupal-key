@@ -88,7 +88,7 @@ abstract class KeyFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /** @var $key \Drupal\key\Entity\Key */
+    /* @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
     $form['label'] = array(
@@ -295,8 +295,7 @@ abstract class KeyFormBase extends EntityForm {
       // If either the key provider has changed or the submitted value
       // is not the same as the obscured value.
       if (($this->originalKey && $this->originalKey->getKeyProvider()->getPluginId() != $this->entity->getKeyProvider()->getPluginId())
-        || ($key_value_data['submitted'] != $key_value_data['obscured']))
-      {
+        || ($key_value_data['submitted'] != $key_value_data['obscured'])) {
         // Set the key value.
         $this->entity->setKeyValue($key_value_data['processed_submitted']);
       }
@@ -317,7 +316,9 @@ abstract class KeyFormBase extends EntityForm {
    * AJAX callback to update the dynamic settings on the form.
    *
    * @param array $form
+   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    *
    * @return array
    *   The element to update in the form.
@@ -330,10 +331,10 @@ abstract class KeyFormBase extends EntityForm {
    * Update the Key Type plugin.
    */
   protected function updateKeyType(FormStateInterface $form_state) {
-    /** @var $key \Drupal\key\Entity\Key */
+    /* @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
-    /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+    /* @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
     $plugin = $key->getKeyType();
 
     $key->setPlugin('key_type', $plugin->getPluginId());
@@ -357,10 +358,10 @@ abstract class KeyFormBase extends EntityForm {
    * Update the Key Provider plugin.
    */
   protected function updateKeyProvider(FormStateInterface $form_state) {
-    /** @var $key \Drupal\key\Entity\Key */
+    /* @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
-    /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+    /* @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
     $plugin = $key->getKeyProvider();
 
     $key->setPlugin('key_provider', $plugin->getPluginId());
@@ -384,12 +385,13 @@ abstract class KeyFormBase extends EntityForm {
    * Update the Key Input plugin.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    */
   protected function updateKeyInput(FormStateInterface $form_state) {
-    /** @var $key \Drupal\key\Entity\Key */
+    /* @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
-    /** @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
+    /* @var $plugin \Drupal\key\Plugin\KeyPluginInterface */
     $plugin = $key->getKeyInput();
 
     // Get the current key value data.
@@ -405,7 +407,7 @@ abstract class KeyFormBase extends EntityForm {
     $key->setPlugin('key_input', $key_input_id);
 
     // Set the plugin's configuration to the default. It may be
-    // overridden below
+    // overridden below.
     $configuration = $plugin->defaultConfiguration();
 
     // Clear the current key value. It may be overridden below.
@@ -417,7 +419,7 @@ abstract class KeyFormBase extends EntityForm {
     // be met in order to use the key value from it:
     // - The key value was not obscured when the form first loaded
     // - The original key provider is the same as the current one
-    //   AND the original key type is the same as the current one
+    //   AND the original key type is the same as the current one.
     if ($this->originalKey) {
       // If the key value is not obscured.
       if (empty($key_value_data['obscured'])) {
@@ -448,7 +450,7 @@ abstract class KeyFormBase extends EntityForm {
   }
 
   /**
-   * Returns the original key entity
+   * Returns the original key entity.
    *
    * @return \Drupal\key\Entity\Key
    *   The original key entity.

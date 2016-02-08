@@ -210,7 +210,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
   /**
    * Create a plugin collection of the requested plugin type.
    *
-   * @param $type
+   * @param string $type
    *   The plugin type.
    *
    * @return \Drupal\key\Plugin\KeyPluginCollection
@@ -286,7 +286,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // If an original key exists.
     if (isset($this->original)) {
-      /** @var $original \Drupal\key\Entity\Key */
+      /* @var $original \Drupal\key\Entity\Key */
       $original = $this->original;
 
       // If the original key's provider allows setting a key value and
@@ -308,7 +308,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     foreach ($entities as $id => $key) {
-      /** @var $key \Drupal\key\Entity\Key */
+      /* @var $key \Drupal\key\Entity\Key */
       // Give the key provider plugin the opportunity to delete the key value.
       if ($key->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
         $key->deleteKeyValue();

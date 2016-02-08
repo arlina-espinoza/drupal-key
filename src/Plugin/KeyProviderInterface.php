@@ -26,7 +26,9 @@ interface KeyProviderInterface {
   public function getKeyValue(KeyInterface $key);
 
   /**
-   * @param $key_value
+   * Obscures a key value.
+   *
+   * @param string $key_value
    *   The key value to obscure.
    * @param array $options
    *   Options to use when obscuring the value.

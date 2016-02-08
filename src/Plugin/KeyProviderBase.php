@@ -12,13 +12,7 @@ namespace Drupal\key\Plugin;
 abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInterface {
 
   /**
-   * @param $key_value
-   *   The key value to obscure.
-   * @param array $options
-   *   Options to use when obscuring the value.
-   *
-   * @return string
-   *   The obscured key value.
+   * {@inheritdoc}
    */
   public static function obscureKeyValue($key_value, array $options = []) {
     switch ($options['key_type_group']) {
@@ -41,7 +35,9 @@ abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInter
   }
 
   /**
-   * @param $key_value
+   * Helper method to obscure a value.
+   *
+   * @param string $key_value
    *   The key value to obscure.
    * @param array $options
    *   Options to use when obscuring the value.

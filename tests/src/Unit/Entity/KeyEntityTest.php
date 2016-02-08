@@ -1,7 +1,7 @@
 <?php
 /**
- *  @file
- *  Provides \Drupal\Tests\key\Unit\Entity\KeyEntityTest
+ * @file
+ * Provides \Drupal\Tests\key\Unit\Entity\KeyEntityTest.
  */
 
 namespace Drupal\Tests\key\Unit\Entity;
@@ -100,7 +100,7 @@ class KeyEntityTest extends KeyTestBase {
     $definition = [
       'id' => 'config',
       'label' => 'Configuration',
-      'storage_method' => 'config'
+      'storage_method' => 'config',
     ];
     $this->key_provider_settings = ['key_value' => $this->createToken(), 'base64_encoded' => FALSE];
     $plugin = new ConfigKeyProvider($this->key_provider_settings, 'config', $definition);
@@ -114,7 +114,7 @@ class KeyEntityTest extends KeyTestBase {
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'file', 'label' => 'File', 'storage_method' => 'file'],
-        ['id' => 'config', 'label' => 'Configuration', 'storage_method' => 'config']
+        ['id' => 'config', 'label' => 'Configuration', 'storage_method' => 'config'],
       ]);
     $this->keyProviderManager->expects($this->any())
       ->method('createInstance')

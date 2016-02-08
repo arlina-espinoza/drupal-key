@@ -22,7 +22,7 @@ class KeyEditForm extends KeyFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Only when the form is first built.
     if (!$form_state->isRebuilding()) {
-      /** @var $key \Drupal\key\Entity\Key */
+      /* @var $key \Drupal\key\Entity\Key */
       $key = $this->entity;
       $this->originalKey = clone $key;
 
