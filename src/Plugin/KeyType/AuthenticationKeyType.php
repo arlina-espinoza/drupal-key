@@ -7,6 +7,7 @@
 
 namespace Drupal\key\Plugin\KeyType;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyTypeBase;
 
 /**
@@ -23,4 +24,20 @@ use Drupal\key\Plugin\KeyTypeBase;
  * )
  */
 class AuthenticationKeyType extends KeyTypeBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateKeyValue(array $configuration) {
+    // Generate a random 16-character password.
+    return user_password(16);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateKeyValue(array $form, FormStateInterface $form_state, $key_value) {
+    // Validation of the key value is optional.
+  }
+
 }
