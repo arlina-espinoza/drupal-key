@@ -32,30 +32,54 @@ key.key.*:
       type: key.input.[%parent.key_input]
       label: 'Key input settings'
 
-key.type.*:
-  type: mapping
-  label: 'Key type settings'
+key.type.authentication:
+  type: sequence
 
-key.provider.*:
+key.type.encryption:
   type: mapping
-  label: 'Key provider settings'
+  label: 'Encryption key type settings'
+  mapping:
+      key_size:
+        type: integer
+        label: 'Key size'
 
 key.provider.config:
   type: mapping
-  label: 'Configuration'
+  label: 'Configuration key provider settings'
   mapping:
     key_value:
       type: string
-      label: 'Key Value'
+      label: 'Key value'
+    base64_encoded:
+      type: boolean
+      label: 'Base64-encoded'
 
 key.provider.file:
   type: mapping
-  label: 'File'
+  label: 'File key provider settings'
   mapping:
     file_location:
       type: string
-      label: 'File Location'
+      label: 'File location'
+    base64_encoded:
+      type: boolean
+      label: 'Base64-encoded'
 
-key.input.*:
+key.input.none:
+  type: sequence
+
+key.input.text_field:
   type: mapping
-  label: 'Key input settings'
+  label: 'Text field key input settings'
+  mapping:
+      base64_encoded:
+        type: boolean
+        label: 'Base64-encoded'
+
+key.input.textarea_field:
+  type: mapping
+  label: 'Textarea field key input settings'
+  mapping:
+      base64_encoded:
+        type: boolean
+        label: 'Base64-encoded'
