@@ -307,7 +307,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    foreach ($entities as $id => $key) {
+    foreach ($entities as $key) {
       /* @var $key \Drupal\key\Entity\Key */
       // Give the key provider plugin the opportunity to delete the key value.
       if ($key->getKeyProvider() instanceof KeyProviderSettableValueInterface) {

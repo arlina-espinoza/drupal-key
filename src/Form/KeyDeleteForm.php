@@ -44,7 +44,7 @@ class KeyDeleteForm extends EntityConfirmFormBase {
     $form = parent::buildForm($form, $form_state);
 
     // Allow the plugins to modify the form.
-    foreach ($this->entity->getPlugins() as $type => $plugin) {
+    foreach ($this->entity->getPlugins() as $plugin) {
       if ($plugin instanceof KeyPluginDeleteFormInterface) {
         $plugin->buildDeleteForm($form, $form_state);
       }
@@ -60,7 +60,7 @@ class KeyDeleteForm extends EntityConfirmFormBase {
     parent::validateForm($form, $form_state);
 
     // Allow the plugins to perform additional validation.
-    foreach ($this->entity->getPlugins() as $type => $plugin) {
+    foreach ($this->entity->getPlugins() as $plugin) {
       if ($plugin instanceof KeyPluginDeleteFormInterface) {
         $plugin->validateDeleteForm($form, $form_state);
       }
@@ -75,7 +75,7 @@ class KeyDeleteForm extends EntityConfirmFormBase {
     drupal_set_message($this->t('The key %label has been deleted.', array('%label' => $this->entity->label())));
 
     // Allow the plugins to perform additional actions.
-    foreach ($this->entity->getPlugins() as $type => $plugin) {
+    foreach ($this->entity->getPlugins() as $plugin) {
       if ($plugin instanceof KeyPluginDeleteFormInterface) {
         $plugin->submitDeleteForm($form, $form_state);
       }
