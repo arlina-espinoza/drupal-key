@@ -223,7 +223,7 @@ abstract class KeyFormBase extends EntityForm {
 
     // Make sure each plugin settings field is an array.
     foreach ($this->entity->getPluginTypes() as $type) {
-      if (empty($form_state->getValue($type . '_settings'))) {
+      if (!$form_state->getValue($type . '_settings')) {
         $form_state->setValue($type . '_settings', []);
       }
     }

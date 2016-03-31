@@ -85,7 +85,7 @@ class EncryptionKeyType extends KeyTypeBase implements KeyPluginFormInterface {
    * {@inheritdoc}
    */
   public function validateKeyValue(array $form, FormStateInterface $form_state, $key_value) {
-    if (empty($form_state->getValue('key_size'))) {
+    if (!$form_state->getValue('key_size')) {
       return;
     }
 
