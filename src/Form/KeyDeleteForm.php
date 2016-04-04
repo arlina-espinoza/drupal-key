@@ -7,7 +7,7 @@
 
 namespace Drupal\key\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\key\Plugin\KeyPluginDeleteFormInterface;
@@ -15,7 +15,7 @@ use Drupal\key\Plugin\KeyPluginDeleteFormInterface;
 /**
  * Builds the form to delete a Key.
  */
-class KeyDeleteForm extends EntityConfirmFormBase {
+class KeyDeleteForm extends EntityDeleteForm {
   /**
    * {@inheritdoc}
    */
