@@ -10,6 +10,7 @@ namespace Drupal\key\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\key\Exception\KeyValueNotSetException;
 use Drupal\key\KeyInterface;
 use Drupal\key\Plugin\KeyPluginCollection;
 use Drupal\key\Plugin\KeyProviderSettableValueInterface;
@@ -114,6 +115,13 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    * @var array
    */
   protected $key_input_settings = [];
+
+  /**
+   * The key value.
+   *
+   * @var string|NULL
+   */
+  protected $keyValue = NULL;
 
   /**
    * The plugin collections, indexed by plugin type.
@@ -260,12 +268,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    * {@inheritdoc}
    */
   public function setKeyValue($key_value) {
-    if ($this->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
-      return $this->getKeyProvider()->setKeyValue($this, $key_value);
-    }
-    else {
-      return FALSE;
-    }
+    $this->keyValue = $key_value;
   }
 
   /**
@@ -278,6 +281,34 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
     else {
       return FALSE;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    // If the key provider supports setting a key value.
+    if ($this->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
+      // If the provider requires a key value, but it is either not set
+      // or empty, throw an exception.
+      if ($this->getKeyProvider()->getPluginDefinition()['key_value']['required'] && (is_null($this->keyValue) || $this->keyValue === '')) {
+        throw new KeyValueNotSetException('The selected key provider requires a key value.');
+      }
+
+      // If a key value was defined, set the key value using the key provider.
+      if (isset($this->keyValue)) {
+        $this->getKeyProvider()->setKeyValue($this, $this->keyValue);
+      }
+    }
+    // If the key provider does not support setting a value.
+    else {
+      // If a key value was defined, throw an exception.
+      if (isset($this->keyValue)) {
+        throw new KeyValueNotSetException('The selected key provider does not support setting a key value.');
+      }
+    }
+
+    parent::preSave($storage);
   }
 
   /**

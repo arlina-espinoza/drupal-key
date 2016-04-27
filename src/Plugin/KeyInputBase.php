@@ -42,8 +42,9 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface, 
     $key_input_settings = $form_state->getValues();
     $key_value_data = $form_state->get('key_value');
     if (isset($key_input_settings['key_value'])) {
-      // If the submitted key value is equal to the obscured value.
-      if ($key_input_settings['key_value'] == $key_value_data['obscured']) {
+      // If the submitted key value is not empty and equal to the obscured
+      // value.
+      if (!empty($key_input_settings['key_value']) && $key_input_settings['key_value'] == $key_value_data['obscured']) {
         // Use the processed original value as the submitted value.
         $processed_values['submitted'] = $key_value_data['processed_original'];
       }

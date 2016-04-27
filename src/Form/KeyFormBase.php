@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Entity\Key;
+use Drupal\key\Exception\KeyValueNotSetException;
 use Drupal\key\Plugin\KeyPluginFormInterface;
 use Drupal\key\Plugin\KeyProviderSettableValueInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -260,7 +261,7 @@ abstract class KeyFormBase extends EntityForm {
     // Allow the Key Type plugin to validate the key value. Use the processed
     // key value if there is one. Otherwise, retrieve the key value using the
     // key provider.
-    if (!empty($processed_values['processed_submitted'])) {
+    if (isset($processed_values['processed_submitted'])) {
       $key_value = $processed_values['processed_submitted'];
     }
     else {
@@ -292,11 +293,27 @@ abstract class KeyFormBase extends EntityForm {
 
     // If the key provider allows a key value to be set.
     if ($this->entity->getKeyProvider() instanceof KeyProviderSettableValueInterface) {
-      // If either the key provider has changed or the submitted value
-      // is not the same as the obscured value.
-      if (($this->originalKey && $this->originalKey->getKeyProvider()->getPluginId() != $this->entity->getKeyProvider()->getPluginId())
-        || ($key_value_data['submitted'] != $key_value_data['obscured'])) {
-        // Set the key value.
+      $set_key_value = FALSE;
+
+      // If the key provider has changed, the key value should be set.
+      if ($this->originalKey && $this->originalKey->getKeyProvider()->getPluginId() != $this->entity->getKeyProvider()->getPluginId()) {
+        $set_key_value = TRUE;
+      }
+
+      // If the submitted value is not the same as the obscured value,
+      // the key value should be set.
+      if ($key_value_data['submitted'] != $key_value_data['obscured']) {
+        $set_key_value = TRUE;
+      }
+
+      // If the processed value is not empty, but the submitted value is,
+      // the key value should be set.
+      if (!empty($key_value_data['processed_original']) && empty($key_value_data['submitted'])) {
+        $set_key_value = TRUE;
+      }
+
+      // Set the key value in the entity, if necessary.
+      if ($set_key_value) {
         $this->entity->setKeyValue($key_value_data['processed_submitted']);
       }
     }
@@ -308,7 +325,27 @@ abstract class KeyFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
+    /* @var $key \Drupal\key\Entity\Key */
+    $key = $this->entity;
+
+    // Save the key, catching exceptions.
+    try {
+      $status = $key->save();
+    }
+    catch (KeyValueNotSetException $e) {
+      drupal_set_message($this->t('The key was not saved because the key value could not be set. @message', array('@message' => $e->getMessage())), 'error');
+      return;
+    }
+
+    $t_args = array('%name' => $key->label());
+
+    if ($status == SAVED_UPDATED) {
+      drupal_set_message($this->t('The key %name has been updated.', $t_args));
+    }
+    elseif ($status == SAVED_NEW) {
+      drupal_set_message(t('The key %name has been added.', $t_args));
+    }
+
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 

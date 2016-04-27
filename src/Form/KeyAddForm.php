@@ -34,12 +34,4 @@ class KeyAddForm extends KeyFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-    drupal_set_message($this->t('The key %label has been added.', array('%label' => $this->entity->label())));
-  }
-
 }

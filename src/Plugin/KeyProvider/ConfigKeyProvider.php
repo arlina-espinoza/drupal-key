@@ -8,6 +8,7 @@
 namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\key\Exception\KeyValueNotSetException;
 use Drupal\key\Plugin\KeyProviderBase;
 use Drupal\key\Plugin\KeyPluginFormInterface;
 use Drupal\key\Plugin\KeyProviderSettableValueInterface;
@@ -90,11 +91,13 @@ class ConfigKeyProvider extends KeyProviderBase implements KeyPluginFormInterfac
       $key_value = base64_encode($key_value);
     }
 
-    if ($this->configuration['key_value'] = $key_value) {
+    $this->configuration['key_value'] = $key_value;
+
+    if (isset($this->configuration['key_value'])) {
       return TRUE;
     }
     else {
-      return FALSE;
+      throw new KeyValueNotSetException();
     }
   }
 
