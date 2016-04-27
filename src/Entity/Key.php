@@ -163,7 +163,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    */
   public function setPlugin($type, $id) {
     $this->$type = $id;
-    $this->getPluginCollection($type)->addInstanceID($id);
+    $this->getPluginCollection($type)->addInstanceId($id);
   }
 
   /**
