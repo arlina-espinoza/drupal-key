@@ -53,14 +53,14 @@ class KeyRepository implements KeyRepositoryInterface {
    * {@inheritdoc}
    */
   public function getKeysByProvider($key_provider_id) {
-    return $this->entityTypeManager->getStorage('key')->loadByProperties(array('key_provider' => $key_provider_id));
+    return $this->entityTypeManager->getStorage('key')->loadByProperties(['key_provider' => $key_provider_id]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getKeysByType($key_type_id) {
-    return $this->entityTypeManager->getStorage('key')->loadByProperties(array('key_type' => $key_type_id));
+    return $this->entityTypeManager->getStorage('key')->loadByProperties(['key_type' => $key_type_id]);
   }
 
   /**
@@ -88,9 +88,9 @@ class KeyRepository implements KeyRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getKeyNamesAsOptions($filters = array()) {
-    $options = array();
-    $keys = array();
+  public function getKeyNamesAsOptions($filters = []) {
+    $options = [];
+    $keys = [];
 
     // TODO: Make filtering more sophisticated.
     if (empty($filters)) {

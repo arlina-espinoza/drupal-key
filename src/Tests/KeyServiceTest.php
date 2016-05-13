@@ -16,7 +16,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class KeyServiceTest extends WebTestBase {
 
-  public static $modules = array('key', 'dblog');
+  public static $modules = ['key', 'dblog'];
 
   /**
    * Test getKeyValue functions.
@@ -24,7 +24,7 @@ class KeyServiceTest extends WebTestBase {
   public function testConfigKeyProviderService() {
 
     // Create user with permission to administer keys.
-    $user1 = $this->drupalCreateUser(array('administer keys'));
+    $user1 = $this->drupalCreateUser(['administer keys']);
     $this->drupalLogin($user1);
 
     // Create new key using the Configuration key provider.
@@ -85,7 +85,7 @@ class KeyServiceTest extends WebTestBase {
     $contents = file_get_contents($rpath);
 
     // Create user with permission to administer keys.
-    $user1 = $this->drupalCreateUser(array('administer keys'));
+    $user1 = $this->drupalCreateUser(['administer keys']);
     $this->drupalLogin($user1);
 
     // Create a new file key.

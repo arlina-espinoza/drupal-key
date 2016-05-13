@@ -92,62 +92,62 @@ abstract class KeyFormBase extends EntityForm {
     /* @var $key \Drupal\key\Entity\Key */
     $key = $this->entity;
 
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Key name'),
       '#maxlength' => 255,
       '#default_value' => $key->label(),
       '#required' => TRUE,
-    );
-    $form['id'] = array(
+    ];
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $key->id(),
-      '#machine_name' => array(
-        'exists' => array($this->storage, 'load'),
-      ),
+      '#machine_name' => [
+        'exists' => [$this->storage, 'load'],
+      ],
       '#disabled' => !$key->isNew(),
-    );
-    $form['description'] = array(
+    ];
+    $form['description'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Description'),
       '#default_value' => $key->getDescription(),
       '#description' => $this->t('A short description of the key.'),
-    );
+    ];
 
     // This is the element that contains all of the dynamic parts of the form.
-    $form['settings'] = array(
+    $form['settings'] = [
       '#type' => 'container',
       '#prefix' => '<div id="key-settings">',
       '#suffix' => '</div>',
-    );
+    ];
 
     // Key type section.
-    $form['settings']['type_section'] = array(
+    $form['settings']['type_section'] = [
       '#type' => 'details',
       '#title' => $this->t('Type settings'),
       '#open' => TRUE,
-    );
-    $form['settings']['type_section']['key_type'] = array(
+    ];
+    $form['settings']['type_section']['key_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Key type'),
       '#options' => $key->getPluginsAsOptions('key_type'),
       '#required' => TRUE,
       '#default_value' => $key->getKeyType()->getPluginId(),
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => [$this, 'ajaxUpdateSettings'],
         'event' => 'change',
         'wrapper' => 'key-settings',
-      ),
-    );
-    $form['settings']['type_section']['key_type_description'] = array(
+      ],
+    ];
+    $form['settings']['type_section']['key_type_description'] = [
       '#markup' => $key->getKeyType()->getPluginDefinition()['description'],
-    );
-    $form['settings']['type_section']['key_type_settings'] = array(
+    ];
+    $form['settings']['type_section']['key_type_settings'] = [
       '#type' => 'container',
       '#title' => $this->t('Key type settings'),
       '#title_display' => FALSE,
       '#tree' => TRUE,
-    );
+    ];
     if ($key->getKeyType() instanceof KeyPluginFormInterface) {
       $plugin_form_state = $this->createPluginFormState('key_type', $form_state);
       $form['settings']['type_section']['key_type_settings'] += $key->getKeyType()->buildConfigurationForm([], $plugin_form_state);
@@ -155,32 +155,32 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     // Key provider section.
-    $form['settings']['provider_section'] = array(
+    $form['settings']['provider_section'] = [
       '#type' => 'details',
       '#title' => $this->t('Provider settings'),
       '#open' => TRUE,
-    );
-    $form['settings']['provider_section']['key_provider'] = array(
+    ];
+    $form['settings']['provider_section']['key_provider'] = [
       '#type' => 'select',
       '#title' => $this->t('Key provider'),
       '#options' => $key->getPluginsAsOptions('key_provider'),
       '#required' => TRUE,
       '#default_value' => $key->getKeyProvider()->getPluginId(),
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => [$this, 'ajaxUpdateSettings'],
         'event' => 'change',
         'wrapper' => 'key-settings',
-      ),
-    );
-    $form['settings']['provider_section']['key_provider_description'] = array(
+      ],
+    ];
+    $form['settings']['provider_section']['key_provider_description'] = [
       '#markup' => $key->getKeyProvider()->getPluginDefinition()['description'],
-    );
-    $form['settings']['provider_section']['key_provider_settings'] = array(
+    ];
+    $form['settings']['provider_section']['key_provider_settings'] = [
       '#type' => 'container',
       '#title' => $this->t('Key provider settings'),
       '#title_display' => FALSE,
       '#tree' => TRUE,
-    );
+    ];
     if ($key->getKeyProvider() instanceof KeyPluginFormInterface) {
       $plugin_form_state = $this->createPluginFormState('key_provider', $form_state);
       $form['settings']['provider_section']['key_provider_settings'] += $key->getKeyProvider()->buildConfigurationForm([], $plugin_form_state);
@@ -188,21 +188,21 @@ abstract class KeyFormBase extends EntityForm {
     }
 
     // Key input section.
-    $form['settings']['input_section'] = array(
+    $form['settings']['input_section'] = [
       '#type' => 'details',
       '#title' => $this->t('Value'),
       '#open' => TRUE,
-    );
-    $form['settings']['input_section']['key_input'] = array(
+    ];
+    $form['settings']['input_section']['key_input'] = [
       '#type' => 'value',
       '#value' => $key->getKeyInput()->getPluginId(),
-    );
-    $form['settings']['input_section']['key_input_settings'] = array(
+    ];
+    $form['settings']['input_section']['key_input_settings'] = [
       '#type' => 'container',
       '#title' => $this->t('Key value settings'),
       '#title_display' => FALSE,
       '#tree' => TRUE,
-    );
+    ];
     if ($key->getKeyInput() instanceof KeyPluginFormInterface) {
       $plugin_form_state = $this->createPluginFormState('key_input', $form_state);
       $form['settings']['input_section']['key_input_settings'] += $key->getKeyInput()->buildConfigurationForm([], $plugin_form_state);
@@ -229,10 +229,10 @@ abstract class KeyFormBase extends EntityForm {
       }
     }
 
-    $processed_values = array(
+    $processed_values = [
       'submitted' => NULL,
       'processed_submitted' => NULL,
-    );
+    ];
     foreach ($this->entity->getPlugins() as $type => $plugin) {
       if ($plugin instanceof KeyPluginFormInterface) {
         $plugin_form_state = $this->createPluginFormState($type, $form_state);
@@ -333,11 +333,11 @@ abstract class KeyFormBase extends EntityForm {
       $status = $key->save();
     }
     catch (KeyValueNotSetException $e) {
-      drupal_set_message($this->t('The key was not saved because the key value could not be set. @message', array('@message' => $e->getMessage())), 'error');
+      drupal_set_message($this->t('The key was not saved because the key value could not be set. @message', ['@message' => $e->getMessage()]), 'error');
       return;
     }
 
-    $t_args = array('%name' => $key->label());
+    $t_args = ['%name' => $key->label()];
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('The key %name has been updated.', $t_args));

@@ -58,9 +58,9 @@ class KeyProvider extends Plugin {
    *
    * @var array
    */
-  public $key_value = array(
+  public $key_value = [
     'accepted' => FALSE,
     'required' => FALSE,
-  );
+  ];
 
 }

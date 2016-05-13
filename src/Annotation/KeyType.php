@@ -60,8 +60,8 @@ class KeyType extends Plugin {
    *
    * @var array
    */
-  public $key_value = array(
+  public $key_value = [
     'plugin' => 'text_field',
-  );
+  ];
 
 }

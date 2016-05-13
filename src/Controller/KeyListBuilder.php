@@ -43,14 +43,14 @@ class KeyListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Key');
-    $header['type'] = array(
+    $header['type'] = [
       'data' => $this->t('Type'),
-      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-    );
-    $header['provider'] = array(
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
+    $header['provider'] = [
       'data' => $this->t('Provider'),
-      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-    );
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
 
     return $header + parent::buildHeader();
   }
@@ -74,7 +74,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
    */
   public function render() {
     $build = parent::render();
-    $build['table']['#empty'] = $this->t('No keys are available. <a href=":link">Add a key</a>.', array(':link' => Url::fromRoute('entity.key.add_form')->toString()));
+    $build['table']['#empty'] = $this->t('No keys are available. <a href=":link">Add a key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
     return $build;
   }
 

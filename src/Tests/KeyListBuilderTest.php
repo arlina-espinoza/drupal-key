@@ -16,14 +16,14 @@ use Drupal\simpletest\WebTestBase;
  */
 class KeyListBuilderTest extends WebTestBase {
 
-  public static $modules = array('key', 'dblog');
+  public static $modules = ['key', 'dblog'];
 
   /**
    * Test KeyListBuilder functions.
    */
   public function testListBuilder() {
     // Create user with permission to administer keys.
-    $user1 = $this->drupalCreateUser(array('administer keys'));
+    $user1 = $this->drupalCreateUser(['administer keys']);
     $this->drupalLogin($user1);
 
     // Go to the Key list page.

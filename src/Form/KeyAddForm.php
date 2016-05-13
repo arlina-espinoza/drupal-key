@@ -23,12 +23,12 @@ class KeyAddForm extends KeyFormBase {
     // Only when the form is first built.
     if (!$form_state->isRebuilding()) {
       // Set the key value data to NULL, since this is a new key.
-      $form_state->set('key_value', array(
+      $form_state->set('key_value', [
         'original' => NULL,
         'processed_original' => NULL,
         'obscured' => NULL,
         'current' => '',
-      ));
+      ]);
     }
 
     return parent::buildForm($form, $form_state);

@@ -46,7 +46,7 @@ abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return [];
   }
 
   /**
@@ -67,7 +67,7 @@ abstract class KeyPluginBase extends PluginBase implements KeyPluginInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
 
 }

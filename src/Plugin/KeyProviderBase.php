@@ -47,11 +47,11 @@ abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInter
    */
   protected static function obscureValue($key_value, array $options = []) {
     // Add default options.
-    $options += array(
+    $options += [
       'replacement_character' => '*',
       'fixed_length' => '',
       'visible_right' => 4,
-    );
+    ];
 
     if ($options['visible_right'] > 0) {
       $visible_right_chars = substr($key_value, $options['visible_right'] * -1);

@@ -68,7 +68,7 @@ class KeyEditForm extends KeyFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $form['#title'] = $this->t('Edit key %label', array('%label' => $this->entity->label()));
+    $form['#title'] = $this->t('Edit key %label', ['%label' => $this->entity->label()]);
     return parent::form($form, $form_state);
   }
 

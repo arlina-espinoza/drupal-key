@@ -20,7 +20,7 @@ class KeyDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the key %key?', array('%key' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the key %key?', ['%key' => $this->entity->label()]);
   }
 
   /**
@@ -72,7 +72,7 @@ class KeyDeleteForm extends EntityDeleteForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message($this->t('The key %label has been deleted.', array('%label' => $this->entity->label())));
+    drupal_set_message($this->t('The key %label has been deleted.', ['%label' => $this->entity->label()]));
 
     // Allow the plugins to perform additional actions.
     foreach ($this->entity->getPlugins() as $plugin) {

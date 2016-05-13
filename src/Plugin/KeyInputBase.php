@@ -35,10 +35,10 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface, 
     // the submitted value. If the key value is Base64-encoded, decode it and
     // return the result as the processed_submitted value. Input plugins can
     // override this behavior to perform more complex processing.
-    $processed_values = array(
+    $processed_values = [
       'submitted' => NULL,
       'processed_submitted' => NULL,
-    );
+    ];
     $key_input_settings = $form_state->getValues();
     $key_value_data = $form_state->get('key_value');
     if (isset($key_input_settings['key_value'])) {

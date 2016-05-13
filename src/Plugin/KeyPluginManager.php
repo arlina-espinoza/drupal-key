@@ -37,16 +37,16 @@ class KeyPluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    $type_annotations = array(
+    $type_annotations = [
       'key_type' => 'Drupal\key\Annotation\KeyType',
       'key_provider' => 'Drupal\key\Annotation\KeyProvider',
       'key_input' => 'Drupal\key\Annotation\KeyInput',
-    );
-    $plugin_interfaces = array(
+    ];
+    $plugin_interfaces = [
       'key_type' => 'Drupal\key\Plugin\KeyTypeInterface',
       'key_provider' => 'Drupal\key\Plugin\KeyProviderInterface',
       'key_input' => 'Drupal\key\Plugin\KeyInputInterface',
-    );
+    ];
 
     $this->pluginType = $type;
     $this->subdir = 'Plugin/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $type)));

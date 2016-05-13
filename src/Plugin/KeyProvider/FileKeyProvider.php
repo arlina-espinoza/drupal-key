@@ -42,27 +42,27 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['file_location'] = array(
+    $form['file_location'] = [
       '#type' => 'textfield',
       '#title' => $this->t('File location'),
-      '#description' => $this->t('The location of the file in which the key will be stored. The path may be absolute (e.g., %abs), relative to the Drupal directory (e.g., %rel), or defined using a stream wrapper (e.g., %str).', array(
+      '#description' => $this->t('The location of the file in which the key will be stored. The path may be absolute (e.g., %abs), relative to the Drupal directory (e.g., %rel), or defined using a stream wrapper (e.g., %str).', [
         '%abs' => '/etc/keys/foobar.key',
         '%rel' => '../keys/foobar.key',
         '%str' => 'private://keys/foobar.key',
-      )),
+      ]),
       '#required' => TRUE,
       '#default_value' => $this->getConfiguration()['file_location'],
-    );
+    ];
 
     // If this key type is for an encryption key.
     if ($form_state->getFormObject()->getEntity()->getKeyType()->getPluginDefinition()['group'] == 'encryption') {
       // Add an option to indicate that the value is stored Base64-encoded.
-      $form['base64_encoded'] = array(
+      $form['base64_encoded'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Base64-encoded'),
         '#description' => $this->t('Check this if the key in the file is Base64-encoded.'),
         '#default_value' => $this->getConfiguration()['base64_encoded'],
-      );
+      ];
     }
 
     return $form;

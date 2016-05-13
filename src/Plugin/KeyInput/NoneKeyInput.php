@@ -25,9 +25,9 @@ class NoneKeyInput extends KeyInputBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['key_value_message'] = array(
+    $form['key_value_message'] = [
       '#markup' => $this->t("The selected key provider does not accept a value. See the provider's description for instructions on how and where to store the key value."),
-    );
+    ];
     return $form;
   }
 

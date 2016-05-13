@@ -46,12 +46,12 @@ class ConfigKeyProvider extends KeyProviderBase implements KeyPluginFormInterfac
     // If this key type is for an encryption key.
     if ($form_state->getFormObject()->getEntity()->getKeyType()->getPluginDefinition()['group'] == 'encryption') {
       // Add an option to indicate that the value is stored Base64-encoded.
-      $form['base64_encoded'] = array(
+      $form['base64_encoded'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Base64-encoded'),
         '#description' => $this->t('Checking this will store the key with Base64 encoding.'),
         '#default_value' => $this->getConfiguration()['base64_encoded'],
-      );
+      ];
     }
 
     return $form;

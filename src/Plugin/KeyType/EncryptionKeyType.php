@@ -40,14 +40,14 @@ class EncryptionKeyType extends KeyTypeBase implements KeyPluginFormInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['key_size'] = array(
+    $form['key_size'] = [
       '#type' => 'select',
       '#title' => $this->t('Key size'),
       '#description' => $this->t('The size of the key in bits, with 8 bits per byte.'),
       '#options' => array_combine(range(32, 512, 32), range(32, 512, 32)),
       '#default_value' => $this->getConfiguration()['key_size'],
       '#required' => TRUE,
-    );
+    ];
 
     return $form;
   }
