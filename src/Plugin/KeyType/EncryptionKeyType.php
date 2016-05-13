@@ -40,13 +40,43 @@ class EncryptionKeyType extends KeyTypeBase implements KeyPluginFormInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['key_size'] = [
+    // Define the most common key size options.
+    $key_size_options = [
+      '128' => 128,
+      '256' => 256,
+    ];
+
+    $key_size = $this->getConfiguration()['key_size'];
+    $key_size_other_value = '';
+    if (!in_array($key_size, $key_size_options)) {
+      $key_size_other_value = $key_size;
+      $key_size = 'other';
+    }
+
+    $form['key_size'] = array(
       '#type' => 'select',
       '#title' => $this->t('Key size'),
       '#description' => $this->t('The size of the key in bits, with 8 bits per byte.'),
-      '#options' => array_combine(range(32, 512, 32), range(32, 512, 32)),
-      '#default_value' => $this->getConfiguration()['key_size'],
+      '#options' => $key_size_options + ['other' => $this->t('Other')],
+      '#default_value' => $key_size,
       '#required' => TRUE,
+    );
+    $form['key_size_other_value'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Key size (other value)'),
+      '#title_display' => 'invisible',
+      '#description' => $this->t('Enter a custom key size in bits.'),
+      '#default_value' => $key_size_other_value,
+      '#maxlength'=> 20,
+      '#size'=> 20,
+      '#states' => [
+        'visible' => [
+          'select[name="key_type_settings[key_size]"]' => ['value' => 'other'],
+        ],
+        'required' => [
+          'select[name="key_type_settings[key_size]"]' => ['value' => 'other'],
+        ],
+      ],
     ];
 
     return $form;
@@ -56,6 +86,12 @@ class EncryptionKeyType extends KeyTypeBase implements KeyPluginFormInterface {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // If 'Other' was selected for the key size, use the custom entered value.
+    $key_size = $form_state->getValue('key_size');
+    if ($key_size == 'other') {
+      $form_state->setValue('key_size', $form_state->getValue('key_size_other_value'));
+    }
+    $form_state->unsetValue('key_size_other_value');
   }
 
   /**
