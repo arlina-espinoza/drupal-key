@@ -66,6 +66,7 @@ class KeySelect extends Select {
     // unless disabled.
     if ($element['#key_description']) {
       $original_description = (isset($element['#description'])) ? $element['#description'] : '';
+      // @todo this causes escaping.
       $key_description = t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
       $element['#description'] = $key_description . ' ' . $original_description;
     }

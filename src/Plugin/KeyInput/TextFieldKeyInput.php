@@ -37,17 +37,19 @@ class TextFieldKeyInput extends KeyInputBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $key_value_data = $form_state->get('key_value');
 
+    /** @var \Drupal\key\Entity\Key $key */
+    $key = $form_state->getFormObject()->getEntity();
     $form['key_value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Key value'),
-      '#required' => $form_state->getFormObject()->getEntity()->getKeyProvider()->getPluginDefinition()['key_value']['required'],
+      '#required' => $key->getKeyProvider()->getPluginDefinition()['key_value']['required'],
       '#default_value' => $key_value_data['current'],
       // Tell the browser not to autocomplete this field.
       '#attributes' => ['autocomplete' => 'off'],
     ];
 
     // If this key input is for an encryption key.
-    if ($form_state->getFormObject()->getEntity()->getKeyType()->getPluginDefinition()['group'] == 'encryption') {
+    if ($key->getKeyType()->getPluginDefinition()['group'] == 'encryption') {
       // Add an option to indicate that the value is Base64-encoded.
       $form['base64_encoded'] = [
         '#type' => 'checkbox',
