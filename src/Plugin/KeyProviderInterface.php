@@ -7,6 +7,7 @@
 
 namespace Drupal\key\Plugin;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\key\KeyInterface;
 
 /**
@@ -37,5 +38,17 @@ interface KeyProviderInterface {
    *   The obscured key value.
    */
   public static function obscureKeyValue($key_value, array $options);
+
+  /**
+   * Allows a key provider to perform actions after a key entity is saved.
+   *
+   * @param \Drupal\key\KeyInterface $key
+   *   The key entity that was saved.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage object.
+   * @param bool $update
+   *   TRUE if the entity has been updated, or FALSE if it has been inserted.
+   */
+  public function postSave(KeyInterface $key, EntityStorageInterface $storage, $update = TRUE);
 
 }

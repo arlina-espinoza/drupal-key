@@ -315,6 +315,9 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
    * {@inheritdoc}
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    // Allow the key provider to perform post-save actions.
+    $this->getKeyProvider()->postSave($this, $storage, $update);
+
     // If an original key exists.
     if (isset($this->original)) {
       /* @var $original \Drupal\key\Entity\Key */

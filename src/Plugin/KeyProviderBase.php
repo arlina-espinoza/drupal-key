@@ -6,6 +6,9 @@
 
 namespace Drupal\key\Plugin;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\key\KeyInterface;
+
 /**
  * Defines a base class for Key Provider plugins.
  */
@@ -69,6 +72,13 @@ abstract class KeyProviderBase extends KeyPluginBase implements KeyProviderInter
     }
 
     return $obscured_chars . $visible_right_chars;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(KeyInterface $key, EntityStorageInterface $storage, $update = TRUE) {
+    // Post-save actions are optional.
   }
 
 }
