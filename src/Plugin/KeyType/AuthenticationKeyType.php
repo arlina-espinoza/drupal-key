@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyType\AuthenticationKeyType.
- */
-
 namespace Drupal\key\Plugin\KeyType;
 
 use Drupal\Core\Form\FormStateInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Entity\Key.
- */
-
 namespace Drupal\key\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

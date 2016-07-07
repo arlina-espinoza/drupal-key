@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyPluginCollection.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;

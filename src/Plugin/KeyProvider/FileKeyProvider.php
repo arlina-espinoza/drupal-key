@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyProvider\FileKeyProvider.
- */
-
 namespace Drupal\key\Plugin\KeyProvider;
 
 use Drupal\Core\Form\FormStateInterface;

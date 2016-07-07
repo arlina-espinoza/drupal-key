@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyInputInterface.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;

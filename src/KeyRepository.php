@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\KeyRepository.
- */
-
 namespace Drupal\key;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

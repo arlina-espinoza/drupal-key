@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Element\KeySelect.
- */
-
 namespace Drupal\key\Element;
 
 use Drupal\Core\Form\FormStateInterface;

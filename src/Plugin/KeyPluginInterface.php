@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyPluginInterface.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

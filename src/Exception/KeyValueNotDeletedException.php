@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Exception\KeyValueNotDeletedException.
- */
-
 namespace Drupal\key\Exception;
 
 /**

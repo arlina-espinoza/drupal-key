@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\KeyInterface.
- */
-
 namespace Drupal\key;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

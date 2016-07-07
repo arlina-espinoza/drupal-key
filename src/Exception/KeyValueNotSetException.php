@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Exception\KeyValueNotSetException.
- */
-
 namespace Drupal\key\Exception;
 
 /**

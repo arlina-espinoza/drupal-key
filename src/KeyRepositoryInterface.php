@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\KeyRepositoryInterface.
- */
-
 namespace Drupal\key;
 
 /**

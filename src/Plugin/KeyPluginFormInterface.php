@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyPluginFormInterface.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Plugin\PluginFormInterface;

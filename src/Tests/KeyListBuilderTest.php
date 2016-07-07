@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of \Drupal\key\Tests\KeyListBuilderTest.
- */
-
 namespace Drupal\key\Tests;
 
 use Drupal\simpletest\WebTestBase;

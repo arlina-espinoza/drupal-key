@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Form\KeyAddForm.
- */
-
 namespace Drupal\key\Form;
 
 use Drupal\Core\Form\FormStateInterface;

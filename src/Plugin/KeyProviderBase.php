@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Provides \Drupal\key\Plugin\KeyProviderBase.
- */
 
 namespace Drupal\key\Plugin;
 

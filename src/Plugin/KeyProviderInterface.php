@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyProviderInterface.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Entity\EntityStorageInterface;

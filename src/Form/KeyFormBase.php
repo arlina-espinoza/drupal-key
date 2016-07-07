@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Form\KeyFormBase.
- */
-
 namespace Drupal\key\Form;
 
 use Drupal\Core\Entity\EntityForm;

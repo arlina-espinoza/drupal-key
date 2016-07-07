@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Annotation\KeyType.
- */
-
 namespace Drupal\key\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

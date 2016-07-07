@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Provides \Drupal\Tests\key\Unit\Entity\KeyEntityTest.
- */
 
 namespace Drupal\Tests\key\Unit\Entity;
 

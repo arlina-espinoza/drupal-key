@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Controller\KeyListBuilder.
- */
-
 namespace Drupal\key\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

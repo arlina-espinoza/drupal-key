@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Form\KeyDeleteForm.
- */
-
 namespace Drupal\key\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;

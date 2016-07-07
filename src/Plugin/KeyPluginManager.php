@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyPluginManager.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;

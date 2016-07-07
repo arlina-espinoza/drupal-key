@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\key\Plugin\KeyProviderSettableValueInterface.
- */
-
 namespace Drupal\key\Plugin;
 
 use Drupal\key\KeyInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of \Drupal\key\Tests\KeyServiceTest.
- */
-
 namespace Drupal\key\Tests;
 
 use Drupal\simpletest\WebTestBase;
