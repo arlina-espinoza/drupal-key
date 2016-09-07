@@ -25,16 +25,36 @@ class KeyRepository implements KeyRepositoryInterface {
   protected $keyProviderManager;
 
   /**
+   * The key type plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $keyTypeManager;
+
+  /**
+   * The key input plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $keyInputManager;
+
+  /**
    * Constructs a new KeyRepository.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $key_provider_manager
    *   The key provider plugin manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_type_manager
+   *   The key type plugin manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $key_input_manager
+   *   The key input plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, PluginManagerInterface $key_provider_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, PluginManagerInterface $key_provider_manager, PluginManagerInterface $key_type_manager, PluginManagerInterface $key_input_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->keyProviderManager = $key_provider_manager;
+    $this->keyTypeManager = $key_type_manager;
+    $this->keyInputManager = $key_input_manager;
   }
 
   /**
@@ -76,6 +96,21 @@ class KeyRepository implements KeyRepositoryInterface {
   /**
    * {@inheritdoc}
    */
+  public function getKeysByTypeGroup($type_group) {
+    $key_types = array_filter($this->keyTypeManager->getDefinitions(), function ($definition) use ($type_group) {
+      return $definition['group'] == $type_group;
+    });
+
+    $keys = [];
+    foreach ($key_types as $key_type) {
+      $keys = array_merge($keys, $this->getKeysByType($key_type['id']));
+    }
+    return $keys;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getKey($key_id) {
     return $this->entityTypeManager->getStorage('key')->load($key_id);
   }
@@ -85,21 +120,19 @@ class KeyRepository implements KeyRepositoryInterface {
    */
   public function getKeyNamesAsOptions($filters = []) {
     $options = [];
-    $keys = [];
+    $keys = $this->getKeys();
 
-    // TODO: Make filtering more sophisticated.
-    if (empty($filters)) {
-      $keys = $this->getKeys();
-    }
-    else {
-      if (isset($filters['type']) && isset($filters['provider'])) {
-        $keys = array_intersect_key($this->getKeysByType($filters['type']), $this->getKeysByProvider($filters['provider']));
-      }
-      elseif (isset($filters['type'])) {
-        $keys = $this->getKeysByType($filters['type']);
-      }
-      elseif (isset($filters['provider'])) {
-        $keys = $this->getKeysByProvider($filters['provider']);
+    foreach ($filters as $index => $filter) {
+      switch ($index) {
+        case 'type':
+          $keys = array_intersect_key($this->getKeysByType($filter), $keys);
+          break;
+        case 'provider':
+          $keys = array_intersect_key($this->getKeysByProvider($filter), $keys);
+          break;
+        case 'type_group':
+          $keys = array_intersect_key($this->getKeysByTypeGroup($filter), $keys);
+          break;
       }
     }
 

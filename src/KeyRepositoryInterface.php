@@ -44,6 +44,19 @@ interface KeyRepositoryInterface {
   public function getKeysByStorageMethod($storage_method);
 
   /**
+   * Get keys that use a key type in the specified group.
+   *
+   * Group is an annotation of a key's key type.
+   *
+   * @param string $type_group
+   *   The key type group on which to filter.
+   *
+   * @return \Drupal\key\Entity\Key[]
+   *   An array of key objects indexed by their ids.
+   */
+  public function getKeysByTypeGroup($type_group);
+
+  /**
    * Get a specific key.
    *
    * @param string $key_id
