@@ -31,6 +31,17 @@ interface KeyRepositoryInterface {
   public function getKeysByProvider($key_provider_id);
 
   /**
+   * Get keys that use the specified key type.
+   *
+   * @param string $key_type_id
+   *   The key type ID to use.
+   *
+   * @return \Drupal\key\Entity\Key[]
+   *   An array of key objects indexed by their ids.
+   */
+  public function getKeysByType($key_type_id);
+
+  /**
    * Get keys that use the specified storage method.
    *
    * Storage method is an annotation of a key's key provider.
