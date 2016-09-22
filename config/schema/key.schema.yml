@@ -83,3 +83,14 @@ key.input.textarea_field:
       base64_encoded:
         type: boolean
         label: 'Base64-encoded'
+
+key.input.generate:
+  type: mapping
+  label: 'Generate key input settings'
+  mapping:
+      generated:
+        type: boolean
+        label: 'Generated'
+      display_once:
+        type: boolean
+        label: 'Display once'
