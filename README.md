@@ -100,10 +100,10 @@ which behaves like a select element, but is populated with available
 keys as options.
 
 ```
-$form['secret_key'] = array(
+$form['secret_key'] = [
   '#type' => 'key_select',
   '#title' => $this->t('Secret key'),
-);
+];
 ```
 
 There are a couple of additional properties that can be used:

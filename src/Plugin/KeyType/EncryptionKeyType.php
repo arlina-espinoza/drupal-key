@@ -48,14 +48,14 @@ class EncryptionKeyType extends KeyTypeBase implements KeyPluginFormInterface {
       $key_size = 'other';
     }
 
-    $form['key_size'] = array(
+    $form['key_size'] = [
       '#type' => 'select',
       '#title' => $this->t('Key size'),
       '#description' => $this->t('The size of the key in bits, with 8 bits per byte.'),
       '#options' => $key_size_options + ['other' => $this->t('Other')],
       '#default_value' => $key_size,
       '#required' => TRUE,
-    );
+    ];
     $form['key_size_other_value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Key size (other value)'),

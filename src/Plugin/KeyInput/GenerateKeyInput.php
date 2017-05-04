@@ -56,10 +56,10 @@ class GenerateKeyInput extends KeyInputBase {
       ];
     }
 
-    $form['generated'] = array(
+    $form['generated'] = [
       '#type' => 'value',
       '#value' => $config['generated'],
-    );
+    ];
 
     return $form;
   }
