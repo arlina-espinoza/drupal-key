@@ -262,7 +262,7 @@ abstract class KeyFormBase extends EntityForm {
     else {
       // Create a temporary key entity to retrieve the key value.
       $temp_key = new Key($form_state->getValues(), 'key');
-      $key_value = $temp_key->getKeyValue();
+      $key_value = $temp_key->getKeyValue(TRUE);
     }
 
     $plugin_form_state = $this->createPluginFormState('key_type', $form_state);
