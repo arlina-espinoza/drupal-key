@@ -120,4 +120,34 @@ class KeyConfigOverride extends ConfigEntityBase implements KeyConfigOverrideInt
     return $this->key;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    if ($this->config_type && $this->config_name) {
+      if ($this->config_type === 'system.simple') {
+        $this->addDependency('config', $this->config_name);
+      }
+      else {
+        $config = $this->entityTypeManager()
+          ->getStorage($this->config_type)
+          ->load($this->config_name);
+
+        $this->addDependency('config', $config->getConfigDependencyName());
+      }
+    }
+
+    if ($this->key_id) {
+      $key = $this->entityTypeManager()
+        ->getStorage('key')
+        ->load($this->key_id);
+
+      $this->addDependency('config', $key->getConfigDependencyName());
+    }
+
+    return $this;
+  }
+
 }
