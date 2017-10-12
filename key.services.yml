@@ -11,3 +11,8 @@ services:
   plugin.manager.key.key_input:
     class: Drupal\key\Plugin\KeyPluginManager
     arguments: ['key_input', '@container.namespaces', '@cache.discovery', '@module_handler']
+  key.config_override:
+      class: \Drupal\key\KeyConfigOverrides
+      arguments: ['@cache.data']
+      tags:
+        - {name: config.factory.override, priority: 10}

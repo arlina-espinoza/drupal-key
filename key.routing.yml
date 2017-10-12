@@ -29,3 +29,19 @@ entity.key.delete_form:
     _title: 'Delete Key'
   requirements:
     _permission: 'administer keys'
+
+entity.key_config_override.collection:
+  path: '/admin/config/development/configuration/key-overrides'
+  defaults:
+    _entity_list: 'key_config_override'
+    _title: 'Key Configuration Overrides'
+  requirements:
+    _permission: 'administer key configuration overrides'
+
+entity.key_config_override.add_form:
+  path: '/admin/config/development/configuration/key-overrides/add'
+  defaults:
+    _entity_form: 'key_config_override.add'
+    _title: 'Add a key configuration override'
+  requirements:
+    _permission: 'administer key configuration overrides'

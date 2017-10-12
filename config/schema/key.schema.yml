@@ -94,3 +94,26 @@ key.input.generate:
       display_once:
         type: boolean
         label: 'Display once'
+
+key.config_override.*:
+  type: config_entity
+  label: 'Key Configuration Override'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    config_type:
+      type: string
+      label: 'Configuration type'
+    config_name:
+      type: string
+      label: 'Configuration name'
+    config_item:
+      type: string
+      label: 'Configuration item'
+    key_id:
+      type: string
+      label: 'Key ID'
