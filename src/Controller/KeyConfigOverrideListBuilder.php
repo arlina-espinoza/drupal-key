@@ -7,6 +7,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\key\KeyRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,6 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\key\Entity\KeyConfigOverride
  */
 class KeyConfigOverrideListBuilder extends ConfigEntityListBuilder {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The configuration manager.
@@ -35,10 +43,11 @@ class KeyConfigOverrideListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ConfigManagerInterface $config_manager, KeyRepositoryInterface $key_repository) {
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, EntityStorageInterface $storage, ConfigManagerInterface $config_manager, KeyRepositoryInterface $key_repository) {
+    parent::__construct($entity_type, $storage);
+    $this->entityTypeManager = $entity_type_manager;
     $this->configManager = $config_manager;
     $this->keyRepository = $key_repository;
-    parent::__construct($entity_type, $storage);
   }
 
   /**
@@ -47,6 +56,7 @@ class KeyConfigOverrideListBuilder extends ConfigEntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
+      $container->get('entity_type.manager'),
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('config.manager'),
       $container->get('key.repository')
@@ -73,10 +83,20 @@ class KeyConfigOverrideListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /* @var $entity \Drupal\key\KeyConfigOverrideInterface */
 
+    // Build the complete configuration ID.
+    $config_id = '';
+    $config_type = $entity->getConfigType();
+    if ($config_type != 'system.simple') {
+      $definition = $this->entityTypeManager->getDefinition($config_type);
+      $config_id .= $definition->getConfigPrefix() . '.';
+    }
+    $config_id .= $entity->getConfigName();
+    $config_id .= ':' . $entity->getConfigItem();
+
     $key = $this->keyRepository->getKey($entity->getKeyId());
 
     $row['label'] = $entity->label();
-    $row['config_id'] = $entity->getConfigName() . ':' . $entity->getConfigItem();
+    $row['config_id'] = $config_id;
     $row['key_id'] = $key->label();
 
     return $row + parent::buildRow($entity);
