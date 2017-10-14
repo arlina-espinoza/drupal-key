@@ -45,7 +45,7 @@ class KeyConfigOverrideAddForm extends EntityForm {
   /**
    * The configuration entity type definitions.
    *
-   * @var \Drupal\Core\Render\RendererInterface
+   * @var \Drupal\Core\Entity\EntityTypeInterface[]
    */
   protected $configEntityTypeDefinitions;
 
@@ -188,26 +188,32 @@ class KeyConfigOverrideAddForm extends EntityForm {
 
   /**
    * Get the configuration entity type definitions.
+   *
+   * @param bool $with_excluded
+   *   Whether or not to include excluded configuration types.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   The entity type definitions.
    */
-  protected function getConfigEntityTypeDefinitions() {
-    // Define configuration entity types to ignore.
-    $ignore = [
-      'key',
-      'key_config_override',
-    ];
-
+  protected function getConfigEntityTypeDefinitions($with_excluded = FALSE) {
     if (!isset($this->configEntityTypeDefinitions)) {
       $config_entity_type_definitions = [];
       foreach ($this->entityTypeManager->getDefinitions() as $entity_type => $definition) {
-        if ($definition->entityClassImplements(ConfigEntityInterface::class)
-          && !in_array($entity_type, $ignore)) {
+        if ($definition->entityClassImplements(ConfigEntityInterface::class)) {
           $config_entity_type_definitions[$entity_type] = $definition;
         }
       }
       $this->configEntityTypeDefinitions = $config_entity_type_definitions;
     }
 
-    return $this->configEntityTypeDefinitions;
+    if ($with_excluded) {
+      $definitions = $this->configEntityTypeDefinitions;
+    }
+    else {
+      $definitions = array_diff_key($this->configEntityTypeDefinitions, $this->excludedConfigTypes());
+    }
+
+    return $definitions;
   }
 
   /**
@@ -242,7 +248,7 @@ class KeyConfigOverrideAddForm extends EntityForm {
       // Gather the configuration entity prefixes.
       $config_prefixes = array_map(function (EntityTypeInterface $definition) {
         return $definition->getConfigPrefix() . '.';
-      }, $this->configEntityTypeDefinitions);
+      }, $this->getConfigEntityTypeDefinitions(TRUE));
 
       // Get all configuration names.
       $names = $this->configStorage->listAll();
@@ -295,6 +301,20 @@ class KeyConfigOverrideAddForm extends EntityForm {
     $config_items = array_combine($config_items, $config_items);
 
     return $config_items;
+  }
+
+  /**
+   * Define the list of configuration types to exclude.
+   *
+   * @return array
+   *  The configuration types to exclude.
+   */
+  protected function excludedConfigTypes() {
+    $exclude = [
+      'key',
+      'key_config_override',
+    ];
+    return array_combine($exclude, $exclude);
   }
 
   /**
