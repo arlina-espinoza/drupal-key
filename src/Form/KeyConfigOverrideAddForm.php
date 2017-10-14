@@ -4,9 +4,12 @@ namespace Drupal\key\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class KeyConfigOverrideAddForm extends EntityForm {
@@ -26,11 +29,25 @@ class KeyConfigOverrideAddForm extends EntityForm {
   protected $configFactory;
 
   /**
+   * The config storage.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $configStorage;
+
+  /**
    * The Key Configuration Override entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
+
+  /**
+   * The configuration entity type definitions.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $configEntityTypeDefinitions;
 
   /**
    * Constructs a KeyConfigOverrideAddForm.
@@ -40,9 +57,10 @@ class KeyConfigOverrideAddForm extends EntityForm {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, StorageInterface $config_storage) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
+    $this->configStorage = $config_storage;
     $this->storage = $entity_type_manager->getStorage('key_config_override');
   }
 
@@ -52,7 +70,8 @@ class KeyConfigOverrideAddForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('config.storage')
     );
   }
 
@@ -67,10 +86,13 @@ class KeyConfigOverrideAddForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config_names = $this->getSimpleConfigurationNames();
+    $config_type = $form_state->getValue('config_type');
+    $config_name = $form_state->getValue('config_name');
+
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Key configuration override name'),
+      '#description' => $this->t('A human readable name for this override.'),
       '#size' => 30,
       '#maxlength' => 64,
       '#required' => TRUE,
@@ -85,44 +107,57 @@ class KeyConfigOverrideAddForm extends EntityForm {
       ],
     ];
 
-    // Only simple configuration objects are currently supported.
-    $form['config_name'] = [
-      '#type' => 'value',
-      '#value' => 'system.simple',
-    ];
+    $entity_types = array_map(function (EntityTypeInterface $definition) {
+      return $definition->getLabel();
+    }, $this->getConfigEntityTypeDefinitions());
 
-    $default_config_name = $form_state->getValue('config_name', '');
-    $form['config_name'] = [
-      '#title' => $this->t('Configuration name'),
+    // Sort the entity types by label.
+    uasort($entity_types, 'strnatcasecmp');
+
+    // Add the simple configuration type to the top of the list.
+    $config_types = [
+      'system.simple' => $this->t('Simple configuration'),
+    ] + $entity_types;
+
+    $form['config_type'] = [
+      '#title' => $this->t('Configuration type'),
       '#type' => 'select',
-      '#options' => $config_names,
-      '#default_value' => $default_config_name,
-      '#empty_value' => '',
-      '#empty_option' => t('- Select -'),
+      '#options' => $config_types,
+      '#required' => TRUE,
       '#ajax' => [
-        'callback' => '::updateConfigurationItems',
-        'wrapper' => 'edit-config-item-wrapper',
+        'callback' => '::changeConfigObject',
+        'wrapper' => 'edit-config-object-wrapper',
       ],
     ];
 
-//    $config_object = $this->configFactory->get($default_config_name);
-//    $config_array = $config_object->get();
-//    $config_items = $this->getConfigurationItems($config_array);
-//    $form['config_item'] = [
-//      '#title' => $this->t('Configuration item'),
-//      '#type' => 'select',
-//      '#options' => $config_items,
-//      '#empty_value' => '',
-//      '#empty_option' => t('- Select -'),
-//      '#prefix' => '<div id="edit-config-item-wrapper">',
-//      '#suffix' => '</div>',
-//    ];
+    $form['config_object'] = [
+      '#type' => 'container',
+      '#prefix' => '<div id="edit-config-object-wrapper">',
+      '#suffix' => '</div>',
+    ];
+
+    $form['config_object']['config_name'] = [
+      '#title' => $this->t('Configuration name'),
+      '#type' => 'select',
+      '#options' => $this->getConfigNames($config_type),
+      '#required' => TRUE,
+      '#ajax' => [
+        'callback' => '::changeConfigObject',
+        'wrapper' => 'edit-config-object-wrapper',
+      ],
+    ];
+
+    $form['config_object']['config_item'] = [
+      '#title' => $this->t('Configuration item'),
+      '#type' => 'select',
+      '#options' => $this->getConfigItems($config_type, $config_name),
+      '#required' => TRUE,
+    ];
+
     $form['key_id'] = [
       '#title' => $this->t('Key'),
       '#type' => 'key_select',
-      '#default_value' => '',
-      '#empty_value' => '',
-      '#empty_option' => t('- Select -'),
+      '#required' => TRUE,
     ];
 
     return parent::buildForm($form, $form_state);
@@ -145,51 +180,121 @@ class KeyConfigOverrideAddForm extends EntityForm {
   }
 
   /**
-   * Handles updating the configuration items.
+   * Updates the configuration object container element.
    */
-  public function updateConfigurationItems($form, FormStateInterface $form_state) {
-    $form['config_item']['#options'] = [
-      '' => t('- Select -'),
-    ];
-
-    $config_name = $form_state->getValue('config_name');
-    $config_object = $this->configFactory->get($config_name);
-    $config_array = $config_object->get();
-
-    $config_items = $this->getConfigurationItems($config_array);
-    $form['config_item']['#options'] = array_combine($config_items, $config_items);
-
-    return $form['config_item'];
+  public function changeConfigObject($form, FormStateInterface $form_state) {
+    return $form['config_object'];
   }
 
   /**
-   * Get a list of simple configuration names.
-   *
-   * @return array
-   *   The simple configuration names.
+   * Get the configuration entity type definitions.
    */
-  protected function getSimpleConfigurationNames() {
-    // Gather the configuration entity prefixes.
-    $config_entity_prefixes = [];
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type => $definition) {
-      if ($definition->entityClassImplements(ConfigEntityInterface::class)) {
-        $config_entity_prefixes[] = $definition->getConfigPrefix() . '.';
+  protected function getConfigEntityTypeDefinitions() {
+    // Define configuration entity types to ignore.
+    $ignore = [
+      'key',
+      'key_config_override',
+    ];
+
+    if (!isset($this->configEntityTypeDefinitions)) {
+      $config_entity_type_definitions = [];
+      foreach ($this->entityTypeManager->getDefinitions() as $entity_type => $definition) {
+        if ($definition->entityClassImplements(ConfigEntityInterface::class)
+          && !in_array($entity_type, $ignore)) {
+          $config_entity_type_definitions[$entity_type] = $definition;
+        }
       }
+      $this->configEntityTypeDefinitions = $config_entity_type_definitions;
     }
 
-    // Find all configuration, then filter out anything matching a
-    // configuration entity prefix.
-    $names = $this->configFactory->listAll();
-    $names = array_combine($names, $names);
-    foreach ($names as $config_name) {
-      foreach ($config_entity_prefixes as $config_entity_prefix) {
-        if (strpos($config_name, $config_entity_prefix) === 0) {
-          unset($names[$config_name]);
+    return $this->configEntityTypeDefinitions;
+  }
+
+  /**
+   * Get the configuration names for a specified configuration type.
+   *
+   * @param string|null $config_type
+   *   The configuration type.
+   *
+   * @return array
+   *   The configuration names.
+   */
+  protected function getConfigNames($config_type = NULL) {
+    $names = [
+      '' => $this->t('- Select -'),
+    ];
+
+    // Handle entity configuration types.
+    if ($config_type && $config_type !== 'system.simple') {
+      $entity_storage = $this->entityTypeManager->getStorage($config_type);
+      foreach ($entity_storage->loadMultiple() as $entity) {
+        $entity_id = $entity->id();
+        if ($label = $entity->label()) {
+          $names[$entity_id] = new TranslatableMarkup('@label (@id)', ['@label' => $label, '@id' => $entity_id]);
+        }
+        else {
+          $names[$entity_id] = $entity_id;
+        }
+      }
+    }
+    // Handle simple configuration.
+    elseif ($config_type == 'system.simple') {
+      // Gather the configuration entity prefixes.
+      $config_prefixes = array_map(function (EntityTypeInterface $definition) {
+        return $definition->getConfigPrefix() . '.';
+      }, $this->configEntityTypeDefinitions);
+
+      // Get all configuration names.
+      $names = $this->configStorage->listAll();
+      $names = array_combine($names, $names);
+
+      // Filter out any names that match a configuration entity prefix
+      foreach ($names as $config_name) {
+        foreach ($config_prefixes as $config_prefix) {
+          if (strpos($config_name, $config_prefix) === 0) {
+            unset($names[$config_name]);
+          }
         }
       }
     }
 
     return $names;
+  }
+
+  /**
+   * Get the configuration items for a specified configuration name.
+   *
+   * @param string|null $config_type
+   *   The configuration type.
+   * @param string|null $config_name
+   *   The configuration name.
+   *
+   * @return array
+   *   The configuration items.
+   */
+  protected function getConfigItems($config_type = NULL, $config_name = NULL) {
+    $config_items = [];
+
+    if (!$config_name) {
+      return $config_items;
+    }
+
+    // For simple configuration, use the configuration name. For configuration
+    // entities, use a combination of the prefix and configuration name.
+    if ($config_type == 'system.simple') {
+      $name = $config_name;
+    }
+    else {
+      $definition = $this->getConfigEntityTypeDefinitions()[$config_type];
+      $name = $definition->getConfigPrefix() . '.' . $config_name;
+    }
+
+    $config_object = $this->configFactory->get($name);
+    $config_array = $config_object->get();
+    $config_items += $this->flattenConfigItemList($config_array);
+    $config_items = array_combine($config_items, $config_items);
+
+    return $config_items;
   }
 
   /**
@@ -203,12 +308,12 @@ class KeyConfigOverrideAddForm extends EntityForm {
    *   The current level of nesting.
    *
    * @return array
-   *   The flat array of configuration items.
+   *   The flattened array of configuration items.
    */
-  protected function getConfigurationItems($config_array, $prefix = '', $level = 0) {
+  protected function flattenConfigItemList($config_array, $prefix = '', $level = 0) {
     $config_items = [];
 
-    // Ignore certain items.
+    // Define items to ignore.
     $ignore = [
       'uuid',
       '_core',
@@ -220,7 +325,7 @@ class KeyConfigOverrideAddForm extends EntityForm {
       }
 
       if (is_array($value) && $level < 5) {
-        $config_items = array_merge($config_items, $this->getConfigurationItems($value, $key . '.', $level + 1));
+        $config_items = array_merge($config_items, $this->flattenConfigItemList($value, $key . '.', $level + 1));
       }
       else {
         $config_items[] = $prefix . $key;
