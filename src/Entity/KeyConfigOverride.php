@@ -15,7 +15,8 @@ use Drupal\key\KeyConfigOverrideInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\key\Controller\KeyConfigOverrideListBuilder",
  *     "form" = {
- *       "add" = "Drupal\key\Form\KeyConfigOverrideAddForm"
+ *       "add" = "Drupal\key\Form\KeyConfigOverrideAddForm",
+ *       "delete" = "Drupal\key\Form\KeyConfigOverrideDeleteForm"
  *     }
  *   },
  *   config_prefix = "config_override",
@@ -26,6 +27,7 @@ use Drupal\key\KeyConfigOverrideInterface;
  *   },
  *   links = {
  *     "add-form" = "/admin/config/development/configuration/key-overrides/add",
+ *     "delete-form" = "/admin/config/development/configuration/key-overrides/manage/{key_config_override}/delete",
  *     "collection" = "/admin/config/development/configuration/key-overrides"
  *   }
  * )

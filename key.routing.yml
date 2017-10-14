@@ -45,3 +45,11 @@ entity.key_config_override.add_form:
     _title: 'Add a key configuration override'
   requirements:
     _permission: 'administer key configuration overrides'
+
+entity.key_config_override.delete_form:
+  path: '/admin/config/development/configuration/key-overrides/manage/{key_config_override}/delete'
+  defaults:
+    _entity_form: 'key_config_override.delete'
+    _title: 'Delete Key Configuration Override'
+  requirements:
+    _permission: 'administer key configuration overrides'
