@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class KeyConfigOverrideAddForm extends EntityForm {
 
@@ -50,6 +51,13 @@ class KeyConfigOverrideAddForm extends EntityForm {
   protected $configEntityTypeDefinitions;
 
   /**
+   * The current request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a KeyConfigOverrideAddForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -57,11 +65,12 @@ class KeyConfigOverrideAddForm extends EntityForm {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, StorageInterface $config_storage) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, RequestStack $request_stack) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->configStorage = $config_storage;
     $this->storage = $entity_type_manager->getStorage('key_config_override');
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -71,7 +80,8 @@ class KeyConfigOverrideAddForm extends EntityForm {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('config.factory'),
-      $container->get('config.storage')
+      $container->get('config.storage'),
+      $container->get('request_stack')
     );
   }
 
@@ -154,9 +164,12 @@ class KeyConfigOverrideAddForm extends EntityForm {
       '#required' => TRUE,
     ];
 
+    $request = $this->requestStack->getCurrentRequest();
+    $query_key = $request->query->get('key');
     $form['key_id'] = [
       '#title' => $this->t('Key'),
       '#type' => 'key_select',
+      '#default_value' => $query_key,
       '#required' => TRUE,
     ];
 

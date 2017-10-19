@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,6 +16,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\key\Entity\Key
  */
 class KeyListBuilder extends ConfigEntityListBuilder {
+
+  /**
+   * @var array
+   */
+  protected $overrides;
 
   /**
    * {@inheritdoc}
@@ -46,6 +52,10 @@ class KeyListBuilder extends ConfigEntityListBuilder {
       'data' => $this->t('Provider'),
       'class' => [RESPONSIVE_PRIORITY_MEDIUM],
     ];
+    $header['overrides'] = [
+      'data' => $this->t('Overrides'),
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
 
     return $header + parent::buildHeader();
   }
@@ -61,7 +71,37 @@ class KeyListBuilder extends ConfigEntityListBuilder {
     $row['type'] = $key->getKeyType()->getPluginDefinition()['label'];
     $row['provider'] = $key->getKeyProvider()->getPluginDefinition()['label'];
 
+    $overrides = $this->getOverridesByKeyId($key->id());
+    $row['overrides']['data'] = [
+      '#theme' => 'item_list',
+      '#items' => $overrides,
+    ];
+
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOperations(EntityInterface $entity) {
+    /* @var $key \Drupal\key\Entity\Key */
+    $key = $entity;
+
+    $operations = parent::getOperations($key);
+
+    $key_collection = Url::fromRoute('entity.key.collection')->toString();
+    $operations['add_override'] = [
+      'title' => $this->t('Add Config Override'),
+      'weight' => 50,
+      'url' => Url::fromRoute(
+        'entity.key_config_override.add_form',
+        [],
+        ['query' => ['destination' => $key_collection, 'key' => $key->id()]]
+      ),
+    ];
+    uasort($operations, '\Drupal\Component\Utility\SortArray::sortByWeightElement');
+
+    return $operations;
   }
 
   /**
@@ -71,6 +111,40 @@ class KeyListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
     $build['table']['#empty'] = $this->t('No keys are available. <a href=":link">Add a key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
     return $build;
+  }
+
+
+  /**
+   * Get any overrides associated with a key.
+   *
+   * @param string $key_id
+   *   The ID of the key.
+   *
+   * @return array
+   *   The overrides associated with a key.
+   */
+  protected function getOverridesByKeyId($key_id) {
+    if (!$this->overrides) {
+      $entities = \Drupal::entityTypeManager()
+        ->getStorage('key_config_override')
+        ->loadMultiple();
+
+      foreach ($entities as $entity) {
+        // Build the complete configuration ID.
+        $config_id = '';
+        $config_type = $entity->getConfigType();
+        if ($config_type != 'system.simple') {
+          $definition = \Drupal::entityTypeManager()->getDefinition($config_type);
+          $config_id .= $definition->getConfigPrefix() . '.';
+        }
+        $config_id .= $entity->getConfigName();
+        $config_id .= ':' . $entity->getConfigItem();
+
+        $this->overrides[$entity->getKeyId()][] = $config_id;
+      }
+    }
+
+    return isset($this->overrides[$key_id]) ? $this->overrides[$key_id] : [];
   }
 
 }
