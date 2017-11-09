@@ -45,9 +45,13 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
     }
     $this->inOverride = TRUE;
 
+    $mapping = $this->getMapping();
+    if (!$mapping) {
+      return [];
+    }
+
     $overrides = [];
 
-    $mapping = $this->getMapping();
     $key_storage = $this->entityTypeManager->getStorage('key');
 
     foreach ($names as $name) {
@@ -106,22 +110,27 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
 
   protected function getMapping() {
     if (!$this->mapping) {
-      $overrides = $this->entityTypeManager
-        ->getStorage('key_config_override')
-        ->loadMultiple();
+      if ($this->entityTypeManager->getDefinition('key_config_override', FALSE)) {
+        $overrides = $this->entityTypeManager
+          ->getStorage('key_config_override')
+          ->loadMultiple();
 
-      foreach ($overrides as $override) {
-        $type = $override->getConfigType();
-        $name = $override->getConfigName();
-        $item = $override->getConfigItem();
-        $key_id = $override->getKeyId();
+        foreach ($overrides as $override) {
+          $type = $override->getConfigType();
+          $name = $override->getConfigName();
+          $item = $override->getConfigItem();
+          $key_id = $override->getKeyId();
 
-        if ($type !== 'system.simple') {
-          $def = $this->entityTypeManager->getDefinition($type);
-          $name = $def->getConfigPrefix() . '.' . $name;
+          if ($type !== 'system.simple') {
+            $def = $this->entityTypeManager->getDefinition($type);
+            $name = $def->getConfigPrefix() . '.' . $name;
+          }
+
+          $this->mapping[$name][$item] = $key_id;
         }
-
-        $this->mapping[$name][$item] = $key_id;
+      }
+      else {
+        $this->mapping = [];
       }
     }
 
