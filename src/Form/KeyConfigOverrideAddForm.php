@@ -358,7 +358,7 @@ class KeyConfigOverrideAddForm extends EntityForm {
       }
 
       if (is_array($value) && $level < 5) {
-        $config_items = array_merge($config_items, $this->flattenConfigItemList($value, $key . '.', $level + 1));
+        $config_items = array_merge($config_items, $this->flattenConfigItemList($value, $prefix . $key . '.', $level + 1));
       }
       else {
         $config_items[] = $prefix . $key;
