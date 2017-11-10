@@ -2,6 +2,7 @@
 
 namespace Drupal\key;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
@@ -72,7 +73,10 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
           continue;
         }
 
-        $config[$item] = $key_value;
+        // Turn the dot-separated configuration item name into a nested
+        // array and set the value.
+        $parents = explode('.', $item);
+        NestedArray::setValue($config, $parents, $key_value);
       }
 
       if ($config) {
