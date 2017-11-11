@@ -173,6 +173,13 @@ class KeyConfigOverrideAddForm extends EntityForm {
       '#required' => TRUE,
     ];
 
+    $form['clear_overridden'] = [
+      '#title' => $this->t('Clear overridden value'),
+      '#type' => 'checkbox',
+      '#description' => $this->t('Check this field to clear any existing value for the overridden configuration item. This is important to make sure potentially sensitive data is removed from the configuration.'),
+      '#default_value' => TRUE,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -188,8 +195,27 @@ class KeyConfigOverrideAddForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+    $saved = parent::save($form, $form_state);
 
-    return parent::save($form, $form_state);
+    // Clear the overridden value, if requested.
+    if ($saved && $form_state->getValue('clear_overridden')) {
+      $override = $this->entity;
+
+      $type = $override->getConfigType();
+      $name = $override->getConfigName();
+      $item = $override->getConfigItem();
+
+      if ($type !== 'system.simple') {
+        $definition = $this->entityTypeManager->getDefinition($type);
+        $name = $definition->getConfigPrefix() . '.' . $name;
+      }
+
+      $config = $this->configFactory()->getEditable($name);
+      $config->set($item, NULL);
+      $config->save();
+    }
+
+    return $saved;
   }
 
   /**
