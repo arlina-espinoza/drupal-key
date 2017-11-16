@@ -18,6 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class KeyListBuilder extends ConfigEntityListBuilder {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * @var array
    */
   protected $overrides;
@@ -25,8 +32,9 @@ class KeyListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage) {
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, EntityStorageInterface $storage) {
     parent::__construct($entity_type, $storage);
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -35,6 +43,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
+      $container->get('entity_type.manager'),
       $container->get('entity_type.manager')->getStorage($entity_type->id())
     );
   }
@@ -125,7 +134,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
    */
   protected function getOverridesByKeyId($key_id) {
     if (!$this->overrides) {
-      $entities = \Drupal::entityTypeManager()
+      $entities = $this->entityTypeManager
         ->getStorage('key_config_override')
         ->loadMultiple();
 
@@ -134,7 +143,7 @@ class KeyListBuilder extends ConfigEntityListBuilder {
         $config_id = '';
         $config_type = $entity->getConfigType();
         if ($config_type != 'system.simple') {
-          $definition = \Drupal::entityTypeManager()->getDefinition($config_type);
+          $definition = $this->entityTypeManager->getDefinition($config_type);
           $config_id .= $definition->getConfigPrefix() . '.';
         }
         $config_id .= $entity->getConfigName();
