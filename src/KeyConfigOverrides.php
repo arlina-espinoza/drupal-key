@@ -6,17 +6,11 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides key overrides for configuration.
  */
 class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
-
-  /**
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
 
   /**
    * @var array
@@ -27,15 +21,6 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
    * @var bool
    */
   protected $inOverride = FALSE;
-
-  /**
-   * Creates a new KeyConfigOverride instance.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager) {
-    $this->entityTypeManager = $entityTypeManager;
-  }
 
   /**
    * {@inheritdoc}
@@ -53,7 +38,8 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
 
     $overrides = [];
 
-    $key_storage = $this->entityTypeManager->getStorage('key');
+    $entityTypeManager = \Drupal::entityTypeManager();
+    $key_storage = $entityTypeManager->getStorage('key');
 
     foreach ($names as $name) {
       if (!isset($mapping[$name])) {
@@ -114,8 +100,9 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
 
   protected function getMapping() {
     if (!$this->mapping) {
-      if ($this->entityTypeManager->getDefinition('key_config_override', FALSE)) {
-        $overrides = $this->entityTypeManager
+      $entityTypeManager = \Drupal::entityTypeManager();
+      if ($entityTypeManager->getDefinition('key_config_override', FALSE)) {
+        $overrides = $entityTypeManager
           ->getStorage('key_config_override')
           ->loadMultiple();
 
@@ -126,7 +113,7 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
           $key_id = $override->getKeyId();
 
           if ($type !== 'system.simple') {
-            $def = $this->entityTypeManager->getDefinition($type);
+            $def = $entityTypeManager->getDefinition($type);
             $name = $def->getConfigPrefix() . '.' . $name;
           }
 

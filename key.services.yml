@@ -13,6 +13,5 @@ services:
     arguments: ['key_input', '@container.namespaces', '@cache.discovery', '@module_handler']
   key.config_override:
       class: \Drupal\key\KeyConfigOverrides
-      arguments: ['@entity_type.manager']
       tags:
         - {name: config.factory.override, priority: 10}
