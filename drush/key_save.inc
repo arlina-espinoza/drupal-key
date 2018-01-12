@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\key\Entity\Key;
 use Drupal\Component\Serialization\Json;
 use Drush\Log\LogLevel;
 
@@ -60,8 +59,20 @@ function _drush_key_save($id, $key_value = NULL) {
     $values['label'] = $values['id'];
   }
 
-  // Create a key entity.
-  $key = new Key($values, 'key');
+  // If the key already exists, make a clone and update it.
+  // Otherwise, create a new key entity.
+  if ($existing_key) {
+    $key = clone $existing_key;
+    foreach ($values as $index => $value) {
+      if ($index != 'id') {
+        $key->set($index, $value);
+      }
+    }
+  }
+  else {
+    $storage = \Drupal::service('entity_type.manager')->getStorage('key');
+    $key = $storage->create($values);
+  }
 
   // If a key value was specified, set it.
   if (isset($key_value)) {
