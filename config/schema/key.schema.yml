@@ -64,6 +64,9 @@ key.provider.file:
     base64_encoded:
       type: boolean
       label: 'Base64-encoded'
+    strip_line_breaks:
+      type: boolean
+      label: 'Strip trailing line breaks'
 
 key.input.none:
   type: sequence

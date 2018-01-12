@@ -30,6 +30,7 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
     return [
       'file_location' => '',
       'base64_encoded' => FALSE,
+      'strip_line_breaks' => FALSE,
     ];
   }
 
@@ -47,6 +48,13 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
       ]),
       '#required' => TRUE,
       '#default_value' => $this->getConfiguration()['file_location'],
+    ];
+
+    $form['strip_line_breaks'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Strip trailing line breaks'),
+      '#description' => $this->t('Check this to remove any trailing line breaks from the file. Leave unchecked if there is a chance that a line break could be a valid character in the key.'),
+      '#default_value' => $this->getConfiguration()['strip_line_breaks'],
     ];
 
     // If this key type is for an encryption key.
@@ -102,6 +110,10 @@ class FileKeyProvider extends KeyProviderBase implements KeyPluginFormInterface 
     }
 
     $key_value = file_get_contents($file);
+
+    if (isset($this->configuration['strip_line_breaks']) && $this->configuration['strip_line_breaks'] == TRUE) {
+      $key_value = rtrim($key_value, "\n\r");
+    }
 
     if (isset($this->configuration['base64_encoded']) && $this->configuration['base64_encoded'] == TRUE) {
       $key_value = base64_decode($key_value);

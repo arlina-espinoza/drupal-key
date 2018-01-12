@@ -96,6 +96,7 @@ class KeyServiceTest extends WebTestBase {
       'description' => 'A test of the file key provider.',
       'key_provider' => 'file',
       'key_provider_settings[file_location]' => $rpath,
+      'key_provider_settings[strip_line_breaks]' => FALSE,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
