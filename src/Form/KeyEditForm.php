@@ -2,7 +2,9 @@
 
 namespace Drupal\key\Form;
 
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Class KeyEditForm.
@@ -10,6 +12,13 @@ use Drupal\Core\Form\FormStateInterface;
  * @package Drupal\key\Form
  */
 class KeyEditForm extends KeyFormBase {
+
+  /**
+   * Keeps track of extra confirmation step on key edit.
+   *
+   * @var bool
+   */
+  protected $editConfirmed = FALSE;
 
   /**
    * {@inheritdoc}
@@ -64,7 +73,80 @@ class KeyEditForm extends KeyFormBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->t('Edit key %label', ['%label' => $this->entity->label()]);
+
+    // If editing has not been confirmed yet, display a warning and require
+    // confirmation.
+    if (!$this->editConfirmed) {
+      $form['confirm_edit'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('Be extremely careful when editing a key! It may result in broken site functionality. Are you sure you want to edit this key?'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      ];
+
+      return EntityForm::form($form, $form_state);
+    }
+
     return parent::form($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function actions(array $form, FormStateInterface $form_state) {
+    // If editing has not been confirmed yet.
+    if (!$this->editConfirmed) {
+      return [
+        'submit' => [
+          '#type' => 'submit',
+          '#value' => $this->t('Edit'),
+          '#button_type' => 'primary',
+          '#submit' => [
+            [$this, 'confirmEdit'],
+          ],
+        ],
+        'cancel' => [
+          '#type' => 'link',
+          '#title' => $this->t('Cancel'),
+          '#attributes' => ['class' => ['button']],
+          '#url' => Url::fromRoute('entity.key.collection'),
+          '#cache' => [
+            'contexts' => [
+              'url.query_args:destination',
+            ],
+          ],
+        ],
+      ];
+    }
+    else {
+      return parent::actions($form, $form_state);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // If editing has not been confirmed yet.
+    if (!$this->editConfirmed) {
+      return;
+    }
+    else {
+      parent::validateForm($form, $form_state);
+    }
+  }
+
+  /**
+   * Submit handler for the edit confirmation button.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function confirmEdit(array &$form, FormStateInterface $form_state) {
+    $this->editConfirmed = TRUE;
+    $form_state->setRebuild();
   }
 
 }
