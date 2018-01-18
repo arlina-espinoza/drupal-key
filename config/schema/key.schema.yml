@@ -35,6 +35,12 @@ key.key.*:
 key.type.authentication:
   type: sequence
 
+key.type.authentication_multivalue:
+  type: sequence
+
+key.type.user_password:
+  type: sequence
+
 key.type.encryption:
   type: mapping
   label: 'Encryption key type settings'

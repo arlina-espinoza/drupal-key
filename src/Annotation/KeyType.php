@@ -3,6 +3,7 @@
 namespace Drupal\key\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a key type annotation object.
@@ -57,6 +58,22 @@ class KeyType extends Plugin {
    */
   public $key_value = [
     'plugin' => 'text_field',
+  ];
+
+  /**
+   * Settings for multi-value keys.
+   *
+   * This is used to indicate if a key type supports multiple values and,
+   * if so, how its fields are named. Fields should be defined as key-value
+   * pairs. For example:
+   *   - "username" = @Translation("User name")
+   *   - "password" = @Translation("Password")
+   *
+   * @var array
+   */
+  public $multivalue = [
+    'enabled' => FALSE,
+    'fields' => []
   ];
 
 }

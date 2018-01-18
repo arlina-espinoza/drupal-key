@@ -79,6 +79,14 @@ interface KeyInterface extends ConfigEntityInterface {
   public function getKeyValue();
 
   /**
+   * Gets the values of the key.
+   *
+   * @return array
+   *   The values of the key.
+   */
+  public function getKeyValues();
+
+  /**
    * Sets the value of the key.
    *
    * @param string $key_value

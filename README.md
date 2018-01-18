@@ -148,3 +148,10 @@ but the examples can be extrapolated to fit the use case of your module.
 ### Get a key value
 
 `Drupal::service('key.repository')->getKey($key_id)->getKeyValue()`
+
+### Get multiple values from a key
+
+`Drupal::service('key.repository')->getKey($key_id)->getKeyValues()`
+
+This will return an array of values. If the key does not support multiple
+values, the array will contain only one element.
