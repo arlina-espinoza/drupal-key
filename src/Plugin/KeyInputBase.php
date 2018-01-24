@@ -69,7 +69,7 @@ abstract class KeyInputBase extends KeyPluginBase implements KeyInputInterface, 
     // This is the default behavior. The key value is Base64-encoded if
     // it was originally submitted with Base64 encoding. Otherwise, it is
     // returned as-is.
-    if ($this->configuration['base64_encoded']) {
+    if (isset($this->configuration['base64_encoded']) && $this->configuration['base64_encoded'] == TRUE) {
       $processed_value = base64_encode($key_value);
     }
     else {
