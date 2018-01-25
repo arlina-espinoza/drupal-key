@@ -39,7 +39,36 @@ class AuthenticationMultivalueKeyType extends KeyTypeBase implements KeyTypeMult
    * {@inheritdoc}
    */
   public function validateKeyValue(array $form, FormStateInterface $form_state, $key_value) {
-    // Validation of the key value is optional.
+    if (empty($key_value)) {
+      return;
+    }
+
+    // If a field named "key_value" exists in the key input settings, use it for
+    // the error element, if necessary. Otherwise, use the entire form.
+    if (isset($form['settings']['input_section']['key_input_settings']['key_value'])) {
+      $error_element = $form['settings']['input_section']['key_input_settings']['key_value'];
+    }
+    else {
+      $error_element = $form;
+    }
+
+    $value = $this->unserialize($key_value);
+    if ($value === NULL) {
+      $form_state->setError($error_element, $this->t('The key value does not contain valid JSON.'));
+      return;
+    }
+
+    $definition = $this->getPluginDefinition();
+    $required_fields = array_keys($definition['multivalue']['fields']);
+
+    foreach($required_fields as $field) {
+      if (!isset($value[$field])) {
+        $form_state->setError($error_element, $this->t('The key value is missing the field %field.', ['%field' => $field]));
+      }
+      elseif (empty($value[$field])) {
+        $form_state->setError($error_element, $this->t('The key value field %field is empty.', ['%field' => $field]));
+      }
+    }
   }
 
   /**
