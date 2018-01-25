@@ -63,6 +63,13 @@ class KeyConfigOverride extends ConfigEntityBase implements KeyConfigOverrideInt
   protected $config_name;
 
   /**
+   * The configuration prefix.
+   *
+   * @var string
+   */
+  protected $config_prefix;
+
+  /**
    * The configuration item.
    *
    * @var string
@@ -95,6 +102,13 @@ class KeyConfigOverride extends ConfigEntityBase implements KeyConfigOverrideInt
    */
   public function getConfigName() {
     return $this->config_name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigPrefix() {
+    return $this->config_prefix;
   }
 
   /**

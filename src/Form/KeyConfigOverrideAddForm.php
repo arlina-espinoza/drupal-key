@@ -188,6 +188,21 @@ class KeyConfigOverrideAddForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
+    // Add the entity prefix when the form is submitted.
+    if ($form_state->isSubmitted()) {
+      $definitions = $this->getConfigEntityTypeDefinitions();
+      $config_type = $form_state->getValue('config_type');
+
+      if (key_exists($config_type, $definitions)) {
+        $config_prefix = $definitions[$config_type]->getConfigPrefix();
+      }
+      else {
+        $config_prefix = '';
+      }
+
+      $form_state->setValue('config_prefix', $config_prefix);
+    }
   }
 
   /**

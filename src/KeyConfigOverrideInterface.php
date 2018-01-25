@@ -23,6 +23,14 @@ interface KeyConfigOverrideInterface extends ConfigEntityInterface {
   public function getConfigName();
 
   /**
+   * Gets the configuration prefix.
+   *
+   * @return string
+   *   The configuration prefix.
+   */
+  public function getConfigPrefix();
+
+  /**
    * Gets the configuration item.
    *
    * @return string

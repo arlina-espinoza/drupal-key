@@ -37,3 +37,45 @@ function key_update_8001() {
     return t('File key provider settings updated.');
   }
 }
+
+/**
+ * Add the configuration prefix to existing key configuration overrides.
+ */
+function key_update_8002() {
+  $updated = FALSE;
+
+  $configFactory = \Drupal::configFactory();
+  $entityTypeManager = \Drupal::entityTypeManager();
+
+  // Loop through key configuration overrides.
+  foreach ($configFactory->listAll('key.config_override.') as $name) {
+    $override = $configFactory->getEditable($name);
+
+    if (!$override) {
+      continue;
+    }
+
+    $config_prefix = $override->get('config_prefix');
+    if (isset($config_prefix)) {
+      continue;
+    }
+
+    $config_type = $override->get('config_type');
+    if (!isset($config_type)) {
+      continue;
+    }
+
+    $config_prefix = '';
+    if ($config_type != 'system.simple') {
+      $definition = $entityTypeManager->getDefinition($config_type);
+      $config_prefix = $definition->getConfigPrefix();
+    }
+
+    $override->set('config_prefix', $config_prefix);
+    $override->save(TRUE);
+  }
+
+  if ($updated) {
+    return t('Key configuration overrides updated.');
+  }
+}

@@ -38,35 +38,28 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
 
     $overrides = [];
 
-    $entityTypeManager = \Drupal::entityTypeManager();
-    $key_storage = $entityTypeManager->getStorage('key');
-
     foreach ($names as $name) {
-      if (!isset($mapping[$name])) {
+      if (!key_exists($name, $mapping)) {
         continue;
       }
 
-      $config = [];
+      $override = [];
 
-      foreach ($mapping[$name] as $item => $key_id) {
-        $key = $key_storage->load($key_id);
-        if (!$key) {
-          continue;
-        }
+      foreach ($mapping[$name] as $config_item => $key_id) {
+        $key_value = \Drupal::service('key.repository')->getKey($key_id)->getKeyValue();
 
-        $key_value = $key->getKeyValue();
-        if (!$key_value) {
+        if (!isset($key_value)) {
           continue;
         }
 
         // Turn the dot-separated configuration item name into a nested
         // array and set the value.
-        $parents = explode('.', $item);
-        NestedArray::setValue($config, $parents, $key_value);
+        $config_item_parents = explode('.', $config_item);
+        NestedArray::setValue($override, $config_item_parents, $key_value);
       }
 
-      if ($config) {
-        $overrides[$name] = $config;
+      if ($override) {
+        $overrides[$name] = $override;
       }
     }
 
@@ -98,31 +91,37 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
     return NULL;
   }
 
+  /**
+   * Get a mapping of key configuration overrides.
+   *
+   * @return array
+   *   A mapping of key configuration overrides.
+   */
   protected function getMapping() {
     if (!$this->mapping) {
-      $entityTypeManager = \Drupal::entityTypeManager();
-      if ($entityTypeManager->getDefinition('key_config_override', FALSE)) {
-        $overrides = $entityTypeManager
-          ->getStorage('key_config_override')
-          ->loadMultiple();
+      $mapping = [];
+      $config_factory = \Drupal::configFactory();
+      $override_ids = $config_factory->listAll('key.config_override.');
+      $overrides = $config_factory->loadMultiple($override_ids);
 
-        foreach ($overrides as $override) {
-          $type = $override->getConfigType();
-          $name = $override->getConfigName();
-          $item = $override->getConfigItem();
-          $key_id = $override->getKeyId();
+      foreach ($overrides as $id => $override) {
+        $override = $override->get();
 
-          if ($type !== 'system.simple') {
-            $def = $entityTypeManager->getDefinition($type);
-            $name = $def->getConfigPrefix() . '.' . $name;
-          }
-
-          $this->mapping[$name][$item] = $key_id;
+        $config_id = '';
+        if (!empty($override['config_prefix'])) {
+          $config_id .= $override['config_prefix'] . '.';
         }
+        if (isset($override['config_name'])) {
+          $config_id .= $override['config_name'];
+        }
+
+        $config_item = $override['config_item'];
+        $key_id = $override['key_id'];
+
+        $mapping[$config_id][$config_item] = $key_id;
       }
-      else {
-        $this->mapping = [];
-      }
+
+      $this->mapping = $mapping;
     }
 
     return $this->mapping;
