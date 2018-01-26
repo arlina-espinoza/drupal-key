@@ -61,13 +61,22 @@ class KeyType extends Plugin {
   ];
 
   /**
-   * Settings for multi-value keys.
+   * The fields available in keys with multiple values.
    *
    * This is used to indicate if a key type supports multiple values and,
-   * if so, how its fields are named. Fields should be defined as key-value
-   * pairs. For example:
-   *   - "username" = @Translation("User name")
-   *   - "password" = @Translation("Password")
+   * if so, information about its fields. Fields can be defined in either
+   * of the following two formats.
+   *
+   * Simple:
+   * "username" = @Translation("User name")
+   *
+   * Complex:
+   * "password" = {
+   *   "label" = @Translation("Password"),
+   *   "required" = false
+   * }
+   *
+   * Fields are assumed to be required, unless otherwise specified.
    *
    * @var array
    */

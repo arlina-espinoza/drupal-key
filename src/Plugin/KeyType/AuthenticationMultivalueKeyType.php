@@ -59,14 +59,22 @@ class AuthenticationMultivalueKeyType extends KeyTypeBase implements KeyTypeMult
     }
 
     $definition = $this->getPluginDefinition();
-    $required_fields = array_keys($definition['multivalue']['fields']);
+    $fields = $definition['multivalue']['fields'];
 
-    foreach($required_fields as $field) {
-      if (!isset($value[$field])) {
-        $form_state->setError($error_element, $this->t('The key value is missing the field %field.', ['%field' => $field]));
+    foreach($fields as $id => $field) {
+      if (!is_array($field)) {
+        $field = ['label' => $field];
       }
-      elseif (empty($value[$field])) {
-        $form_state->setError($error_element, $this->t('The key value field %field is empty.', ['%field' => $field]));
+
+      if (isset($field['required']) && $field['required'] === FALSE) {
+        continue;
+      }
+
+      if (!isset ($value[$id])) {
+        $form_state->setError($error_element, $this->t('The key value is missing the field %field.', ['%field' => $id]));
+      }
+      elseif (empty($value[$id])) {
+        $form_state->setError($error_element, $this->t('The key value field %field is empty.', ['%field' => $id]));
       }
     }
   }
