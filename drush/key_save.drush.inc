@@ -14,7 +14,7 @@ use Drush\Log\LogLevel;
  * @return bool
  *   FALSE if not successful.
  */
-function _drush_key_save($id, $key_value = NULL) {
+function drush_key_save($id, $key_value = NULL) {
   $values = [];
   $values['id'] = $id;
 

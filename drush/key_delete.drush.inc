@@ -11,7 +11,7 @@ use Drush\Log\LogLevel;
  * @return bool
  *   FALSE if not successful.
  */
-function _drush_key_delete($id) {
+function drush_key_delete($id) {
   // Look for a key with the specified ID. If one does not exist, set an
   // error and abort.
   /* @var $key \Drupal\key\Entity\Key */

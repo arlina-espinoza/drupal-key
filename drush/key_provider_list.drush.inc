@@ -3,7 +3,7 @@
 /**
  * Get a list of available key providers.
  */
-function _drush_key_provider_list() {
+function drush_key_provider_list() {
   $result = [];
 
   $storage_method = drush_get_option('storage-method');

@@ -3,7 +3,7 @@
 /**
  * Get a list of available key types.
  */
-function _drush_key_type_list() {
+function drush_key_type_list() {
   $result = [];
 
   $group = drush_get_option('group');

@@ -10,7 +10,7 @@
  * @param string $id
  *   The ID of the key whose value should be retrieved.
  */
-function _drush_key_value_get($id) {
+function drush_key_value_get($id) {
   // Look for a key with the specified ID. If one does not exist, set an
   // error and abort.
   /* @var $key \Drupal\key\Entity\Key */

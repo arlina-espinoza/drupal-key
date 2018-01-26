@@ -3,7 +3,7 @@
 /**
  * Get a list of available keys.
  */
-function _drush_key_list() {
+function drush_key_list() {
   $result = [];
 
   /* @var $key Drupal\key\Entity\Key */
