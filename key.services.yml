@@ -12,6 +12,7 @@ services:
     class: Drupal\key\Plugin\KeyPluginManager
     arguments: ['key_input', '@container.namespaces', '@cache.discovery', '@module_handler']
   key.config_override:
-      class: \Drupal\key\KeyConfigOverrides
-      tags:
-        - {name: config.factory.override, priority: 10}
+    class: \Drupal\key\KeyConfigOverrides
+    arguments: ['@config.factory', '@cache.data', '@key.repository']
+    tags:
+      - {name: config.factory.override, priority: 10}

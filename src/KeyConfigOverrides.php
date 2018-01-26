@@ -4,6 +4,8 @@ namespace Drupal\key;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 
@@ -11,6 +13,21 @@ use Drupal\Core\Config\StorageInterface;
  * Provides key overrides for configuration.
  */
 class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
+   * @var \Drupal\key\KeyRepositoryInterface
+   */
+  protected $keyRepository;
 
   /**
    * @var array
@@ -21,6 +38,19 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
    * @var bool
    */
   protected $inOverride = FALSE;
+
+  /**
+   * Creates a new ModuleConfigOverrides instance.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface|null $config_factory
+   * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
+   * @param \Drupal\key\KeyRepositoryInterface|null $key_repository
+   */
+  public function __construct(ConfigFactoryInterface $config_factory = NULL, CacheBackendInterface $cache_backend = NULL, KeyRepositoryInterface $key_repository = NULL) {
+    $this->configFactory = $config_factory ?: \Drupal::configFactory();
+    $this->cacheBackend = $cache_backend ?: \Drupal::cache('data');
+    $this->keyRepository = $key_repository ?: \Drupal::service('key.repository');
+  }
 
   /**
    * {@inheritdoc}
@@ -46,7 +76,7 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
       $override = [];
 
       foreach ($mapping[$name] as $config_item => $key_id) {
-        $key_value = \Drupal::service('key.repository')->getKey($key_id)->getKeyValue();
+        $key_value = $this->keyRepository->getKey($key_id)->getKeyValue();
 
         if (!isset($key_value)) {
           continue;
@@ -100,9 +130,8 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
   protected function getMapping() {
     if (!$this->mapping) {
       $mapping = [];
-      $config_factory = \Drupal::configFactory();
-      $override_ids = $config_factory->listAll('key.config_override.');
-      $overrides = $config_factory->loadMultiple($override_ids);
+      $override_ids = $this->configFactory->listAll('key.config_override.');
+      $overrides = $this->configFactory->loadMultiple($override_ids);
 
       foreach ($overrides as $id => $override) {
         $override = $override->get();
