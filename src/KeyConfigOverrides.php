@@ -25,11 +25,6 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $cacheBackend;
 
   /**
-   * @var \Drupal\key\KeyRepositoryInterface
-   */
-  protected $keyRepository;
-
-  /**
    * @var array
    */
   protected $mapping;
@@ -43,13 +38,13 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
    * Creates a new ModuleConfigOverrides instance.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface|null $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
-   * @param \Drupal\key\KeyRepositoryInterface|null $key_repository
+   *   The cache backend.
    */
-  public function __construct(ConfigFactoryInterface $config_factory = NULL, CacheBackendInterface $cache_backend = NULL, KeyRepositoryInterface $key_repository = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory = NULL, CacheBackendInterface $cache_backend = NULL) {
     $this->configFactory = $config_factory ?: \Drupal::configFactory();
     $this->cacheBackend = $cache_backend ?: \Drupal::cache('data');
-    $this->keyRepository = $key_repository ?: \Drupal::service('key.repository');
   }
 
   /**
@@ -66,6 +61,13 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
       return [];
     }
 
+    try {
+      $storage = \Drupal::entityTypeManager()->getStorage('key');
+    }
+    catch (\Exception $e) {
+      return [];
+    }
+
     $overrides = [];
 
     foreach ($names as $name) {
@@ -76,7 +78,7 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
       $override = [];
 
       foreach ($mapping[$name] as $config_item => $key_id) {
-        $key_value = $this->keyRepository->getKey($key_id)->getKeyValue();
+        $key_value = $storage->load($key_id)->getKeyValue();
 
         if (!isset($key_value)) {
           continue;
@@ -99,7 +101,7 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
   }
 
   /**
-   * {@inheritdoc} 
+   * {@inheritdoc}
    */
   public function getCacheSuffix() {
     return 'key_config_override';
