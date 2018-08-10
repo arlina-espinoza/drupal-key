@@ -3,6 +3,7 @@
 namespace Drupal\Tests\key\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Url;
 
 /**
  * Tests administration of keys.
@@ -32,17 +33,50 @@ class KeyAdminTest extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->createTestKey('key_foo');
-    $this->createTestKeyConfigOverride('test_override', 'key_foo');
 
     $this->adminUser = $this->drupalCreateUser(['administer keys']);
 
   }
 
   /**
+   * Tests the key list builder.
+   */
+  public function testKeyListBuilder() {
+    $this->drupalLogin($this->adminUser);
+
+    // Go to the Key list page.
+    $this->drupalGet('admin/config/system/keys');
+    $this->assertResponse(200);
+
+    // Verify that the "no keys" message displays.
+    $this->assertRaw(
+      t('No keys are available. <a href=":link">Add a key</a>.', [
+        ':link' => Url::fromRoute('entity.key.add_form')->toString(),
+      ]), 'Empty text when there are no keys is correct.');
+
+    // Add a key.
+    $this->drupalGet('admin/config/system/keys/add');
+
+    $edit = [
+      'id' => 'testing_key',
+      'label' => 'Testing Key',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+
+    // Go to the Key list page.
+    $this->drupalGet('admin/config/system/keys');
+    $this->assertResponse(200);
+
+    // Verify that the "no keys" message does not display.
+    $this->assertNoText(t('No keys are available.'));
+  }
+
+  /**
    * Tests key routes for an authorized user.
    */
   public function testAdminUserRoutes() {
+    $this->createTestKey('key_foo');
+    $this->createTestKeyConfigOverride('test_override', 'key_foo');
 
     $this->drupalLogin($this->adminUser);
 
