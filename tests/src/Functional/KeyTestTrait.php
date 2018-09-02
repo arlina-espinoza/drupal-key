@@ -41,12 +41,20 @@ trait KeyTestTrait {
   /**
    * Make a key for testing operations that require a key.
    */
-  protected function createTestKey($key_id) {
-    $this->testKey = Key::create([
-      'id' => $key_id,
+  protected function createTestKey($id, $type = NULL, $provider = NULL) {
+    $keyArgs = [
+      'id' => $id,
       'label' => 'Test key',
-    ]);
+    ];
+    if ($type != NULL) {
+      $keyArgs['key_type'] = $type;
+    }
+    if ($provider != NULL) {
+      $keyArgs['key_provider'] = $provider;
+    }
+    $this->testKey = Key::create($keyArgs);
     $this->testKey->save();
+    return $this->testKey;
   }
 
   /**
