@@ -110,7 +110,7 @@ There are a couple of additional properties that can be used:
 
 * `#key_filters` An array of filters to apply to the list of keys. 
 Filtering can be performed on any combination of key type, key provider,
-or key type group. Examples:
+key type group, or storage method. Examples:
   * `#key_filters = ['type' => 'mailchimp']` This would only display 
     MailChimp keys.
   * `#key_filters = ['provider' => 'file']` This would only display keys 
@@ -119,6 +119,8 @@ or key type group. Examples:
     This would only display MailChimp keys that use the File key provider.
   * `#key_filters = ['type_group' => 'encryption']` This would only display 
     keys that are of a key type that belongs to the 'encryption' group.
+  * `#key_filters = ['storage_method' => 'file']` This would only display keys
+    that are defined to use file as the storage_method.
 * `#key_description` This is a boolean value that determines if information
   about keys is added to the element's description. It is TRUE by default
   and it prepends the description with the following text (with a link to 
