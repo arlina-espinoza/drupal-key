@@ -111,9 +111,7 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function getCacheableMetadata($name) {
-    $cache_metadata = new CacheableMetadata();
-    $cache_metadata->addCacheTags(['extensions']);
-    return $cache_metadata;
+    return new CacheableMetadata();
   }
 
   /**
