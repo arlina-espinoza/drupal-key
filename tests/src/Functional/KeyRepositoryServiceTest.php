@@ -15,11 +15,9 @@ class KeyRepositoryServiceTest extends BrowserTestBase {
   use KeyTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['key'];
+  protected static $modules = ['key'];
 
   /**
    * Test key provider methods.

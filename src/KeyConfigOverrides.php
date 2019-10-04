@@ -15,21 +15,29 @@ use Drupal\Core\Config\StorageInterface;
 class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
 
   /**
+   * Config factory.
+   *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
+   * Cache backend.
+   *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackend;
 
   /**
+   * Mapping.
+   *
    * @var array
    */
   protected $mapping;
 
   /**
+   * In override.
+   *
    * @var bool
    */
   protected $inOverride = FALSE;
@@ -71,7 +79,7 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
     $overrides = [];
 
     foreach ($names as $name) {
-      if (!key_exists($name, $mapping)) {
+      if (!array_key_exists($name, $mapping)) {
         continue;
       }
 

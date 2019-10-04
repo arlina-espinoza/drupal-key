@@ -125,7 +125,7 @@ class Key extends ConfigEntityBase implements KeyInterface, EntityWithPluginColl
   /**
    * The key value.
    *
-   * @var string|NULL
+   * @var string|null
    */
   protected $keyValue = NULL;
 

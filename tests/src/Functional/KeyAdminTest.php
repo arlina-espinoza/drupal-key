@@ -16,11 +16,9 @@ class KeyAdminTest extends BrowserTestBase {
   use KeyTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['key'];
+  protected static $modules = ['key'];
 
   /**
    * A user with the 'administer keys' permission.
