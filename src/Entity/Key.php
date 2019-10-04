@@ -40,6 +40,7 @@ use Drupal\key\Plugin\KeyProviderSettableValueInterface;
  *   config_export = {
  *     "id",
  *     "label",
+ *     "description",
  *     "key_type",
  *     "key_type_settings",
  *     "key_provider",
