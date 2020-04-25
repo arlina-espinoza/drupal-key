@@ -1,6 +1,6 @@
 name: Key
 type: module
 description: Provides the ability to manage site-wide keys.
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: Security
 configure: entity.key.collection
